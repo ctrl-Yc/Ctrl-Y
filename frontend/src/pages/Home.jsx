@@ -1,11 +1,10 @@
-
+import { Btn } from '../../components/btn'
 
 export const Home = () => {
-    return (
-        <div className="home">
-        <h1>Welcome to the Home Page</h1>
-        <p>This is a simple React application demonstrating routing and PWA capabilities.</p>
-        <p>Feel free to explore the app and check out the features!</p>
-        </div>
-    );
+  return (
+     <div>
+      <h2 className="text-3xl font-bold underline text-blue-500">Hello World</h2>
+      <Btn onClick={() => alert('押された')}>押す</Btn>
+    </div>
+  )
 }
