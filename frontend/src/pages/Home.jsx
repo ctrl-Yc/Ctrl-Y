@@ -1,5 +1,4 @@
-import React from 'react'
-import Btn from '../../components/btn'
+import { Btn } from '../../components/btn'
 
 export const Home = () => {
   return (
