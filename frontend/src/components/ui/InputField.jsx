@@ -1,4 +1,4 @@
-export const InputField = ({ type = 'text', placeholder = '', value, onChange, className = '' }) => {
+export const InputField = ({ type, placeholder = '', value, onChange, className = '' }) => {
   return (
     <input 
       type={type} 
