@@ -3,7 +3,7 @@ import { CustomButton } from "../components/ui/CustomButton"
 import { InputField } from "../components/ui/InputField"
 import { Link } from "react-router-dom";
 
-export const Signup = () => {
+export const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
