@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton"
 import { InputField } from "../components/ui/InputField"
-import { Link } from "react-router-dom";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
