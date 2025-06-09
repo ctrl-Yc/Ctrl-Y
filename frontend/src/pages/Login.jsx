@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton"
 import { InputField } from "../components/ui/InputField"
+import { Link } from "react-router-dom"
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ export const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         className=""
       />
-      <p>アカウントを持っていない場合<a href="./NewRegister">アカウント作成</a></p>
+      <p>アカウントを持っていない場合<Link to="./SignupPage">アカウント作成</a></p>
       <CustomButton
         type="button"
         label="ログイン"
