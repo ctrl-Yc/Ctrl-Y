@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 
-const Keyword = () => {
+export const Keyword = () => {
     const [keyword, setKeyword] = useState('');
 
     const handleClick = (event) => {
@@ -30,4 +30,4 @@ const Keyword = () => {
     )
 }
 
-export default Keyword
+
