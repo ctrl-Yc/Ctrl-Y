@@ -1,6 +1,6 @@
-import SidebarItem from "./SidebarItem"
+import { SidebarItem } from "./SidebarItem"
 
-const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
+export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
     const menuItems = [
         { id: 'tasks', text: 'お手伝い一覧', icon: 'list' },
         { id: 'records', text: 'おこづかい記録', icon: 'money' },
@@ -28,4 +28,4 @@ const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
     )
 }
 
-export default Sidebar
+

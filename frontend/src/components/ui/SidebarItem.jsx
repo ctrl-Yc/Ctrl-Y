@@ -1,4 +1,4 @@
-const SidebarItem = ({ icon, text, isActive, onClick }) => {
+export const SidebarItem = ({text, isActive, onClick }) => {
     const itemClasses = `
         py-3 px-4 flex items-center cursor-pointer 
         hover:bg-orange-600 hover:text-white 
@@ -21,4 +21,4 @@ const SidebarItem = ({ icon, text, isActive, onClick }) => {
     )
 }
 
-export default SidebarItem
+

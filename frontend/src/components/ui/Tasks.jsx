@@ -1,4 +1,4 @@
-const Tasks = () => {
+export const Tasks = () => {
   return (
     <div>
       
@@ -6,4 +6,3 @@ const Tasks = () => {
   )
 }
 
-export default Tasks

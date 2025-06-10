@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Sidebar from "../components/ui/Sidebar"
-import Tasks from "../components/ui/Tasks";
-import Settings from "../components/ui/Settings";
-import MoneyRecords from "../components/ui/MoneyRecords";
+import { Sidebar }  from "../components/ui/Sidebar"
+import { Tasks } from "../components/ui/Tasks";
+import { Settings } from "../components/ui/Settings";
+import { MoneyRecords }  from "../components/ui/MoneyRecords";
 
-const Top = () => {
+export const Top = () => {
     const [activeTab, setActiveTab] = useState('tasks');
 
     // サイドバーの項目がクリックされたときに呼ばれる関数
@@ -39,5 +39,3 @@ const Top = () => {
         </div>
     )
 }
-
-export default Top
