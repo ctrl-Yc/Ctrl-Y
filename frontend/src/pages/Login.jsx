@@ -30,7 +30,7 @@ export const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         className=""
       />
-      <p>アカウントを持っていない場合<Link to="./SignupPage">アカウント作成</Link></p>
+      <p>アカウントを持っていない場合<Link to="./Signup">アカウント作成</Link></p>
       <CustomButton
         type="button"
         label="ログイン"
