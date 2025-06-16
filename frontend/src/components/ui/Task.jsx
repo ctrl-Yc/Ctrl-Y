@@ -1,8 +1,8 @@
 import { CustomButton } from "./CustomButton"
 
 export const Task = ({ task }) => {
-    const handleClick = (event) => {
-        event.preventDefault();
+    const handleClick = (e) => {
+        e.preventDefault();
         console.log('ボタンが押されました');
     }
 
