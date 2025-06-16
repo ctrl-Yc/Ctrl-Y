@@ -1,5 +1,7 @@
+//index.js
 const express = require('express');
 const app = express();
+
 
 //prisamaいんすたんす
 const { PrismaClient } = require('@prisma/client');
@@ -12,7 +14,7 @@ app.use(express.json());
     //tasksの全件取得
     app.get('/api/tasks/Allget',async (req,res)=>{
         try{
-            const AllTasks =  await prisma.tasks.findMany();
+            const AllTasks =  await prisma.task.findMany();
             res.status(200).json(AllTasks);
         }catch (error){
             console.log("tasksの全件取得エラー");
@@ -27,7 +29,7 @@ app.use(express.json());
 
             const DeleteTask =  await prisma.tasks.delete({
                 where:{
-                    id: taskid
+                    task_id: taskid
                 }
             });
             console.log("ID:"+taskid+"削除確認");
@@ -41,6 +43,7 @@ app.use(express.json());
 //userの登録
 
 
+console.log(`DB URL: ${process.env.SB_CONNECT}`);
 
 //一番下
 module.exports = app;
