@@ -1,9 +1,20 @@
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("SB_CONNECT")
 }
 
+model Task {
+  task_id    Int      @id @default(autoincrement())
+  t_name       String   @db.Text
+  memo       String?  @db.Text
+  reward     Int      @db.SmallInt
+  deadline   DateTime @db.Timestamptz
+  s_id       Int      @db.SmallInt
+
+   @@map("tasks") // データベースの実際のテーブル名を指定
+}
