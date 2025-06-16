@@ -1,13 +1,18 @@
 // schema.prisma
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("SB_CONNECT")
+  url      = env("DB_URL")
+  directUrl = env("SB_CONNECT")
+  schemas   = ["public", "ctrl-Y"]
 }
 
+//model書く時一番下に"  @@schema("ctrl-Y")  "追加でスキーマを指定
+//その一つ上にテーブル指定
 model Task {
   task_id    Int      @id @default(autoincrement())
   t_name       String   @db.Text
@@ -16,5 +21,6 @@ model Task {
   deadline   DateTime @db.Timestamptz
   s_id       Int      @db.SmallInt
 
-   @@map("tasks") // データベースの実際のテーブル名を指定
+  @@map("tasks") 
+  @@schema("ctrl-Y")
 }

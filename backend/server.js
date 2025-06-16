@@ -24,4 +24,5 @@ app.listen(port, () => {
   console.log(`URL: ${url}`)
   console.log(`Anon Key: ${anonKey}`)
   console.log(`${connect}`)
+  console.log(process.env.DB_URL);
 })
