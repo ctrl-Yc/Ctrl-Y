@@ -22,6 +22,37 @@ app.get('/api/tasks/Allget',async (req,res)=>{
     }
 })
 
+//終わっていないtasksの全件取得
+app.get('/api/tasks/getIncomplete',async (req,res)=>{
+    try{
+        const IncompleteTasks =  await prisma.task.findMany({
+            where:{
+                s_id:{
+                    not:3
+                }
+            }
+        });
+        res.status(200).json(IncompleteTasks);
+    }catch (error){
+        console.log("終わっていないtasksの全件取得エラー");
+        res.status(500).json({ message: '終わっていないtasksの全件取得エラー', error : error.message });
+    }
+})
+//終わっているtasksの全件取得
+app.get('/api/tasks/getcompleted',async (req,res)=>{
+    try{
+        const completedTasks =  await prisma.task.findMany({
+            where:{
+                s_id:3
+            }
+        });
+        res.status(200).json(completedTasks);
+    }catch (error){
+        console.log("終わっていないtasksの全件取得エラー");
+        res.status(500).json({ message: '終わっていないtasksの全件取得エラー', error : error.message });
+    }
+})
+
 //taskの削除
 app.delete('/api/tasks/taskDelete/:id',async (req,res)=>{
     try{
