@@ -141,7 +141,7 @@ app.post('/api/users/userCreate', async (req, res) => {
 
     // JWT発行
     const token = jwt.sign(
-      { timestamp: new Date().toISOString() },
+      {user_id: user.user_id, timestamp: new Date().toISOString() },
       process.env.JWT_SECRET,
       // { expiresIn: '' } 必要なら有効期限を設定 '1h'など
     );
