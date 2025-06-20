@@ -53,10 +53,30 @@ app.get('/api/tasks/getcompleted',async (req,res)=>{
     }
 })
 
-//taskの削除
-app.delete('/api/tasks/taskDelete/:id',async (req,res)=>{
+//taskの作成
+app.post('/api/tasks/newtaskadd',async(req,res)=>{
+    const { t_name,memo,reward,deadline,} = req.body;
     try{
-        const taskid = parseInt(req.params.id, 10);
+        const Newtask = await prisma.task.create({
+            data:{
+                t_name:t_name,
+                memo:memo,
+                reward:reward,
+                deadline:deadline,
+                s_id:0
+            }
+        })
+    }catch(error){
+        console.log("タスクの追加に失敗しました");
+        res.status(500).json({ message: 'taskの追加エラー', error : error.message });
+    }
+});
+
+
+//taskの削除
+app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
+    try{
+        const taskid = parseInt(req.params.task_id, 10);
 
         const DeleteTask =  await prisma.task.delete({
             where:{
