@@ -72,6 +72,28 @@ app.post('/api/tasks/newtaskadd',async(req,res)=>{
     }
 });
 
+//taskの編集
+app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
+    try{
+        const taskid = parseInt(req.params.task_id, 10);
+        const { t_name,memo,reward,deadline,} = req.body;
+        const Edittask = await prisma.task.update({
+            where: {
+                task_id:taskid
+            },
+            data:{
+                t_name:t_name,
+                memo:memo,
+                reward:reward,
+                deadline:deadline,
+            }
+        });
+        console.log("task_id:"+taskid+"編集確認");
+    }catch(error){
+        console.log("タスクの編集に失敗しました");
+        res.status(500).json({ message: 'taskの編集エラー', error : error.message });
+    }
+})
 
 //taskの削除
 app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
@@ -83,7 +105,7 @@ app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
                 task_id: taskid
             }
         });
-        console.log("ID:"+taskid+"削除確認");
+        console.log("task_id:"+taskid+"削除確認");
     }catch (error){
         console.log("taskの削除エラー");
         res.status(500).json({ message: 'taskの削除エラー', error : error.message });
