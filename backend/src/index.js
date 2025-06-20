@@ -1,7 +1,9 @@
 //index.js
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
+app.use(cors());
 
 //prismaいんすたんす
 const { PrismaClient } = require('@prisma/client');
@@ -154,7 +156,7 @@ app.post('/api/users/userCreate', async (req, res) => {
 
 
 //終了タスクの合計
-app.get('/api/task/complete', async (req, res) => {
+app.get('/api/tasks/complete', async (req, res) => {
     try {
         const completedTask = await prisma.task.count({
             where: {
@@ -168,7 +170,7 @@ app.get('/api/task/complete', async (req, res) => {
 })
 
 //給料合計金額
-app.get('/api/task/salary', async (req, res) => {
+app.get('/api/tasks/salary', async (req, res) => {
     try {
         const totalSalary = await prisma.task.aggregate({
             where: {
@@ -183,6 +185,22 @@ app.get('/api/task/salary', async (req, res) => {
         res.status(500).json({ message: "給料合計金額取得エラー", error: error.message })
     }
 })
+
+//締め日登録
+// app.post('/api/users/cutoffDay', async (req, res) => {
+//     try {
+//         const { cutoff_day } = req.body;
+
+//         const updateUser = await prisma.user.update({
+//             where: { id: req.user.id }, // req.user.idは認証ミドルウェアで設定されていると仮定
+//             data: { cutoff_day }
+//         });
+//         res.status(200).json({ message: "締め日を更新しました", user: updateUser });
+//     } catch (error) {
+//         console.error("締め日登録エラー:", error);
+//         res.status(500).json({ message: "締め日登録エラー", error: error.message });
+//     }
+// })
 
 //一番下
 module.exports = app;
