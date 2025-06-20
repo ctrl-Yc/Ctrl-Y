@@ -2,13 +2,13 @@ import { SidebarItem } from "./SidebarItem"
 
 export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
     const menuItems = [
-        { id: 'tasks', text: 'お手伝い一覧', icon: 'list' },
+        { id: 'tasks', text: 'おてつだい一覧', icon: 'list' },
         { id: 'records', text: 'おこづかい記録', icon: 'money' },
         { id: 'settings', text: '設定', icon: 'settings' },
     ];
 
     return (
-        <aside className="sidebar w-64 bg-orange-300 text-white p-4 h-full flex flex-col">
+        <aside className="sidebar w-64 bg-orange-100 text-white p-4 h-full flex flex-col">
             <div>
                 <nav>
                     <ul className="space-y-2">
@@ -16,7 +16,9 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
                             <SidebarItem
                                 key={item.id}
                                 icon={item.icon}
+                                
                                 text={item.text}
+
                                 isActive={activeMenuItem === item.id}
                                 onClick={() => onMenuItemClick(item.id)} 
                             />
