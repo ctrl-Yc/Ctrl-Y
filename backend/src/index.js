@@ -1,7 +1,9 @@
 //index.js
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
+app.use(cors());
 
 //prismaいんすたんす
 const { PrismaClient } = require('@prisma/client');
@@ -77,6 +79,28 @@ app.post('/api/tasks/newtaskadd',async(req,res)=>{
     }
 });
 
+//taskの編集
+app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
+    try{
+        const taskid = parseInt(req.params.task_id, 10);
+        const { t_name,memo,reward,deadline,} = req.body;
+        const Edittask = await prisma.task.update({
+            where: {
+                task_id:taskid
+            },
+            data:{
+                t_name:t_name,
+                memo:memo,
+                reward:reward,
+                deadline:deadline,
+            }
+        });
+        console.log("task_id:"+taskid+"編集確認");
+    }catch(error){
+        console.log("タスクの編集に失敗しました");
+        res.status(500).json({ message: 'taskの編集エラー', error : error.message });
+    }
+})
 
 //taskの削除
 app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
@@ -88,8 +112,8 @@ app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
                 task_id: taskid
             }
         });
-        console.log("ID:" + taskid + "削除確認");
-    } catch (error) {
+        console.log("task_id:" + taskid + "削除確認");
+    }catch (error){
         console.log("taskの削除エラー");
         res.status(500).json({ message: 'taskの削除エラー', error : error.message });
     }
@@ -117,7 +141,7 @@ app.post('/api/users/userCreate', async (req, res) => {
 
     // JWT発行
     const token = jwt.sign(
-      { timestamp: new Date().toISOString() },
+      {user_id: user.user_id, timestamp: new Date().toISOString() },
       process.env.JWT_SECRET,
       // { expiresIn: '' } 必要なら有効期限を設定 '1h'など
     );
@@ -132,7 +156,7 @@ app.post('/api/users/userCreate', async (req, res) => {
 
 
 //終了タスクの合計
-app.get('/api/task/complete', async (req, res) => {
+app.get('/api/tasks/complete', async (req, res) => {
     try {
         const completedTask = await prisma.task.count({
             where: {
@@ -146,7 +170,7 @@ app.get('/api/task/complete', async (req, res) => {
 })
 
 //給料合計金額
-app.get('/api/task/salary', async (req, res) => {
+app.get('/api/tasks/salary', async (req, res) => {
     try {
         const totalSalary = await prisma.task.aggregate({
             where: {
@@ -161,8 +185,6 @@ app.get('/api/task/salary', async (req, res) => {
         res.status(500).json({ message: "給料合計金額取得エラー", error: error.message })
     }
 })
-
-
 
 // 子供のuser_idとc_nameを返します。(変更用)
 app.get('/api/child/setting', async (req, res) => {
@@ -182,6 +204,22 @@ app.get('/api/child/setting', async (req, res) => {
     });
     }
 });
+
+//締め日登録
+// app.post('/api/users/cutoffDay', async (req, res) => {
+//     try {
+//         const { cutoff_day } = req.body;
+
+//         const updateUser = await prisma.user.update({
+//             where: { id: req.user.id }, // req.user.idは認証ミドルウェアで設定されていると仮定
+//             data: { cutoff_day }
+//         });
+//         res.status(200).json({ message: "締め日を更新しました", user: updateUser });
+//     } catch (error) {
+//         console.error("締め日登録エラー:", error);
+//         res.status(500).json({ message: "締め日登録エラー", error: error.message });
+//     }
+// })
 
 //一番下
 module.exports = app;
