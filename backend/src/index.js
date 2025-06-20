@@ -74,5 +74,36 @@ app.delete('/api/tasks/taskDelete/:id',async (req,res)=>{
 //userの登録
 
 
+//終了タスクの合計
+app.get('/api/task/complete', async (req, res) => {
+    try {
+        const completedTask = await prisma.task.count({
+            where: {
+                s_id: 3
+            }
+        })
+        res.status(200).json({ completedTask: completedTask });
+    } catch (error) {
+        res.status(500).json({ message: "終了タスクの合計取得エラー", error: error.message })
+    }
+})
+
+//給料合計金額
+app.get('/api/task/salary', async (req, res) => {
+    try {
+        const totalSalary = await prisma.task.aggregate({
+            where: {
+                s_id: 3
+            },
+            _sum: {
+                reward: true
+            }
+        })
+        res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 })
+    } catch (error) {
+        res.status(500).json({ message: "給料合計金額取得エラー", error: error.message })
+    }
+})
+
 //一番下
 module.exports = app;
