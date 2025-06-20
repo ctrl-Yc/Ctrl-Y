@@ -7,7 +7,7 @@ export const Cards = ({ items, onItemClick, cardClassName = '' }) => {
                 <Card
                     key={item.id}
                     title={item.title}
-                    onClick={() => onItemClick(item.path)}
+                    onClick={() => onItemClick(item)}
                     className={cardClassName}
                 />
             ))}
