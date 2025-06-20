@@ -24,3 +24,17 @@ model Task {
   @@map("tasks") 
   @@schema("ctrl-Y")
 }
+
+model User {
+  user_id String  @id @default(uuid())
+  email        String   @db.Text
+  password     String   @db.Text
+  keyword      String?   @db.Text
+  cutoff_day   Boolean?
+  pay_day      Boolean?
+  registered_at DateTime  @default(now())
+  updated_at    DateTime @default(now())
+
+  @@map("parent_acc")
+  @@schema("ctrl-Y")
+}
