@@ -162,5 +162,26 @@ app.get('/api/task/salary', async (req, res) => {
     }
 })
 
+
+
+// 子供のuser_idとc_nameを返します。(変更用)
+app.get('/api/child/setting', async (req, res) => {
+    try {
+    const children = await prisma.child.findMany({
+    select: {
+        c_name: true,
+        user_id: true,
+    },
+    });
+
+    res.status(200).json(children);
+    } catch (error) {
+    res.status(500).json({ 
+    message: "子供一覧の取得エラー", 
+    error: error.message 
+    });
+    }
+});
+
 //一番下
 module.exports = app;

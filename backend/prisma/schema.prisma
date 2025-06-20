@@ -38,3 +38,15 @@ model User {
   @@map("parent_acc")
   @@schema("ctrl-Y")
 }
+
+model Child {
+  user_id String @id @default(uuid())
+  parent_id String
+  c_name String @db.Text
+  icon_path String @db.Text
+  registered_at DateTime @db.Timestamptz(6)
+  updated_at DateTime @db.Timestamptz(6)
+
+  @@map("child_acc")
+  @@schema("ctrl-Y")
+}
