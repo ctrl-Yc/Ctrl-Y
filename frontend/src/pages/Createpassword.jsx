@@ -8,9 +8,10 @@ export const Createpassword = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
- const handlepassword = async () => {
+ const handlePassword = async () => {
   if (!password) {
     alert('入力エラー', 'あいことばを入力してください');
+  return;
   }
   try {
     const response = await axios.post('',
@@ -49,7 +50,7 @@ export const Createpassword = () => {
       <CustomButton
         type="button"
         label="完了"
-        onClick={handlepassword}
+        onClick={handlePassword}
         className=''
       />
       <Link to={-1}>

@@ -12,6 +12,7 @@ export const Login = () => {
  const handleLogin = async () => {
   if (!email || !password) {
     alert('入力エラー', 'メールアドレスとパスワードを入力してください');
+    return;
   }
   try {
     const response = await axios.post('',
