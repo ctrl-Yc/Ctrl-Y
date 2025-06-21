@@ -16,7 +16,7 @@ export const Top = () => {
     // activeTab に応じて表示するメインコンテンツを切り替える関数
     const renderMainContent = () => {
         switch (activeTab) {
-            case 'task': // お手伝い一覧
+            case 'tasks': // お手伝い一覧
                 return <Tasks />;
             case 'records': // おこづかい記録
                 return <MoneyRecords />;
