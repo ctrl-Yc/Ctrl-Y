@@ -7,9 +7,10 @@ npm i
 ↓
 
 //prismaクライアント作成
-npx prisma generate
+//スキーマ変更時
+doppler run -- npx prisma generate
 
 ↓
 
-//dopplerからconst anonKey,const urlを取ってきてサーバ起動
+//サーバ起動
 doppler run -- npm run dev
