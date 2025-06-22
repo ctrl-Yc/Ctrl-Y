@@ -5,6 +5,7 @@ import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'; 
+import { SIGNUP_ENDPOINT } from "../config/api";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/users/userCreate', {
+      const response = await axios.post(SIGNUP_ENDPOINT, {
         email,
         password,
       },
