@@ -154,6 +154,41 @@ app.post('/api/users/userCreate', async (req, res) => {
   }
 });
 
+//Userログイン
+app.post("/api/users/login", async(req,res)=>{
+    try{
+        const { email, password } = req.body;
+
+        //ＤＢから検索
+        const select_user = await prisma.user.findUnique({
+            where: { email }
+        });
+        if(!select_user){
+            return res.status(400).json({ message: '設定されたEmailは存在しません'})
+        };
+        
+        //password合致
+        const passcheck  = await bcrypt.compare(password,select_user.password);
+        if(!passcheck){
+            return res.status(400).json({ message: 'passwordが間違っています'})
+        }
+
+        // JWT発行
+        const token = jwt.sign(
+            {user_id: select_user.user_id, timestamp: new Date().toISOString() },
+            process.env.JWT_SECRET,
+            // { expiresIn: '' } 
+        );
+
+        return res.status(200).json({ token });
+    }catch(error){
+        console.error('loginエラー:', error);
+        res.status(500).json({ message: 'loginエラー', error: error.message });
+    }
+})
+
+//token変わってないかの処理
+
 
 //終了タスクの合計
 app.get('/api/tasks/complete', async (req, res) => {
