@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
+import { CustomButton } from "./CustomButton";
 
 export const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -10,8 +11,9 @@ export const Tasks = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("/api/tasks");// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
+        const response = await axios.get("http://localhost:3000/api/tasks/Allget");// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
         setTasks(response.data);
+        console.log(response.data)
       } catch (err) {
         setError("タスクの取得に失敗しました");
       } finally {
@@ -22,6 +24,11 @@ export const Tasks = () => {
     fetchTasks();
   }, []);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    console.log('ボタンが押されました');
+  }
+
   if (loading) return <p>読み込み中...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -31,11 +38,27 @@ export const Tasks = () => {
 
   return visibleTasks.length === 0 ? (
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
+
   ) : (
-    <ul className="space-y-3">
-      {visibleTasks.map(task => (
-        <Task key={task.task_id} task={task} />
-      ))}
-    </ul>
+    <div>
+      <h1 className="">おてつだい一覧</h1>
+      <ul className="space-y-3">
+        {visibleTasks.map(task => (
+          <Task key={task.task_id} task={task} />
+        ))}
+      </ul>
+      <CustomButton
+        type="button"
+        label="完了報告を見る"
+        onClick={handleClick}
+        className=''
+      />
+      <CustomButton
+        type="button"
+        label="お手伝いを作成"
+        onClick={handleClick}
+        className=''
+      />
+    </div>
   )
 }
