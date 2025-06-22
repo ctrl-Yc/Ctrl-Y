@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
-import { TASKS_ALL_GET } from "../config/api"
+import { TASKS_ALL_GET } from "/src/config/api"
 
 export const Tasks = () => {
   const [tasks, setTasks] = useState([]);

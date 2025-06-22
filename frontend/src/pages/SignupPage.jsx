@@ -5,7 +5,7 @@ import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'; 
-import { SIGNUP_ENDPOINT } from "../config/api";
+import { SIGNUP_ENDPOINT } from "/src/config/api";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState('');
