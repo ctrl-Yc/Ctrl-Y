@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { Sidebar }  from "../components/ui/Sidebar"
+import { Sidebar } from "../components/ui/Sidebar"
 import { Tasks } from "../components/ui/Tasks";
 import { Settings } from "../components/ui/Settings";
-import { MoneyRecords }  from "../components/ui/MoneyRecords";
+import { MoneyRecords } from "../components/ui/MoneyRecords";
+import { SalarySettings } from "../components/ui/SalarySettings";
+import { ChildSettings } from "../components/ui/ChildSettings";
+import { NoticeSettings } from "../components/ui/NoticeSettings";
+import { AccountSettings } from "../components/ui/AccountSettings";
 
 export const Top = () => {
     const [activeTab, setActiveTab] = useState('tasks');
@@ -13,15 +17,28 @@ export const Top = () => {
         console.log(`メインコンテンツを ${itemId} に切り替えます`);
     };
 
-    // activeTab に応じて表示するメインコンテンツを切り替える関数
+    // Settings内カードのクリックで呼ばれる（Topで保持）
+    const handleSettingsItemClick = (settingId) => {
+        setActiveTab(`settings/${settingId}`);
+    };
+
+    // mainに表示するコンテンツ
     const renderMainContent = () => {
         switch (activeTab) {
-            case 'tasks': // お手伝い一覧
+            case 'tasks':
                 return <Tasks />;
-            case 'records': // おこづかい記録
+            case 'records':
                 return <MoneyRecords />;
-            case 'settings': // 設定
-                return <Settings />;
+            case 'settings':
+                return <Settings onSettingItemClick={handleSettingsItemClick} />;
+            case 'settings/salary':
+                return <SalarySettings />;
+            case 'settings/notice':
+                return <NoticeSettings />;
+            case 'settings/account':
+                return <AccountSettings />;
+            case 'settings/child':
+                return <ChildSettings />;
             default:
                 return <div>コンテンツがありません。</div>;
         }

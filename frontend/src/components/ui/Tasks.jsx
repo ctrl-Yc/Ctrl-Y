@@ -32,7 +32,9 @@ export const Tasks = () => {
   if (loading) return <p>読み込み中...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  const visibleTasks = tasks.filter(task => task.s_id !== 3);
+  const visibleTasks = Array.isArray(tasks)
+    ? tasks.filter(task => task.s_id !== 3)
+    : [];
 
   return visibleTasks.length === 0 ? (
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
