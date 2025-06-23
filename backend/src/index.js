@@ -240,6 +240,19 @@ app.post("/api/users/login", async (req, res) => {
     }
 });
 
+app.post("/api/users/rePassword", async (req, res) => {
+    try {
+        const { email } = req.body;
+        // DBから検索
+        const select_user = await prisma.user.findUnique({
+            where: email
+        })
+        res.status(200).json({ message: "パスワード再設定用のメールを送信しました" });
+    } catch (error) {
+        console.error("パスワード再設定エラー:", error);
+        res.status(500).json({ message: "パスワード再設定エラー", error: error.message });
+    }
+})
 
 //token変わってないかの処理
 
