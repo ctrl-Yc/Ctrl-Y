@@ -4,7 +4,7 @@ import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
 import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../config/api";
 
-export const Tasks = ({ setActiveTab }) => {
+export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,7 +47,14 @@ export const Tasks = ({ setActiveTab }) => {
       <h1 className="">{isViewingFinished ? "完了報告一覧" : "おてつだい一覧"}</h1>
       <ul className="space-y-3">
         {tasks.map(task => (
-          <Task key={task.task_id} task={task} />
+          <Task
+            key={task.task_id}
+            task={task}
+            onEdit={() => {
+              setSelectedTaskId(task.task_id);
+              setActiveTab('tasks/edit');
+            }}
+          />
         ))}
       </ul>
       <CustomButton

@@ -8,9 +8,11 @@ import { ChildSettings } from "../components/ui/ChildSettings";
 import { NoticeSettings } from "../components/ui/NoticeSettings";
 import { AccountSettings } from "../components/ui/AccountSettings";
 import { TaskCreate } from "../components/ui/TaskCreate";
+import { TaskEdit } from "../components/ui/TaskEdit";
 
 export const Top = () => {
     const [activeTab, setActiveTab] = useState('tasks');
+    const [selectedTaskId, setSelectedTaskId] = useState(null);
 
     // サイドバーの項目がクリックされたときに呼ばれる関数
     const handleSidebarItemClick = (itemId) => {
@@ -27,9 +29,11 @@ export const Top = () => {
     const renderMainContent = () => {
         switch (activeTab) {
             case 'tasks':
-                return <Tasks key={activeTab} setActiveTab={setActiveTab} />;
+                return <Tasks key={activeTab} setActiveTab={setActiveTab} setSelectedTaskId={setSelectedTaskId} />;
             case 'tasks/create':
                 return <TaskCreate setActiveTab={setActiveTab} />;
+            case 'tasks/edit':
+                return <TaskEdit taskId={selectedTaskId} setActiveTab={setActiveTab} />;
             case 'records':
                 return <MoneyRecords />;
             case 'settings':
