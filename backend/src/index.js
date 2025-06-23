@@ -72,52 +72,67 @@ app.get("/api/tasks/getcompleted", async (req, res) => {
 });
 
 //taskの作成
-app.post("/api/tasks/newtaskadd", async (req, res) => {
-  const { t_name, memo, reward, deadline } = req.body;
-  try {
-    const Newtask = await prisma.task.create({
-      data: {
-        t_name: t_name,
-        memo: memo,
-        reward: reward,
-        deadline: deadline,
-        s_id: 0,
-      },
-    });
-  } catch (error) {
-    console.log("タスクの追加に失敗しました");
-    res.status(500).json({ message: "taskの追加エラー", error: error.message });
-  }
+
+app.post('/api/tasks/newtaskadd',async(req,res)=>{
+    const { t_name,memo,reward,deadline,} = req.body;
+    try{
+        const newTask = await prisma.task.create({
+            data:{
+                t_name:t_name,
+                memo:memo,
+                reward:reward,
+                deadline:deadline,
+                s_id:0
+            }
+        })
+        res.status(200).json(newTask);
+    } catch(error) {
+        console.log("タスクの追加に失敗しました");
+        res.status(500).json({ message: 'taskの追加エラー', error : error.message });
+    }
 });
 
 //taskの編集
-app.patch("/api/tasks/taskEdit/:task_id", async (req, res) => {
-  try {
-    const taskid = parseInt(req.params.task_id, 10);
-    const { t_name, memo, reward, deadline } = req.body;
-    const Edittask = await prisma.task.update({
-      where: {
-        task_id: taskid,
-      },
-      data: {
-        t_name: t_name,
-        memo: memo,
-        reward: reward,
-        deadline: deadline,
-      },
-    });
-    console.log("task_id:" + taskid + "編集確認");
-  } catch (error) {
-    console.log("タスクの編集に失敗しました");
-    res.status(500).json({ message: "taskの編集エラー", error: error.message });
-  }
-});
+app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
+    try{
+        const taskid = parseInt(req.params.task_id, 10);
+        const { t_name,memo,reward,deadline,} = req.body;
+        const editTask = await prisma.task.update({
+            where: {
+                task_id:taskid
+            },
+            data:{
+                t_name:t_name,
+                memo:memo,
+                reward:reward,
+                deadline:deadline,
+            }
+        });
+        console.log("task_id:"+taskid+"編集確認");
+        res.status(200).json(editTask);
+    } catch(error) {
+        console.log("タスクの編集に失敗しました");
+        res.status(500).json({ message: 'taskの編集エラー', error : error.message });
+    }
+})
 
 //taskの削除
-app.delete("/api/tasks/taskDelete/:task_id", async (req, res) => {
-  try {
-    const taskid = parseInt(req.params.task_id, 10);
+app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
+    try{
+        const taskid = parseInt(req.params.task_id, 10);
 
+        const deleteTask =  await prisma.task.delete({
+            where:{
+                task_id: taskid
+            }
+        });
+        console.log("task_id:" + taskid + "削除確認");
+        res.status(200).json(deleteTask);
+    } catch (error) {
+        console.log("taskの削除エラー");
+        res.status(500).json({ message: 'taskの削除エラー', error : error.message });
+    }
+})
     const DeleteTask = await prisma.task.delete({
       where: {
         task_id: taskid,
@@ -159,8 +174,9 @@ app.post("/api/users/userCreate", async (req, res) => {
 
     // JWT発行
     const token = jwt.sign(
-      { user_id: user.user_id, timestamp: new Date().toISOString() },
-      process.env.JWT_SECRET
+    {user_id: user.user_id, timestamp: new Date().toISOString() },
+    process.env.JWT_SECRET,
+      // { expiresIn: '' } 必要なら有効期限を設定 '1h'など
     );
 
     // トークンをレスポンス
@@ -172,17 +188,35 @@ app.post("/api/users/userCreate", async (req, res) => {
 });
 
 //Userログイン
-app.post("/api/users/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+app.post("/api/users/login", async(req,res)=>{
+    try{
+        const { email, password } = req.body;
 
-    //ＤＢから検索
-    const isEmailExist = await prisma.user.findUnique({
-      where: { email },
-    });
+        //ＤＢから検索
+        const select_user = await prisma.user.findUnique({
+            where: { email }
+        });
+        if(!select_user){
+            return res.status(400).json({ message: '設定されたEmailは存在しません'})
+        };
+        
+        //password合致
+        const passcheck  = await bcrypt.compare(password,select_user.password);
+        if(!passcheck){
+            return res.status(400).json({ message: 'passwordが間違っています'})
+        }
 
-    if (!isEmailExist) {
-      return res.status(400).json({ message: "設定されたEmailは存在しません" });
+        // JWT発行
+        const token = jwt.sign(
+            {user_id: select_user.user_id, timestamp: new Date().toISOString() },
+            process.env.JWT_SECRET,
+            // { expiresIn: '' } 
+        );
+
+        return res.status(200).json({ token });
+    } catch(error) {
+        console.error('loginエラー:', error);
+        res.status(500).json({ message: 'loginエラー', error: error.message });
     }
 
     //password合致
