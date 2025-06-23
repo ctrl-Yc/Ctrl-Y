@@ -266,6 +266,7 @@ app.post("/child/login/:child_id", async (req, res) => {
 
 
 //ユーザーのパスワード再設定
+//mail送信の処理は未実装
 app.post("/api/users/rePassword", async (req, res) => {
     try {
         const { email } = req.body;
