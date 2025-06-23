@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
-import { Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 import { SIGNUP_ENDPOINT } from "/src/config/api";
+import { responseToken } from "../config/Token";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -29,8 +30,8 @@ export const SignupPage = () => {
         },
       }
     );
-    const responseToken = response.data.token;
-    localStorage.setItem('token', responseToken);
+    const Token = response.data.token;
+    responseToken(Token);
       console.log('登録成功:', response.data);
       alert('アカウント作成に成功しました！');
       navigate('/childname')

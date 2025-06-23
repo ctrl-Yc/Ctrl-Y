@@ -51,7 +51,6 @@ export const Tasks = ({ setActiveTab }) => {
       <CustomButton
         type="button"
         label="完了報告を見る"
-        onClick={handleClick}
         className=''
       />
       <CustomButton

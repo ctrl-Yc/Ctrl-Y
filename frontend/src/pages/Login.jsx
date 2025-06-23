@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton"
 import { InputField } from "../components/ui/InputField"
 import { Link, useNavigate } from "react-router-dom"
+import { getToken } from "../config/Token";
 import axios from "axios";
 
 export const Login = () => {
@@ -15,7 +16,7 @@ export const Login = () => {
       return;
     }
     try {
-      const response = await axios.post('',
+      const response = await axios.post('LOGIN_ENDPOINT',
         {
           email,
           password,
@@ -26,10 +27,10 @@ export const Login = () => {
           }
         }
       );
-      const responseToken = response.data.token;
-      localStorage.setItem('token', responseToken);
+      const Token = response.data.token;
+      getToken(Token);
       alert('成功', 'ログインに成功しました！');
-      navigate('./top', { state: { 'token': responseToken } });
+      navigate('./top', { state: { 'token': getToken } });
     } catch (error) {
       console.error('ログインエラー:', error);
       alert('失敗', 'ログインに失敗しました');
@@ -74,13 +75,6 @@ export const Login = () => {
             className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
              transition-colors duration-300 mx-auto flex items-center justify-center mt-4"
           />
-          <Link to={-1}>
-            <CustomButton
-              type="button"
-              label="戻る"
-              className=""
-            />
-          </Link>
         </form>
       </div>
 

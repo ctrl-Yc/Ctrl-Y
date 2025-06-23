@@ -2,11 +2,12 @@ import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate } from "react-router-dom";
+import { getToken } from "../config/Token";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
   const [c_name, setName] = useState('');
-   const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -14,8 +15,15 @@ export const Childsignup = () => {
       alert('入力エラー', '入力してください');
       return;
     }
+
+    const token = getToken();
+
+    if (!token) {
+      alert('トークンが見つかりません。親アカウントからやり直してください。');
+      return;
+    }
     try {
-      const response = await axios.post('', 
+      const response = await axios.post('CHILD_SIGNUP', 
       {
         c_name,
         keyword,
@@ -23,6 +31,7 @@ export const Childsignup = () => {
       {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
       }
     );
