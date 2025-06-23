@@ -16,7 +16,6 @@ const SALT_ROUNDS = 10;
 
 app.use(express.json());
 
-
 //tasksの全件取得
 app.get('/api/tasks/Allget',async (req,res)=>{
     try{
@@ -28,13 +27,13 @@ app.get('/api/tasks/Allget',async (req,res)=>{
     }
 })
 
-//終わっていないtasksの全件取得
+//未着手,実行中tasksの全件取得
 app.get('/api/tasks/getIncomplete',async (req,res)=>{
     try{
         const IncompleteTasks =  await prisma.task.findMany({
             where:{
                 s_id:{
-                    not:3
+                    in:[0,1]
                 }
             }
         });
@@ -45,8 +44,23 @@ app.get('/api/tasks/getIncomplete',async (req,res)=>{
     }
 })
 
-//終わっているtasksの全件取得
-app.get('/api/tasks/getcompleted',async (req,res)=>{
+//お手伝い終了タスクの全権取得
+app.get('/api/tasks/finishedHelping',async (req,res)=>{
+    try{
+        const completedTasks =  await prisma.task.findMany({
+            where:{
+                s_id:2
+            }
+        });
+        res.status(200).json(completedTasks);
+    } catch (error) {
+        console.log("お手伝い終了タスクの全件取得エラー");
+        res.status(500).json({ message: 'お手伝い終了タスクの全件取得エラー', error : error.message });
+    }
+})
+
+//承認済みtasksの全件取得
+app.get('/api/tasks/Approved',async (req,res)=>{
     try{
         const completedTasks =  await prisma.task.findMany({
             where:{
