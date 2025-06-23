@@ -27,7 +27,7 @@ model Task {
 
 model User {
   user_id String  @id @default(uuid())
-  email        String   @db.Text
+  email        String   @db.Text @unique
   password     String   @db.Text
   keyword      String?   @db.Text
   cutoff_day   Boolean?
