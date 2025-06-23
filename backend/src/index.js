@@ -27,6 +27,27 @@ app.get("/api/tasks/Allget", async (req, res) => {
     }
 });
 
+// taskの1件取得(task_no指定)
+app.get('/api/tasks/getTask/:task_id', async (req, res) => {
+    try {
+        const taskid = parseInt(req.params.task_id, 10);
+        const task = await prisma.task.findFirst({
+            where: {
+                task_id: taskid
+            }
+        });
+
+        if (!task) {
+            return res.status(404).json({ message: "指定されたタスクが存在しません" });
+        }
+
+        res.status(200).json(task);
+    } catch (error) {
+        console.log("taskの1件取得エラー");
+        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
+    }
+});
+
 
 //未着手,実行中tasksの全件取得
 app.get('/api/tasks/getIncomplete',async (req,res)=>{
@@ -364,6 +385,8 @@ app.get("/api/child/setting", async (req, res) => {
     });
     }
 });
+
+
 
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {
