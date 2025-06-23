@@ -25,4 +25,5 @@ app.listen(port, () => {
   console.log(`Anon Key: ${anonKey}`)
   console.log(`${connect}`)
   console.log(process.env.DB_URL);
+  console.log(process.env.JWT_SECRET)
 })
