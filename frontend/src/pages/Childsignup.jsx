@@ -5,18 +5,20 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
-  const [name, setName] = useState('');
+  const [c_name, setName] = useState('');
+   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    if (!name) {
-      alert('入力エラー', '名前を入力してください');
+    if (!c_name || !keyword) {
+      alert('入力エラー', '入力してください');
       return;
     }
-
     try {
-      const response = await axios.post('', {
-        name,
+      const response = await axios.post('', 
+      {
+        c_name,
+        keyword,
       },
       {
         headers: {
@@ -26,7 +28,7 @@ export const Childsignup = () => {
     );
 
       console.log('登録成功:', response.data);
-      alert('名前を入力完了！');
+      alert('入力完了！');
       navigate('./')
     } catch (error) {
       console.error('エラー:', error);
@@ -41,8 +43,15 @@ export const Childsignup = () => {
         <p>名前を入力してください</p>
         <InputField
           type="name"
-          value={name}
+          value={c_name}
           onChange={e => setName(e.target.value)}
+          className=""
+        />
+        <InputField
+          type="password"
+          placeholder="あいことばを入力"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
           className=""
         />
         <CustomButton

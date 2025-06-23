@@ -74,13 +74,13 @@ export const Login = () => {
             className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
              transition-colors duration-300 mx-auto flex items-center justify-center mt-4"
           />
-          {/* <Link to={-1}>
+          <Link to={-1}>
             <CustomButton
               type="button"
               label="戻る"
               className=""
             />
-          </Link> */}
+          </Link>
         </form>
       </div>
 
