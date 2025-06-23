@@ -25,6 +25,11 @@ export const Tasks = ({ setActiveTab }) => {
     fetchTasks();
   }, []);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    console.log('ボタンが押されました');
+  }
+
   const handleCreateClick = (e) => {
     e.preventDefault();
     setActiveTab('tasks/create');
