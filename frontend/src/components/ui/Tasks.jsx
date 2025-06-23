@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
+import { TASKS_ALL_GET } from "/src/config/api"
 
 export const Tasks = ({ setActiveTab }) => {
   const [tasks, setTasks] = useState([]);
@@ -11,7 +12,7 @@ export const Tasks = ({ setActiveTab }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/tasks/getIncomplete");// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
+        const response = await axios.get(TASKS_ALL_GET);// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
         setTasks(response.data);
         console.log(response.data)
       } catch (err) {
