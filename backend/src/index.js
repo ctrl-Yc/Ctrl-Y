@@ -27,43 +27,53 @@ app.get("/api/tasks/Allget", async (req, res) => {
     }
 });
 
-//終わっていないtasksの全件取得
-app.get("/api/tasks/getIncomplete", async (req, res) => {
-    try {
-    const IncompleteTasks = await prisma.task.findMany({
-    where: {
-        s_id: {
-        not: 3,
-        },
-    },
-    });
-    res.status(200).json(IncompleteTasks);
-    } catch (error) {
-    console.log("終わっていないtasksの全件取得エラー");
-    res.status(500).json({
-        message: "終わっていないtasksの全件取得エラー",
-        error: error.message,
-    });
-    }
-});
 
-//終わっているtasksの全件取得
-app.get("/api/tasks/getcompleted", async (req, res) => {
-    try {
-    const completedTasks = await prisma.task.findMany({
-    where: {
-        s_id: 3,
-    },
-    });
-    res.status(200).json(completedTasks);
+//未着手,実行中tasksの全件取得
+app.get('/api/tasks/getIncomplete',async (req,res)=>{
+    try{
+        const IncompleteTasks =  await prisma.task.findMany({
+            where:{
+                s_id:{
+                    in:[0,1]
+                }
+            }
+        });
+        res.status(200).json(IncompleteTasks);
     } catch (error) {
-    console.log("終わっていないtasksの全件取得エラー");
-    res.status(500).json({
-        message: "終わっていないtasksの全件取得エラー",
-        error: error.message,
-    });
+        console.log("終わっていないtasksの全件取得エラー");
+        res.status(500).json({ message: '終わっていないtasksの全件取得エラー', error : error.message });
     }
-});
+})
+
+//お手伝い終了タスクの全権取得
+app.get('/api/tasks/finishedHelping',async (req,res)=>{
+    try{
+        const completedTasks =  await prisma.task.findMany({
+            where:{
+                s_id:2
+            }
+        });
+        res.status(200).json(completedTasks);
+    } catch (error) {
+        console.log("お手伝い終了タスクの全件取得エラー");
+        res.status(500).json({ message: 'お手伝い終了タスクの全件取得エラー', error : error.message });
+    }
+})
+
+//承認済みtasksの全件取得
+app.get('/api/tasks/Approved',async (req,res)=>{
+    try{
+        const completedTasks =  await prisma.task.findMany({
+            where:{
+                s_id:3
+            }
+        });
+        res.status(200).json(completedTasks);
+    } catch (error) {
+        console.log("終わっていないtasksの全件取得エラー");
+        res.status(500).json({ message: '終わっていないtasksの全件取得エラー', error : error.message });
+    }
+})
 
 //taskの作成
 

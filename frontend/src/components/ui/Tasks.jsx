@@ -4,7 +4,7 @@ import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
 import { TASKS_ALL_GET } from "/src/config/api"
 
-export const Tasks = () => {
+export const Tasks = ({ setActiveTab }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,9 +25,9 @@ export const Tasks = () => {
     fetchTasks();
   }, []);
 
-  const handleClick = (e) => {
+  const handleCreateClick = (e) => {
     e.preventDefault();
-    console.log('ボタンが押されました');
+    setActiveTab('tasks/create');
   }
 
   if (loading) return <p>読み込み中...</p>;
@@ -57,7 +57,7 @@ export const Tasks = () => {
       <CustomButton
         type="button"
         label="お手伝いを作成"
-        onClick={handleClick}
+        onClick={handleCreateClick}
         className=''
       />
     </div>
