@@ -24,7 +24,7 @@ export const Settings = ({ onSettingItemClick }) => {
             onItemClick={(item) => handleClick(item.id)}
             cardClassName=""
           />
-        
+
       </div>
   )
 }

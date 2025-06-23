@@ -41,25 +41,32 @@ export const Tasks = () => {
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
 
   ) : (
-    <div>
-      <h1 className="">おてつだい一覧</h1>
-      <ul className="space-y-3">
-        {visibleTasks.map(task => (
-          <Task key={task.task_id} task={task} />
-        ))}
-      </ul>
-      <CustomButton
-        type="button"
-        label="完了報告を見る"
-        onClick={handleClick}
-        className=''
-      />
-      <CustomButton
-        type="button"
-        label="お手伝いを作成"
-        onClick={handleClick}
-        className=''
-      />
+    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+      <h1 className="text-5xl font-bold p-16">おてつだい一覧</h1>
+      <div>
+        <ul className="w-3/4 space-y-8 space-y-2 mx-auto">
+          {visibleTasks.map(task => (
+            <Task key={task.task_id} task={task} />
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex items-center justify-center space-y-4 my-8">
+        <CustomButton
+          type="button"
+          label="完了報告を見る"
+          onClick={handleClick}
+          className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+          transition-colors duration-300 mx-auto'
+        />
+        <CustomButton
+          type="button"
+          label="お手伝いを作成"
+          onClick={handleClick}
+          className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+          transition-colors duration-300 mx-auto'
+        />
+      </div>
     </div>
   )
 }
