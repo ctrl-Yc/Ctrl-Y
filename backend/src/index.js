@@ -271,7 +271,7 @@ app.post("/api/users/rePassword", async (req, res) => {
         const { email } = req.body;
         // DBから検索
         const select_user = await prisma.user.findUnique({
-            where: email
+            where: { email }
         })
         res.status(200).json({ message: "パスワード再設定用のメールを送信しました" });
     } catch (error) {
