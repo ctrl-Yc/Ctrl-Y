@@ -4,6 +4,7 @@ import { InputField } from "../components/ui/InputField"
 import { Link, useNavigate } from "react-router-dom"
 import { getToken } from "../config/Token";
 import axios from "axios";
+import { LOGIN_ENDPOINT } from "../config/api";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ export const Login = () => {
       return;
     }
     try {
-      const response = await axios.post('LOGIN_ENDPOINT',
+      const response = await axios.post(LOGIN_ENDPOINT,
         {
           email,
           password,
@@ -30,7 +31,7 @@ export const Login = () => {
       const Token = response.data.token;
       getToken(Token);
       alert('成功', 'ログインに成功しました！');
-      navigate('./top', { state: { 'token': getToken } });
+      navigate('./top', { state: { token: getToken(Token) } });
     } catch (error) {
       console.error('ログインエラー:', error);
       alert('失敗', 'ログインに失敗しました');
@@ -40,7 +41,6 @@ export const Login = () => {
 
 
   return (
-    <>
       <div className="bg-orange-100 h-screen">
         <h1 className="text-6xl font-bold text-center w-full py-30">ログイン</h1>
         <form>
@@ -77,7 +77,5 @@ export const Login = () => {
           />
         </form>
       </div>
-
-    </>
   )
 }
