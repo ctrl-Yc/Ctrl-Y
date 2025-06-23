@@ -3,7 +3,7 @@ import axios from "axios";
 import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
 
-export const Tasks = () => {
+export const Tasks = ({ setActiveTab }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ export const Tasks = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/tasks/Allget");// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
+        const response = await axios.get("http://localhost:3000/api/tasks/getIncomplete");// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
         setTasks(response.data);
         console.log(response.data)
       } catch (err) {
@@ -27,6 +27,11 @@ export const Tasks = () => {
   const handleClick = (e) => {
     e.preventDefault();
     console.log('ボタンが押されました');
+  }
+
+  const handleCreateClick = (e) => {
+    e.preventDefault();
+    setActiveTab('tasks/create');
   }
 
   if (loading) return <p>読み込み中...</p>;
@@ -56,7 +61,7 @@ export const Tasks = () => {
       <CustomButton
         type="button"
         label="お手伝いを作成"
-        onClick={handleClick}
+        onClick={handleCreateClick}
         className=''
       />
     </div>
