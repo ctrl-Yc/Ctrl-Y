@@ -64,7 +64,7 @@ app.get('/api/tasks/getcompleted',async (req,res)=>{
 app.post('/api/tasks/newtaskadd',async(req,res)=>{
     const { t_name,memo,reward,deadline,} = req.body;
     try{
-        const Newtask = await prisma.task.create({
+        const newTask = await prisma.task.create({
             data:{
                 t_name:t_name,
                 memo:memo,
@@ -73,7 +73,8 @@ app.post('/api/tasks/newtaskadd',async(req,res)=>{
                 s_id:0
             }
         })
-    }catch(error){
+        res.status(200).json(newTask);
+    } catch(error) {
         console.log("タスクの追加に失敗しました");
         res.status(500).json({ message: 'taskの追加エラー', error : error.message });
     }
@@ -84,7 +85,7 @@ app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
     try{
         const taskid = parseInt(req.params.task_id, 10);
         const { t_name,memo,reward,deadline,} = req.body;
-        const Edittask = await prisma.task.update({
+        const editTask = await prisma.task.update({
             where: {
                 task_id:taskid
             },
@@ -96,7 +97,8 @@ app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
             }
         });
         console.log("task_id:"+taskid+"編集確認");
-    }catch(error){
+        res.status(200).json(editTask);
+    } catch(error) {
         console.log("タスクの編集に失敗しました");
         res.status(500).json({ message: 'taskの編集エラー', error : error.message });
     }
@@ -107,13 +109,14 @@ app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
     try{
         const taskid = parseInt(req.params.task_id, 10);
 
-        const DeleteTask =  await prisma.task.delete({
+        const deleteTask =  await prisma.task.delete({
             where:{
                 task_id: taskid
             }
         });
         console.log("task_id:" + taskid + "削除確認");
-    }catch (error){
+        res.status(200).json(deleteTask);
+    } catch (error) {
         console.log("taskの削除エラー");
         res.status(500).json({ message: 'taskの削除エラー', error : error.message });
     }
@@ -141,8 +144,8 @@ app.post('/api/users/userCreate', async (req, res) => {
 
     // JWT発行
     const token = jwt.sign(
-      {user_id: user.user_id, timestamp: new Date().toISOString() },
-      process.env.JWT_SECRET,
+    {user_id: user.user_id, timestamp: new Date().toISOString() },
+    process.env.JWT_SECRET,
       // { expiresIn: '' } 必要なら有効期限を設定 '1h'など
     );
 
@@ -181,7 +184,7 @@ app.post("/api/users/login", async(req,res)=>{
         );
 
         return res.status(200).json({ token });
-    }catch(error){
+    } catch(error) {
         console.error('loginエラー:', error);
         res.status(500).json({ message: 'loginエラー', error: error.message });
     }
