@@ -11,6 +11,27 @@ exports.getAllTasks = async (req,res)=>{
     }
 }
 
+exports.getOneTasks = async (req,res) =>{
+    try{
+        const taskId = parseInt(req.params.task_id, 10); 
+        const task =  await tasksServices.getOneTask(taskId);
+
+        if (!task) {
+            return res.status(404).json({ message: "指定されたタスクが存在しません" });
+        }
+
+        res.status(200).json(task);
+    }catch(error){
+        console.error("taskの1件取得エラー");
+        if (error.statusCode) {
+            return res.status(error.statusCode).json({ message: error.message });
+        }
+
+        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
+    }
+}
+
+
 exports.getIncompleteTasks = async (req,res)=>{
     try{
         const IncompleteTasks = await tasksServices.findIncompleteTasks();

@@ -8,6 +8,15 @@ exports.findAllTasks = async () =>{
     return await prisma.task.findMany();
 };
 
+// taskの1件取得(task_no指定)
+exports.getOneTask = async (taskId) =>{
+    return await prisma.task.findFirst({
+            where: {
+                task_id: taskId
+            }
+        });
+}
+
 //未着手,実行中tasksの全件取得
 exports.findIncompleteTasks = async () =>{
     return await prisma.task.findMany({

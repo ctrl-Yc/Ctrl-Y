@@ -18,7 +18,9 @@ router.post('/newtaskadd',TasksController.postNewTasks);
 
 router.patch('/taskEdit/:task_id',TasksController.patchEdiTasks);
 
-router.delete('/api/tasks/taskDelete/:task_id',TasksController.deleteTasks);
+router.delete('/taskDelete/:task_id',TasksController.deleteTasks);
+
+router.get('/getOnetask/:task_id',TasksController.getOneTasks);
 
 
 module.exports = router;

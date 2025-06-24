@@ -18,30 +18,7 @@ app.use(express.json());
 //ルートインポート
 const tasksRoutes = require('./routes/tasksRoutes');
 
-// taskの1件取得(task_no指定)
-app.get('/api/tasks/getTask/:task_id', async (req, res) => {
-    try {
-        const taskid = parseInt(req.params.task_id, 10);
-        const task = await prisma.task.findFirst({
-            where: {
-                task_id: taskid
-            }
-        });
-
-        if (!task) {
-            return res.status(404).json({ message: "指定されたタスクが存在しません" });
-        }
-
-        res.status(200).json(task);
-    } catch (error) {
-        console.log("taskの1件取得エラー");
-        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
-    }
-});
-
-
 app.use('/api/tasks', tasksRoutes); 
-
 
 
 
