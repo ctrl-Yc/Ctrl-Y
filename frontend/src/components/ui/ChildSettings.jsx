@@ -49,8 +49,10 @@ export const ChildSettings = () => {
     console.log('決定ボタンが押されました');
   };
   return (
-    <div>
-      <h1>子供</h1>
+    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+      <div className="flex justify-between items-center">
+                <h2 className="text-5xl font-bold p-16">子供</h2>
+            </div>
       <p>あいことばの変更</p>
       <InputField
         type="text"
