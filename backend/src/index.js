@@ -1,40 +1,61 @@
 //index.js
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
 const app = express();
 
 app.use(cors());
 
 //prismaいんすたんす
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // JWTとbcryptのインポート
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10;
 
 app.use(express.json());
 
-
 //tasksの全件取得
-app.get('/api/tasks/Allget',async (req,res)=>{
-    try{
-        const AllTasks =  await prisma.task.findMany();
-        res.status(200).json(AllTasks);
+app.get("/api/tasks/Allget", async (req, res) => {
+    try {
+    const AllTasks = await prisma.task.findMany();
+    res.status(200).json(AllTasks);
     } catch (error) {
-        console.log("tasksの全件取得エラー");
-        res.status(500).json({ message: 'tasksの全件取得エラー', error : error.message });
+    console.log("tasksの全件取得エラー");
+    res.status(500).json({ message: "tasksの全件取得エラー", error: error.message });
     }
-})
+});
 
-//終わっていないtasksの全件取得
+// taskの1件取得(task_no指定)
+app.get('/api/tasks/getTask/:task_id', async (req, res) => {
+    try {
+        const taskid = parseInt(req.params.task_id, 10);
+        const task = await prisma.task.findFirst({
+            where: {
+                task_id: taskid
+            }
+        });
+
+        if (!task) {
+            return res.status(404).json({ message: "指定されたタスクが存在しません" });
+        }
+
+        res.status(200).json(task);
+    } catch (error) {
+        console.log("taskの1件取得エラー");
+        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
+    }
+});
+
+
+//未着手,実行中tasksの全件取得
 app.get('/api/tasks/getIncomplete',async (req,res)=>{
     try{
         const IncompleteTasks =  await prisma.task.findMany({
             where:{
                 s_id:{
-                    not:3
+                    in:[0,1]
                 }
             }
         });
@@ -45,8 +66,23 @@ app.get('/api/tasks/getIncomplete',async (req,res)=>{
     }
 })
 
-//終わっているtasksの全件取得
-app.get('/api/tasks/getcompleted',async (req,res)=>{
+//お手伝い終了タスクの全権取得
+app.get('/api/tasks/finishedHelping',async (req,res)=>{
+    try{
+        const completedTasks =  await prisma.task.findMany({
+            where:{
+                s_id:2
+            }
+        });
+        res.status(200).json(completedTasks);
+    } catch (error) {
+        console.log("お手伝い終了タスクの全件取得エラー");
+        res.status(500).json({ message: 'お手伝い終了タスクの全件取得エラー', error : error.message });
+    }
+})
+
+//承認済みtasksの全件取得
+app.get('/api/tasks/Approved',async (req,res)=>{
     try{
         const completedTasks =  await prisma.task.findMany({
             where:{
@@ -61,10 +97,11 @@ app.get('/api/tasks/getcompleted',async (req,res)=>{
 })
 
 //taskの作成
+
 app.post('/api/tasks/newtaskadd',async(req,res)=>{
     const { t_name,memo,reward,deadline,} = req.body;
     try{
-        const Newtask = await prisma.task.create({
+        const newTask = await prisma.task.create({
             data:{
                 t_name:t_name,
                 memo:memo,
@@ -73,7 +110,8 @@ app.post('/api/tasks/newtaskadd',async(req,res)=>{
                 s_id:0
             }
         })
-    }catch(error){
+        res.status(200).json(newTask);
+    } catch(error) {
         console.log("タスクの追加に失敗しました");
         res.status(500).json({ message: 'taskの追加エラー', error : error.message });
     }
@@ -84,7 +122,7 @@ app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
     try{
         const taskid = parseInt(req.params.task_id, 10);
         const { t_name,memo,reward,deadline,} = req.body;
-        const Edittask = await prisma.task.update({
+        const editTask = await prisma.task.update({
             where: {
                 task_id:taskid
             },
@@ -96,7 +134,8 @@ app.patch('/api/tasks/taskEdit/:task_id',async (req,res)=>{
             }
         });
         console.log("task_id:"+taskid+"編集確認");
-    }catch(error){
+        res.status(200).json(editTask);
+    } catch(error) {
         console.log("タスクの編集に失敗しました");
         res.status(500).json({ message: 'taskの編集エラー', error : error.message });
     }
@@ -107,103 +146,247 @@ app.delete('/api/tasks/taskDelete/:task_id',async (req,res)=>{
     try{
         const taskid = parseInt(req.params.task_id, 10);
 
-        const DeleteTask =  await prisma.task.delete({
+        const deleteTask =  await prisma.task.delete({
             where:{
                 task_id: taskid
             }
         });
         console.log("task_id:" + taskid + "削除確認");
-    }catch (error){
+        res.status(200).json(deleteTask);
+    } catch (error) {
         console.log("taskの削除エラー");
         res.status(500).json({ message: 'taskの削除エラー', error : error.message });
     }
 })
 
+app.delete('/api/tasks/:taskid', async (req, res) => {
+    try {
+    const taskid = req.params.taskid;
 
-//userの登録
-app.post('/api/users/userCreate', async (req, res) => {
+    const task = await prisma.task.findUnique({
+    where: { task_id: taskid }
+    });
+    if (!task) {
+    return res.status(404).json({ message: "指定されたタスクが存在しません" });
+    }
+
+    const deletedTask = await prisma.task.delete({
+    where: { task_id: taskid },
+    });
+
+    console.log("task_id:" + taskid + " を削除しました");
+    res.status(200).json(deletedTask);
+
+    } catch (error) {
+    console.log("taskの削除エラー", error);
+    res.status(500).json({ message: "taskの削除エラー", error: error.message });
+    }
+});
+
+
+app.post("/api/users/userCreate", async (req, res) => {
     try {
     const { email, password } = req.body;
 
     // パスワードハッシュ化
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
+    // Email重複チェック
+    const isEmailExist = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (isEmailExist) {
+        return res.status(400).json({ message: "このEmailはすでに登録されています。" });
+    }
+
     // DB登録
-    await prisma.user.create({
-    data: {
+    const user = await prisma.user.create({
+        data: {
         email,
         password: hashedPassword,
-        keyword: '',
+        keyword: "",
         cutoff_day: false,
         pay_day: false,
-    },
+        },
     });
 
     // JWT発行
     const token = jwt.sign(
-      {user_id: user.user_id, timestamp: new Date().toISOString() },
-      process.env.JWT_SECRET,
+    {user_id: user.user_id, timestamp: new Date().toISOString() },
+    process.env.JWT_SECRET,
       // { expiresIn: '' } 必要なら有効期限を設定 '1h'など
     );
 
-    // トークンのみをレスポンス
+    // トークンをレスポンス
     res.status(200).json({ token });
-  } catch (error) {
-    console.error('userの登録エラー:', error);
-    res.status(500).json({ message: 'userの登録エラー', error: error.message });
+    } catch (error) {
+    console.error("userの登録エラー:", error);
+    res.status(500).json({ message: "userの登録エラー", error: error.message });
+    }
+});
+
+//Userログイン
+app.post("/api/users/login", async (req, res) => {
+    try {
+    const { email, password } = req.body;
+
+    // DBから検索
+    const select_user = await prisma.user.findUnique({
+        where: { email }
+    });
+
+    if (!select_user) {
+        return res.status(400).json({ message: '設定されたEmailは存在しません' });
+    }
+
+    // password合致
+    const passcheck = await bcrypt.compare(password, select_user.password);
+    if (!passcheck) {
+        return res.status(400).json({ message: 'passwordが間違っています' });
+    }
+
+    // JWT発行
+    const token = jwt.sign(
+        { user_id: select_user.user_id, timestamp: new Date().toISOString() },
+        process.env.JWT_SECRET
+      // { expiresIn: '1h' } など設定可能
+    );
+
+    return res.status(200).json({ token });
+
+    } catch (error) {
+    console.error('loginエラー:', error);
+    res.status(500).json({ message: 'loginエラー', error: error.message });
+    }
+});
+
+//子供のログイン
+app.post("/child/login/:child_id", async (req, res) => {
+    try {
+        const user_id = req.params.child_id;
+
+        const select_child = await prisma.child.findFirst({
+            where: {user_id: user_id}
+        })
+        if (!select_child) {
+            return res.status(400).json({ message: '指定された子供のIDは存在しません' });
+        }
+            // JWT発行
+            const token = jwt.sign(
+                { user_id: select_child.user_id, timestamp: new Date().toISOString() },
+                process.env.JWT_SECRET
+            )
+
+        res.status(200).json({ token, child_id: select_child.user_id });
+    } catch (error) {
+        console.error("子供のログインエラー:", error);
+        res.status(500).json({ message: "子供のログインエラー", error: error.message });
+    }
+})
+
+
+//ユーザーのパスワード再設定
+//mail送信の処理は未実装
+app.post("/api/users/rePassword", async (req, res) => {
+    try {
+        const { email } = req.body;
+        // DBから検索
+        const select_user = await prisma.user.findUnique({
+            where: { email }
+        })
+        res.status(200).json({ message: "パスワード再設定用のメールを送信しました" });
+    } catch (error) {
+        console.error("パスワード再設定エラー:", error);
+        res.status(500).json({ message: "パスワード再設定エラー", error: error.message });
+    }
+})
+
+//token変わってないかの処理
+
+//終了タスクの合計
+app.get("/api/tasks/complete", async (req, res) => {
+    try {
+    const completedTask = await prisma.task.count({
+        where: {
+        s_id: 3,
+        },
+    });
+    res.status(200).json({ completedTask: completedTask });
+    } catch (error) {
+    res.status(500).json({ message: "終了タスクの合計取得エラー", error: error.message });
   }
 });
 
-
-//終了タスクの合計
-app.get('/api/tasks/complete', async (req, res) => {
+//給料合計金額 変更 
+app.get("/api/tasks/salary", async (req, res) => {
     try {
-        const completedTask = await prisma.task.count({
-            where: {
-                s_id: 3
-            }
-        })
-        res.status(200).json({ completedTask: completedTask });
+    const totalSalary = await prisma.task.aggregate({
+        where: {
+        s_id: 3,
+        },
+        _sum: {
+        reward: true,
+        },
+    });
+    res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 });
     } catch (error) {
-        res.status(500).json({ message: "終了タスクの合計取得エラー", error: error.message })
+    res.status(500).json({ message: "給料合計金額取得エラー", error: error.message });
     }
-})
+});
 
-//給料合計金額
-app.get('/api/tasks/salary', async (req, res) => {
+app.post("/api/child/childCreate", async (req, res) => {
     try {
-        const totalSalary = await prisma.task.aggregate({
-            where: {
-                s_id: 3
-            },
-            _sum: {
-                reward: true
-            }
-        })
-        res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 })
-    } catch (error) {
-        res.status(500).json({ message: "給料合計金額取得エラー", error: error.message })
+    // トークンの検証・デコード
+    const { c_name, token } = req.body;
+    let decoded;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return res.status(403).json({ message: "トークンが無効です" });
     }
-})
+
+    // デコードしたuser_idをparent_idに使う
+    const parent_id = decoded.user_id;
+
+    const childCreate = await prisma.child.create({
+        data: {
+        c_name: c_name,
+        parent_id: parent_id,
+        },
+    });
+
+    res.status(200).json({ user_id: childCreate.user_id});
+
+    } catch (error) {
+    console.error("子供の登録エラー:", error);
+    res.status(500).json({ message: "子供の登録エラー", error: error.message });
+    }
+});
+
+    
+    
 
 // 子供のuser_idとc_nameを返します。(変更用)
-app.get('/api/child/setting', async (req, res) => {
+app.get("/api/child/setting", async (req, res) => {
     try {
     const children = await prisma.child.findMany({
-    select: {
+        select: {
         c_name: true,
         user_id: true,
-    },
+        },
     });
 
     res.status(200).json(children);
     } catch (error) {
-    res.status(500).json({ 
-    message: "子供一覧の取得エラー", 
-    error: error.message 
+    res.status(500).json({
+        message: "子供一覧の取得エラー",
+        error: error.message,
     });
     }
 });
+
+
 
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {

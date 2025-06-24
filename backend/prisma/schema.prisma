@@ -27,7 +27,7 @@ model Task {
 
 model User {
   user_id String  @id @default(uuid())
-  email        String   @db.Text
+  email        String   @db.Text @unique
   password     String   @db.Text
   keyword      String?   @db.Text
   cutoff_day   Boolean?
@@ -43,9 +43,9 @@ model Child {
   user_id String @id @default(uuid())
   parent_id String
   c_name String @db.Text
-  icon_path String @db.Text
-  registered_at DateTime @db.Timestamptz(6)
-  updated_at DateTime @db.Timestamptz(6)
+  icon_path String? @db.Text
+  registered_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   @@map("child_acc")
   @@schema("ctrl-Y")
