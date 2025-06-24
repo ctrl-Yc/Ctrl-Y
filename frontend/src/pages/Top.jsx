@@ -7,6 +7,7 @@ import { SalarySettings } from "../components/ui/SalarySettings";
 import { ChildSettings } from "../components/ui/ChildSettings";
 import { NoticeSettings } from "../components/ui/NoticeSettings";
 import { AccountSettings } from "../components/ui/AccountSettings";
+import { TaskCreate } from "../components/ui/TaskCreate";
 
 export const Top = () => {
     const [activeTab, setActiveTab] = useState('tasks');
@@ -26,7 +27,9 @@ export const Top = () => {
     const renderMainContent = () => {
         switch (activeTab) {
             case 'tasks':
-                return <Tasks />;
+                return <Tasks key={activeTab} setActiveTab={setActiveTab} />;
+            case 'tasks/create':
+                return <TaskCreate setActiveTab={setActiveTab} />;
             case 'records':
                 return <MoneyRecords />;
             case 'settings':

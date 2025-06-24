@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
-import { TASKS_ALL_GET } from "/src/config/api"
+import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../config/api";
 
-export const Tasks = () => {
+export const Tasks = ({ setActiveTab }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isViewingFinished, setIsViewingFinished] = useState(false);
 
   useEffect(() => {
     const fetchTasks = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(TASKS_ALL_GET);// エラー回避のため仮のURL、後でURL指定する！！！！！！！！！！！！
+        const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
+        const response = await axios.get(endpoint);
         setTasks(response.data);
-        console.log(response.data)
       } catch (err) {
         setError("タスクの取得に失敗しました");
       } finally {
@@ -23,23 +25,23 @@ export const Tasks = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, [isViewingFinished]);
 
-  const handleClick = (e) => {
+  const handleToggleView = (e) => {
     e.preventDefault();
-    console.log('ボタンが押されました');
+    setIsViewingFinished(prev => !prev);
+  };
+
+  const handleCreateClick = (e) => {
+    e.preventDefault();
+    setActiveTab('tasks/create');
   }
 
   if (loading) return <p>読み込み中...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
-  const visibleTasks = Array.isArray(tasks)
-    ? tasks.filter(task => task.s_id !== 3)
-    : [];
-
-  return visibleTasks.length === 0 ? (
+  return tasks.length === 0 ? (
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
-
   ) : (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <h1 className="text-5xl font-bold p-16">おてつだい一覧</h1>
