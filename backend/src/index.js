@@ -306,26 +306,47 @@ app.post("/api/users/rePassword", async (req, res) => {
 
 // 月が変わった時のユーザーの処理
 app.get("/api/pay/payroll", async (req, res) => {
-    try {
-        const payrolls =  await prisma.pay.findMany({});
-        res.status(200).json(payrolls);
+  try {
+    // トークンの検証・デコード
+    const decoded = verifyToken(req);  // 親の user_id が入ってる前提
+
+    // ① 親に紐づく子どもを取得
+    const children = await prisma.child.findMany({
+    where: {
+        parent_id: decoded.user_id, // ここは親のUUID
+    },
+    select: {
+        user_id: true,
+    },
+    });
+
+    const childrenUserIds = children.map(child => child.user_id);
+
+    if (childrenUserIds.length === 0) {
+    return res.status(404).json({ message: "子どもが存在しません" });
     }
-    catch (error) {
-        console.error("給与に関するエラー:", error);
-        res.status(500).json({ message: "給与計算エラー", error: error.message });
-    }
+
+    // ② 子の user_id に該当する給与情報を取得
+    const payrolls = await prisma.pay.findMany({
+    where: {
+        user_id: {
+        in: childrenUserIds,
+        },
+    },
+    });
+
+    res.status(200).json(payrolls);
+    } catch (error) {
+    console.error("給与に関するエラー:", error);
+    res.status(500).json({ message: "給与計算エラー", error: error.message });
+}
 });
 
 app.post("/api/child/childCreate", async (req, res) => {
     try {
     // トークンの検証・デコード
-    const { c_name, token } = req.body;
-    let decoded;
-    try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        return res.status(403).json({ message: "トークンが無効です" });
-    }
+    const { c_name } = req.body;
+    const decoded = verifyToken(req);
 
     // デコードしたuser_idをparent_idに使う
     const parent_id = decoded.user_id;
@@ -384,6 +405,29 @@ app.get("/api/child/setting", async (req, res) => {
 //         res.status(500).json({ message: "締め日登録エラー", error: error.message });
 //     }
 // })
+
+
+
+
+// デコードしたトークンを返すメソッド
+function verifyToken(req) {
+    const token = req.body.token || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        throw new Error("トークンが見つかりません");
+    }
+
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        throw new Error("トークンが無効です");
+    }
+}
+
+module.exports = {
+    verifyToken,
+};
+
 
 //一番下
 module.exports = app;
