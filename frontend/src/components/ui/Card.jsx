@@ -1,14 +1,14 @@
-export const Card = ({ title, icon, onClick }) => {
+export const Card = ({ title, icon, className, onClick }) => {
     return (
         <div
             className={`
-                bg-gray-50 border border-gray-200 rounded-lg p-5
-                cursor-pointer hover:shadow-lg transition-shadow duration-200
+                h-50 w-50 bg-gray-50 border border-gray rounded-lg m-5
+                cursor-pointer hover:shadow-md transition-shadow duration-100
             `}
             onClick={onClick}
         >
-            <img src={icon} alt={`${title}アイコン`} className="w-12 h-12 mb-3 mx-auto" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2 text-center">{title}</h3>
+            <img src={icon} className={className}/>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-auto text-center">{title}</h3>
         </div>
     )
 }

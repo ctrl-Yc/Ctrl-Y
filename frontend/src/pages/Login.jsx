@@ -61,8 +61,8 @@ export const Login = () => {
             />
           </div>
 
-          
-          <p className="flex items-center justify-center mt-4 text-2xl">
+
+          <p className="flex items-center justify-center my-8 text-2xl">
             アカウントを持っていない場合
             <Link to="./Signup" className="text-blue-600 underline ml-2 hover:text-blue-400 duration-300">
               アカウント作成
