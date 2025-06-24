@@ -304,6 +304,20 @@ app.post("/api/users/rePassword", async (req, res) => {
 
 //token変わってないかの処理
 
+//終了タスクの合計
+app.get("/api/tasks/complete", async (req, res) => {
+    try {
+    const completedTask = await prisma.task.count({
+        where: {
+        s_id: 3,
+        },
+    });
+    res.status(200).json({ completedTask: completedTask });
+    } catch (error) {
+    res.status(500).json({ message: "終了タスクの合計取得エラー", error: error.message });
+  }
+});
+
 // 月が変わった時のユーザーの処理
 app.get("/api/pay/payroll", async (req, res) => {
   try {
@@ -342,11 +356,33 @@ app.get("/api/pay/payroll", async (req, res) => {
 }
 });
 
+//給料合計金額
+app.get("/api/tasks/salary", async (req, res) => {
+    try {
+    const totalSalary = await prisma.task.aggregate({
+        where: {
+        s_id: 3,
+        },
+        _sum: {
+        reward: true,
+        },
+    });
+    res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 });
+    } catch (error) {
+    res.status(500).json({ message: "給料合計金額取得エラー", error: error.message });
+    }
+});
+
 app.post("/api/child/childCreate", async (req, res) => {
     try {
     // トークンの検証・デコード
-    const { c_name } = req.body;
-    const decoded = verifyToken(req);
+    const { c_name, token } = req.body;
+    let decoded;
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return res.status(403).json({ message: "トークンが無効です" });
+    }
 
     // デコードしたuser_idをparent_idに使う
     const parent_id = decoded.user_id;
@@ -366,8 +402,6 @@ app.post("/api/child/childCreate", async (req, res) => {
     }
 });
 
-    
-    
 
 // 子供のuser_idとc_nameを返します。(変更用)
 app.get("/api/child/setting", async (req, res) => {
@@ -388,8 +422,6 @@ app.get("/api/child/setting", async (req, res) => {
     }
 });
 
-
-
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {
 //     try {
@@ -405,8 +437,6 @@ app.get("/api/child/setting", async (req, res) => {
 //         res.status(500).json({ message: "締め日登録エラー", error: error.message });
 //     }
 // })
-
-
 
 
 // デコードしたトークンを返すメソッド
