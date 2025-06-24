@@ -2,31 +2,42 @@ import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate } from "react-router-dom";
+import { getToken } from "../config/Token";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
-  const [name, setName] = useState('');
+  const [c_name, setName] = useState('');
+  const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
-    if (!name) {
-      alert('入力エラー', '名前を入力してください');
+    if (!c_name || !keyword) {
+      alert('入力エラー', '入力してください');
       return;
     }
 
+    const token = getToken();
+
+    if (!token) {
+      alert('トークンが見つかりません。親アカウントからやり直してください。');
+      return;
+    }
     try {
-      const response = await axios.post('', {
-        name,
+      const response = await axios.post('CHILD_SIGNUP', 
+      {
+        c_name,
+        keyword,
       },
       {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
       }
     );
 
       console.log('登録成功:', response.data);
-      alert('名前を入力完了！');
+      alert('入力完了！');
       navigate('./')
     } catch (error) {
       console.error('エラー:', error);
@@ -36,29 +47,41 @@ export const Childsignup = () => {
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-center w-full">子供用アカウント作成</h1>
-      <form>
-        <p>名前を入力してください</p>
-        <InputField
-          type="name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className=""
-        />
-        <CustomButton
-          type="button"
-          label="作成"
-          onClick={handleSignup}
-          className=""
-        />
-        <Link to={-1}>
-          <CustomButton
-            type="button"
-            label="戻る"
-            className=""
-          />
-        </Link>
-      </form>
+      <div className="bg-orange-100 h-screen">
+        <h1 className="text-6xl font-bold text-center w-full py-25">子供用アカウント作成</h1>
+        <form className="space-y-4">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <p className="text-3xl font-bold text-center pb-10">名前を入力してください</p>
+            <InputField
+              type="name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
+            />
+          </div>
+
+          <div className="flex justify-center mt-6">
+            <div className="flex space-x-100">
+              <Link to={-1}>
+                <CustomButton
+                  type="button"
+                  label="もどる"
+                  className="w-50 h-15 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+             transition-colors duration-300 mt-4"
+                />
+              </Link>
+              <CustomButton
+                type="button"
+                label="作成"
+                onClick={handleSignup}
+                className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
+              transition-colors duration-300 mt-4"
+              />
+            </div>
+
+          </div>
+        </form>
+      </div>
     </>
   );
 };

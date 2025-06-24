@@ -18,6 +18,27 @@ app.use(express.json());
 //ルートインポート
 const tasksRoutes = require('./routes/tasksRoutes');
 
+// taskの1件取得(task_no指定)
+app.get('/api/tasks/getTask/:task_id', async (req, res) => {
+    try {
+        const taskid = parseInt(req.params.task_id, 10);
+        const task = await prisma.task.findFirst({
+            where: {
+                task_id: taskid
+            }
+        });
+
+        if (!task) {
+            return res.status(404).json({ message: "指定されたタスクが存在しません" });
+        }
+
+        res.status(200).json(task);
+    } catch (error) {
+        console.log("taskの1件取得エラー");
+        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
+    }
+});
+
 
 app.use('/api/tasks', tasksRoutes); 
 
@@ -101,6 +122,46 @@ app.post("/api/users/login", async (req, res) => {
     }
 });
 
+//子供のログイン
+app.post("/child/login/:child_id", async (req, res) => {
+    try {
+        const user_id = req.params.child_id;
+
+        const select_child = await prisma.child.findFirst({
+            where: {user_id: user_id}
+        })
+        if (!select_child) {
+            return res.status(400).json({ message: '指定された子供のIDは存在しません' });
+        }
+            // JWT発行
+            const token = jwt.sign(
+                { user_id: select_child.user_id, timestamp: new Date().toISOString() },
+                process.env.JWT_SECRET
+            )
+
+        res.status(200).json({ token, child_id: select_child.user_id });
+    } catch (error) {
+        console.error("子供のログインエラー:", error);
+        res.status(500).json({ message: "子供のログインエラー", error: error.message });
+    }
+})
+
+
+//ユーザーのパスワード再設定
+//mail送信の処理は未実装
+app.post("/api/users/rePassword", async (req, res) => {
+    try {
+        const { email } = req.body;
+        // DBから検索
+        const select_user = await prisma.user.findUnique({
+            where: { email }
+        })
+        res.status(200).json({ message: "パスワード再設定用のメールを送信しました" });
+    } catch (error) {
+        console.error("パスワード再設定エラー:", error);
+        res.status(500).json({ message: "パスワード再設定エラー", error: error.message });
+    }
+})
 
 //token変わってないかの処理
 
@@ -118,7 +179,7 @@ app.get("/api/tasks/complete", async (req, res) => {
   }
 });
 
-//給料合計金額
+//給料合計金額 変更 
 app.get("/api/tasks/salary", async (req, res) => {
     try {
     const totalSalary = await prisma.task.aggregate({
@@ -185,6 +246,8 @@ app.get("/api/child/setting", async (req, res) => {
     });
     }
 });
+
+
 
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {
