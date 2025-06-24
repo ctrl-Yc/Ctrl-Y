@@ -82,6 +82,7 @@ export const Childsignup = () => {
           </div>
         </form>
       </div>
+
     </>
   );
 };
