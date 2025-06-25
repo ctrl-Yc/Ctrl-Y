@@ -72,53 +72,42 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
             <p>・名前</p>
             <InputField
                 type="text"
-                placeholder=""
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className=""
             />
             <CustomButton
                 type="button"
                 label="削除"
                 onClick={handleDeleteClick}
-                className=''
             />
             <p>・金額</p>
             <InputField
                 type="number"
-                placeholder=""
                 value={reward}
                 onChange={e => setReward(e.target.value)}
-                className=""
             />
             （円）
             <p>・期限</p>
             <InputField
                 type="datetime-local"
-                placeholder=""
                 value={deadline}
                 onChange={e => setDeadline(e.target.value)}
-                className=""
             />
             <p>・説明</p>
             <InputField
                 type="text"
-                placeholder=""
                 value={memo}
                 onChange={e => setMemo(e.target.value)}
-                className=""
             />
             <CustomButton
                 type="button"
                 label="戻る"
                 onClick={handleBackClick}
-                className=''
             />
             <CustomButton
                 type="button"
                 label="決定"
                 onClick={handleSubmitClick}
-                className=''
             />
         </div>
     )
