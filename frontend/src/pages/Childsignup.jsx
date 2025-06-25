@@ -54,8 +54,14 @@ export const Childsignup = () => {
             <p className="text-3xl font-bold text-center pb-10">名前を入力してください</p>
             <InputField
               type="name"
-              value={name}
+              value={c_name}
               onChange={e => setName(e.target.value)}
+              className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
+            />
+            <InputField
+              type="password"
+              value={keyword}
+              onChange={e => setKeyword(e.target.value)}
               className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
             />
           </div>

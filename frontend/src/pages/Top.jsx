@@ -58,7 +58,7 @@ export const Top = () => {
                 onMenuItemClick={handleSidebarItemClick}
             />
             {/* メインコンテンツ部分 */}
-            <main className="flex-grow items-center p-6 bg-orange-200"> 
+            <main className="flex-grow items-center p-6 bg-orange-200 overflow-y-auto h-screen"> 
                 {renderMainContent()}
             </main>
         </div>

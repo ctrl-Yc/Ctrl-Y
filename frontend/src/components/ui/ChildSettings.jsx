@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "./CustomButton";
 import { Select } from "./Select";
 import { InputField } from "./InputField";
-import axios from "axios";
+// import axios from "axios";
 
 export const ChildSettings = () => {
   const [keyword, setKeyword] = useState('');
