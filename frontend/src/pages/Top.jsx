@@ -57,7 +57,8 @@ export const Top = () => {
                 activeMenuItem={activeTab}
                 onMenuItemClick={handleSidebarItemClick}
             />
-            <main className="flex-grow p-6 bg-gray-100 overflow-y-auto"> {/* メインコンテンツはスクロール可能に */}
+            {/* メインコンテンツ部分 */}
+            <main className="flex-grow items-center p-6 bg-orange-200"> 
                 {renderMainContent()}
             </main>
         </div>

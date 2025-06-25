@@ -50,3 +50,14 @@ model Child {
   @@map("child_acc")
   @@schema("ctrl-Y")
 }
+
+model Pay {
+  user_id String
+  inserted_month DateTime @default(now())
+  number Int @db.SmallInt
+  reward Int @db.SmallInt
+
+  @@id([user_id, inserted_month])
+  @@map("payroll")
+  @@schema("ctrl-Y")
+}

@@ -42,42 +42,47 @@ export const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-orange-100 flex items-center justify-center">
-      <div className="bg-orange-100 rounded-xl w-full max-w-sm">
-        <h1 className="text-xl font-bold text-center mb-6">アカウント作成</h1>
-        <form className="space-y-4">
+    <div className="bg-orange-100 h-screen">
+      <h1 className="text-6xl font-bold text-center w-full py-25">アカウント作成</h1>
+      <form className="space-y-4">
+        <div className="flex flex-col items-center justify-center space-y-4">
           <InputField
             type="email"
             placeholder="メールアドレス"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-full bg-gray-100 placeholder-gray-500"
+            className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100 placeholder-gray-500 placeholder-text-xl"
           />
           <InputField
             type="password"
             placeholder="パスワード"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded-full bg-gray-100 placeholder-gray-500"
+            className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100 placeholder-gray-500 placeholder-text-xl"
           />
-          <div className="flex justify-between mt-6">
+        </div>
+
+        <div className="flex justify-center mt-6">
+          <div className="flex space-x-100">
             <CustomButton
               type="button"
               label="もどる"
               onClick={() => navigate(-1)}
-              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300"
-            >
-            </CustomButton>
+              className="w-50 h-15 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+             transition-colors duration-300 mt-4"
+            />
+            
             <CustomButton
               type="button"
               label="作成"
               onClick={handleSignup}
-              className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-            >
-            </CustomButton>
+              className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
+              transition-colors duration-300 mt-4"
+            />
           </div>
-        </form>
-      </div>
+
+        </div>
+      </form>
     </div>
   );
 };
