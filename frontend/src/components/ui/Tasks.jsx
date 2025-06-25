@@ -17,8 +17,8 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
         const response = await axios.get(endpoint);
         setTasks(response.data);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error(error);
         setError("タスクの取得に失敗しました");
       } finally {
         setLoading(false);
