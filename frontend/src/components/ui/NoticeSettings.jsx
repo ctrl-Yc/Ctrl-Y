@@ -18,30 +18,46 @@ export const NoticeSettings = () => {
     console.log('決定ボタンが押されました');
   };
   return (
-    <div>
-      <h1>通知</h1>
-      <p>締め日通知</p>
-      <ToggleSwitch
-        checked={cutoffNoticeOn}
-        onChange={() => setCutoffNoticeOn(prev => !prev)}
-      />
-      <p>給料日通知</p>
-      <ToggleSwitch
-        checked={paydayNoticeOn}
-        onChange={() => setPaydayNoticeOn(prev => !prev)}
-      />
-      <CustomButton
-        type="button"
-        label="戻る"
-        onClick={handleBackClick}
-        className=''
-      />
-      <CustomButton
-        type="button"
-        label="決定"
-        onClick={handleSubmitClick}
-        className=''
-      />
+    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+      <div className="flex justify-between items-center">
+        <h2 className="text-5xl font-bold p-16">通知</h2>
+      </div>
+      <div className="mx-16 space-y-4">
+        <div>
+          <p className="text-2xl mr-4">締め日通知</p>
+          <ToggleSwitch
+            checked={cutoffNoticeOn}
+            onChange={() => setCutoffNoticeOn(prev => !prev)}
+          />
+        </div>
+
+        <div>
+          <p className="text-2xl mr-4">給料日通知</p>
+          <ToggleSwitch
+            checked={paydayNoticeOn}
+            onChange={() => setPaydayNoticeOn(prev => !prev)}
+          />
+        </div>
+
+        <div className="mt-8 space-x-12">
+          <CustomButton
+            type="button"
+            label="戻る"
+            onClick={handleBackClick}
+            className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+                      transition-colors duration-300'
+          />
+          <CustomButton
+            type="button"
+            label="決定"
+            onClick={handleSubmitClick}
+            className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+                      transition-colors duration-300'
+          />
+        </div>
+
+      </div>
+
     </div>
   )
 }
