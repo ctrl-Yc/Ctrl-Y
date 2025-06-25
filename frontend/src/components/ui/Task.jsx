@@ -1,9 +1,9 @@
 import { CustomButton } from "./CustomButton"
 
-export const Task = ({ task }) => {
+export const Task = ({ task, onEdit }) => {
     const handleClick = (e) => {
         e.preventDefault();
-        console.log('ボタンが押されました');
+        onEdit();
     }
 
     return (

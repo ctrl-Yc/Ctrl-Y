@@ -4,7 +4,7 @@ import { Task } from "./Task";
 import { CustomButton } from "./CustomButton";
 import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../config/api";
 
-export const Tasks = ({ setActiveTab }) => {
+export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,24 +43,28 @@ export const Tasks = ({ setActiveTab }) => {
   return tasks.length === 0 ? (
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
   ) : (
-    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-      <h1 className="text-5xl font-bold p-16">おてつだい一覧</h1>
-      <div>
-        <ul className="w-3/4 space-y-8 space-y-2 mx-auto">
-          {visibleTasks.map(task => (
-            <Task key={task.task_id} task={task} />
-          ))}
-        </ul>
-      </div>
+    <div>
+      <h1 className="">{isViewingFinished ? "完了報告一覧" : "おてつだい一覧"}</h1>
+      <ul className="space-y-3">
+        {tasks.map(task => (
+          <Task
+            key={task.task_id}
+            task={task}
+            onEdit={() => {
+              setSelectedTaskId(task.task_id);
+              setActiveTab('tasks/edit');
+            }}
+          />
+        ))}
+      </ul>
+      <CustomButton
+        type="button"
+        label={isViewingFinished ? "もどる" : "完了報告を見る"}
+        onClick={handleToggleView}
+        className=''
+      />
+      {!isViewingFinished && (
 
-      <div className="flex items-center justify-center space-y-4 my-8">
-        <CustomButton
-          type="button"
-          label="完了報告を見る"
-          onClick={handleClick}
-          className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-          transition-colors duration-300 mx-auto'
-        />
         <CustomButton
           type="button"
           label="お手伝いを作成"
