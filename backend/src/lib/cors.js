@@ -1,7 +1,7 @@
 const cors = require("cors");
 
 const corset = {
-    origin: "",
+    origin: "http://localhost:5173",
     credentials: true,
 };
 
