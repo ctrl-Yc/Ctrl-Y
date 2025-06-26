@@ -30,7 +30,7 @@ export const AccountSettings = () => {
             <div className="flex justify-between items-center">
                 <h2 className="text-5xl font-bold p-16">アカウント</h2>
             </div>
-            <div className="mx-16 space-y-4">
+            <div className="mx-20 space-y-4">
                 <div className="space-y-4">
                     <p className="text-2xl">メールアドレスの変更</p>
                     <InputField
@@ -38,7 +38,7 @@ export const AccountSettings = () => {
                         placeholder=""
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="mb-12 w-100 h-12 px-4 border rounded-lg bg-gray-100"
+                        className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
                     />
                 </div>
                 <div className="space-y-4 flex flex-col">
@@ -48,14 +48,14 @@ export const AccountSettings = () => {
                         placeholder="パスワード"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        className="mb-8 w-100 h-12 px-4 border rounded-lg bg-gray-100"
+                        className="mb-8 w-100 h-12 px-4 border rounded-lg bg-white"
                     />
                     <InputField
                         type="password"
                         placeholder="パスワード(確認)"
                         value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
-                        className="mb-12 w-100 h-12 px-4 border rounded-lg bg-gray-100"
+                        className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
                     />
                 </div>
                 <div className="mt-8 space-x-12">
