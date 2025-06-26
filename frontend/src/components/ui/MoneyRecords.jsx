@@ -39,30 +39,34 @@ export const MoneyRecords = () => {
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-            <div className="flex justify-between items-center">
-                <h2 className="text-5xl font-bold p-16">おこづかい記録</h2>
-            </div>
+            <div className='m-10'>
 
-            <div className="flex justify-end mb-8 mr-28">
-                <Select
-                    options={yearOptions}
-                    value={selectedYear}
-                    onChange={handleYearChange}
-                    className="w-26 mr-10"
-                // placeholder="年を選択" // 初期値を設定しない場合に利用
-                />
-            </div>
-            <div className="flex justify-center">
-                <div className="w-3/4 h-6 space-y-8">
-                    {filteredRecords.map((record, index) => ( // フィルタリングされたデータをマップ
-                        <div key={index} className="bg-gray-50 h-30 border border-gray-200 rounded-lg p-5 flex items-center justify-between shadow-sm">
-                            <div className="text-gray-900 font-semibold text-xl">{record.month}</div>
-                            <div className="flex items-center space-x-6">
-                                <span className="text-xl font-bold text-green-600">¥{record.amount}</span>
-                                <span className="text-gray-600 text-base">お手伝い回数：<span className="font-semibold">{record.choreCount}回</span></span>
+
+                <div className="flex justify-between items-center">
+                    <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
+                </div>
+
+                <div className="flex justify-end mb-8 mr-28">
+                    <Select
+                        options={yearOptions}
+                        value={selectedYear}
+                        onChange={handleYearChange}
+                        className="w-26 mr-10"
+                    // placeholder="年を選択" // 初期値を設定しない場合に利用
+                    />
+                </div>
+                <div className="flex justify-center">
+                    <div className="w-3/4 h-6 space-y-8">
+                        {filteredRecords.map((record, index) => ( // フィルタリングされたデータをマップ
+                            <div key={index} className="bg-gray-50 h-30 border border-gray-200 rounded-lg px-20 flex items-center justify-between shadow-sm">
+                                <div className="text-gray-900 font-semibold text-2xl">{record.month}</div>
+                                <div className="flex items-center space-x-10">
+                                    <span className="text-xl font-bold text-green-600">¥{record.amount}</span>
+                                    <span className="text-gray-600 text-base">お手伝い回数：<span className="font-semibold">{record.choreCount}回</span></span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

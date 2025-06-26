@@ -44,30 +44,33 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   return tasks.length === 0 ? (
     <p className="text-center text-gray-400">表示できるタスクがありません。</p>
   ) : (
-    <div>
-      <h1 className="text-xl font-bold mb-4">
-        {isViewingFinished ? "完了報告一覧" : "おてつだい一覧"}
-      </h1>
-      <ul className="space-y-3">
-        {tasks.map(task => (
-          <Task
-            key={task.task_id}
-            task={task}
-            onEdit={() => {
-              setSelectedTaskId(task.task_id);
-              setActiveTab('tasks/edit');
-            }}
-          />
-        ))}
-      </ul>
+    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+      <div className="m-10">
 
-      <div className="mt-6 flex flex-col items-center space-y-4">
+        <h1 className="text-5xl font-bold p-8">
+          {isViewingFinished ? "完了報告一覧" : "おてつだい一覧"}
+        </h1>
+
+        <ul className="space-y-3 flex justify-center items-center flex-col">
+          {tasks.map(task => (
+            <Task
+              key={task.task_id}
+              task={task}
+              onEdit={() => {
+                setSelectedTaskId(task.task_id);
+                setActiveTab('tasks/edit');
+              }}
+            />
+          ))}
+        </ul>
+      </div>
+      <div className="my-12 flex justify-center items-center space-x-32">
         <CustomButton
           type="button"
           label={isViewingFinished ? "もどる" : "完了報告を見る"}
           onClick={handleToggleView}
           className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-          transition-colors duration-300 mx-auto'
+          transition-colors duration-300'
         />
         {!isViewingFinished && (
           <CustomButton
@@ -78,6 +81,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
           />
         )}
       </div>
+
     </div>
   );
 };
