@@ -43,7 +43,7 @@ export const SalarySettings = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">給与</h2>
       </div>
-      <div className="mx-16 space-y-4">
+      <div className="mx-20 space-y-4">
         <p className="text-xl">給料日の変更</p>
         <Select
           options={paydayOptions}

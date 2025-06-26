@@ -22,9 +22,9 @@ export const NoticeSettings = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">通知</h2>
       </div>
-      <div className="mx-16 space-y-4">
+      <div className="mx-20 space-y-4">
         <div>
-          <p className="text-2xl mr-4">締め日通知</p>
+          <p className="text-2xl mr-4 mb-4">締め日通知</p>
           <ToggleSwitch
             checked={cutoffNoticeOn}
             onChange={() => setCutoffNoticeOn(prev => !prev)}
@@ -32,7 +32,7 @@ export const NoticeSettings = () => {
         </div>
 
         <div>
-          <p className="text-2xl mr-4">給料日通知</p>
+          <p className="text-2xl mr-4 mb-4">給料日通知</p>
           <ToggleSwitch
             checked={paydayNoticeOn}
             onChange={() => setPaydayNoticeOn(prev => !prev)}
