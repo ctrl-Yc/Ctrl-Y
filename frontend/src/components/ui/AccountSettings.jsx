@@ -2,7 +2,7 @@ import { useState } from "react";
 import { InputField } from "./InputField"
 import { CustomButton } from "./CustomButton";
 
-export const AccountSettings = () => {
+export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -10,8 +10,7 @@ export const AccountSettings = () => {
     // 戻るボタン
     const handleBackClick = (e) => {
         e.preventDefault();
-        console.log('戻るボタンが押されました');
-
+        setActiveTab('settings');
     }
 
     // 決定ボタン

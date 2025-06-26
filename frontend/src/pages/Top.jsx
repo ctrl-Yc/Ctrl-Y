@@ -39,13 +39,13 @@ export const Top = () => {
             case 'settings':
                 return <Settings onSettingItemClick={handleSettingsItemClick} />;
             case 'settings/salary':
-                return <SalarySettings />;
+                return <SalarySettings setActiveTab={setActiveTab} />;
             case 'settings/notice':
-                return <NoticeSettings />;
+                return <NoticeSettings setActiveTab={setActiveTab} />;
             case 'settings/account':
-                return <AccountSettings />;
+                return <AccountSettings setActiveTab={setActiveTab} />;
             case 'settings/child':
-                return <ChildSettings />;
+                return <ChildSettings setActiveTab={setActiveTab} />;
             default:
                 return <div>コンテンツがありません。</div>;
         }

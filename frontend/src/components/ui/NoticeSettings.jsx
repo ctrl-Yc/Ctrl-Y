@@ -2,14 +2,14 @@ import { useState } from "react";
 import { ToggleSwitch } from "./ToggleSwitch";
 import { CustomButton } from "./CustomButton";
 
-export const NoticeSettings = () => {
+export const NoticeSettings = ({ setActiveTab }) => {
   const [cutoffNoticeOn, setCutoffNoticeOn] = useState(false);
   const [paydayNoticeOn, setPaydayNoticeOn] = useState(false);
 
   // 戻るボタン
   const handleBackClick = (e) => {
     e.preventDefault();
-    console.log('戻るボタンが押されました');
+    setActiveTab('settings');
   };
 
   // 決定ボタン
