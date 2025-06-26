@@ -216,30 +216,30 @@ app.get("/api/tasks/salary", async (req, res) => {
 
 app.post("/api/child/childCreate", async (req, res) => {
     try {
-    // トークンの検証・デコード
-    const { c_name, token } = req.body;
-    let decoded;
-    try {
-        decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        return res.status(403).json({ message: "トークンが無効です" });
-    }
+        const { c_name } = req.body;
 
-    // デコードしたuser_idをparent_idに使う
-    const parent_id = decoded.user_id;
+        let decoded;
+        try {
+            decoded = verifyToken(req);
+        } catch (error) {
+            return res.status(403).json({ message: error.message });
+        }
 
-    const childCreate = await prisma.child.create({
-        data: {
-        c_name: c_name,
-        parent_id: parent_id,
-        },
-    });
+        // 親のidを取得
+        const parent_id = decoded.user_id;
 
-    res.status(200).json({ user_id: childCreate.user_id});
+        const childCreate = await prisma.child.create({
+            data: {
+                c_name: c_name,
+                parent_id: parent_id,
+            },
+        });
+
+        res.status(200).json({ user_id: childCreate.user_id });
 
     } catch (error) {
-    console.error("子供の登録エラー:", error);
-    res.status(500).json({ message: "子供の登録エラー", error: error.message });
+        console.error("子供の登録エラー:", error);
+        res.status(500).json({ message: "子供の登録エラー", error: error.message });
     }
 });
 
