@@ -2,25 +2,11 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "./CustomButton";
 import { Select } from "./Select";
 import { InputField } from "./InputField";
-import axios from "axios";
 
 export const ChildSettings = () => {
   const [keyword, setKeyword] = useState('');
   const [selectedChildId, setSelectedChildId] = useState('');
   const [children, setChildren] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchChildren = async () => {
-  //     try {
-  //       const response = await axios.get("/api/children"); // あとでURLを追加
-  //       setChildren(response.data);
-  //     } catch (error) {
-  //       console.error("子供の取得に失敗しました", error);
-  //     }
-  //   };
-
-  //   fetchChildren();
-  // }, []);
 
   useEffect(() => {
     // 仮データを用意

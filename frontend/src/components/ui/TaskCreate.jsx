@@ -2,6 +2,7 @@ import { useState } from "react";
 import { InputField } from "./InputField"
 import axios from "axios";
 import { CustomButton } from "./CustomButton";
+import { TASK_CREATE_POST } from "../../config/api";
 
 export const TaskCreate = ({ setActiveTab }) => {
     const [name, setName] = useState('');
@@ -20,7 +21,7 @@ export const TaskCreate = ({ setActiveTab }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:3000/api/tasks/newtaskadd", 
+            const response = await axios.post(TASK_CREATE_POST, 
                 {
                     t_name: name,
                     memo: memo,
@@ -28,12 +29,10 @@ export const TaskCreate = ({ setActiveTab }) => {
                     deadline: new Date(deadline)
                 }
         );
-            console.log("test")
-            alert("登録が完了しました");
+            console.log("登録成功:", response.data);
             setActiveTab('tasks');
         } catch (error) {
             console.error('登録エラー:', error);
-            alert("タスクの登録に失敗しました");
         }
     };
   

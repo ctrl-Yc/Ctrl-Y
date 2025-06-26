@@ -25,7 +25,7 @@ export const Login = () => {
         {
           headers: {
             'Content-type': 'application/json'
-          }
+          },
         }
       );
       const Token = response.data.token;

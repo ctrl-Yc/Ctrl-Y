@@ -29,7 +29,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         };
 
         fetchTaskDetail();
-    }, [taskId]);
+    }, [taskId, setActiveTab]);
 
     const handleBackClick = (e) => {
         e.preventDefault();
