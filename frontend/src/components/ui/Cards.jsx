@@ -8,7 +8,7 @@ export const Cards = ({ items, onItemClick, cardClassName = '' }) => {
                     key={item.id}
                     title={item.title}
                     onClick={() => onItemClick(item)}
-                    className={item.cardClassName}
+                    className={item.cardClassName || cardClassName}
                     icon={item.icon}
                 />
             ))}

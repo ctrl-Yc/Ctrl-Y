@@ -61,8 +61,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         type="button"
         label={isViewingFinished ? "もどる" : "完了報告を見る"}
         onClick={handleToggleView}
-        className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-          transition-colors duration-300 mx-autoy'
+        className=''
       />
       {!isViewingFinished && (
 
@@ -73,8 +72,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
           className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
           transition-colors duration-300 mx-auto'
         />
-      )
-      }
+      </div>
     </div>
-  );
-};
+  )
+}
