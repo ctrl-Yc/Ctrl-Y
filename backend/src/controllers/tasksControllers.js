@@ -87,7 +87,7 @@ exports.deleteTasks = async (req,res) =>{
     try{
         const taskId = parseInt(req.params.task_id, 10); 
         await tasksServices.deleteTask(taskId);
-        res.status(204).send;
+        res.status(204).send();
     }catch (error) {
         console.log("tasksの削除エラー");
         res.status(500).json({ message : error.message});
