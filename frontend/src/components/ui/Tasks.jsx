@@ -16,7 +16,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       try {
         const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
         const response = await axios.get(endpoint);
-        setTasks(response.data);
+        setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
       } catch (error) {
         console.error(error);
         setError("タスクの取得に失敗しました");
