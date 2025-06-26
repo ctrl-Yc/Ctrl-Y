@@ -8,10 +8,13 @@ app.use(corsMiddleware);
 
 const prisma = require('./lib/prisma');
 
+
 // JWTとbcryptのインポート
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const SALT_ROUNDS = 10;
+
+const { verifyToken } = require("./lib/jwt");
 
 app.use(express.json());
 
@@ -276,25 +279,6 @@ app.get("/api/child/setting", async (req, res) => {
 //     }
 // })
 
-
-// デコードしたトークンを返すメソッド
-function verifyToken(req) {
-    const token = req.body.token || req.headers.authorization?.split(" ")[1];
-
-    if (!token) {
-        throw new Error("トークンが見つかりません");
-    }
-
-    try {
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-        throw new Error("トークンが無効です");
-    }
-}
-
-module.exports = {
-    verifyToken,
-};
 
 
 //一番下
