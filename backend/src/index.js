@@ -111,7 +111,7 @@ app.post("/child/login/:child_id", async (req, res) => {
         const child = await prisma.child.findFirst({
             where: {
                 user_id: child_id,
-                is: { keyword }
+                parent: { keyword }
             },
             include: {
                 parent: {
