@@ -11,7 +11,7 @@ export const Childurl = () => {
   const decoded = jwtDecode(token);
   const childUUID = decoded.user_id;
 
-  const childSignupUrl = `${window.location.origin}/child/login/:childUUID${childUUID}`;
+  const childSignupUrl = `${window.location.origin}/child/login/${childUUID}`;
 
   return (
     <div>
