@@ -4,6 +4,7 @@ import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getToken } from "../config/Token";
 import { CHILD_SIGNUP } from "../config/api";
+import { setChildToken } from "../config/Token";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
@@ -19,10 +20,9 @@ export const Childsignup = () => {
     }
 
     const token = getToken();
-    console.log('Token:', token);
 
     if (!token) {
-      alert('トークンが見つかりません。親アカウントからやり直してください。');
+      alert('親アカウントからやり直してください。');
       return;
     }
     try {
@@ -39,14 +39,15 @@ export const Childsignup = () => {
         },
       }
     );
-
+      const childtoken = response.data.token;
+      setChildToken(childtoken);
+      console.log(childtoken)
       console.log('登録成功:', response.data);
       navigate('/Childurl')
     } catch (error) {
       console.error('エラー:', error);
     }
   };
-
   return (
     <>
       <div className="bg-orange-100 h-screen">

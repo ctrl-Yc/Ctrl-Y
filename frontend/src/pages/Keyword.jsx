@@ -25,7 +25,7 @@ export const Keyword = () => {
         },
         }
     );
-console.log(response)
+    console.log(response)
     if (response.data.token) {
         navigate(`/child/home/${response.data.child_id}`);
     } else {

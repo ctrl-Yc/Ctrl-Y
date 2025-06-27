@@ -1,14 +1,14 @@
 import { jwtDecode } from "jwt-decode";
-import { getToken } from "../config/Token";
+import { getChildToken } from "../config/Token";
 
 export const Childurl = () => {
-  const token = getToken();
+  const childtoken = getChildToken();
 
-  if (!token) {
+  if (!childtoken) {
     return <p>ログインしてください</p>;
   }
 
-  const decoded = jwtDecode(token);
+  const decoded = jwtDecode(childtoken);
   const childUUID = decoded.user_id;
 
   const childSignupUrl = `${window.location.origin}/child/login/${childUUID}`;
