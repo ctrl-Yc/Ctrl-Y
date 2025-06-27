@@ -112,13 +112,22 @@ app.post('/child/login/:child_id', async (req, res) => {
 		if (!select_child) {
 			return res.status(400).json({ message: '指定された子供のIDは存在しません' });
 		}
+
+        const parent_id = await prisma.child.findUnique({
+            where: {user_id: user_id},
+            select: { 
+                parent: {
+                    select: { user_id: true }
+                }
+            }
+        })
 		// JWT発行
 		const token = jwt.sign(
 			{ user_id: select_child.user_id, timestamp: new Date().toISOString() },
 			process.env.JWT_SECRET
 		);
 
-		res.status(200).json({ token, child_id: select_child.user_id });
+		res.status(200).json({ token, child_id: select_child.user_id, parent_id: parent_id.parent.user_id });
 	} catch (error) {
 		console.error('子供のログインエラー:', error);
 		res.status(500).json({ message: '子供のログインエラー', error: error.message });
