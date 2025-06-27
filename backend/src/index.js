@@ -102,37 +102,33 @@ app.post('/api/users/login', async (req, res) => {
 });
 
 //子供のログイン
-app.post('/child/login/:child_id', async (req, res) => {
-	try {
-		const user_id = req.params.child_id;
+app.post('/child/login', async (req, res) => {
+  try {
+    const { parent_id, keyword } = req.body;
 
-		const select_child = await prisma.child.findFirst({
-			where: { user_id: user_id },
-		});
-		if (!select_child) {
-			return res.status(400).json({ message: '指定された子供のIDは存在しません' });
-		}
+    const child = await prisma.child.findFirst({
+      where: {
+        parent_id: parent_id,
+        keyword: keyword,
+      },
+    });
 
-        const parent_id = await prisma.child.findUnique({
-            where: {user_id: user_id},
-            select: { 
-                parent: {
-                    select: { user_id: true }
-                }
-            }
-        })
-		// JWT発行
-		const token = jwt.sign(
-			{ user_id: select_child.user_id, timestamp: new Date().toISOString() },
-			process.env.JWT_SECRET
-		);
+    if (!child) {
+      return res.status(401).json({ message: 'あいことばが間違っています' });
+    }
 
-		res.status(200).json({ token, child_id: select_child.user_id, parent_id: parent_id.parent.user_id });
-	} catch (error) {
-		console.error('子供のログインエラー:', error);
-		res.status(500).json({ message: '子供のログインエラー', error: error.message });
-	}
+    const token = jwt.sign(
+      { user_id: child.user_id, timestamp: new Date().toISOString() },
+      process.env.JWT_SECRET
+    );
+
+    res.status(200).json({ token, child_id: child.user_id, parent_id });
+  } catch (error) {
+    console.error('子供のログインエラー:', error);
+    res.status(500).json({ message: '子供のログインエラー', error: error.message });
+  }
 });
+
 
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装
@@ -223,7 +219,7 @@ app.get('/api/tasks/salary', async (req, res) => {
 
 app.post('/api/child/childCreate', async (req, res) => {
 	try {
-		const { c_name } = req.body;
+		const { c_name, keyword } = req.body;
 
 		let decoded;
 		try {
@@ -239,6 +235,7 @@ app.post('/api/child/childCreate', async (req, res) => {
 			data: {
 				c_name: c_name,
 				parent_id: parent_id,
+				keyword: keyword,
 			},
 		});
 

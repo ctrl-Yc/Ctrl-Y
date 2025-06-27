@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getToken } from "../config/Token";
+import { CHILD_SIGNUP } from "../config/api";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
+  const { parentUUID } = useParams();
   const [c_name, setName] = useState('');
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
@@ -17,16 +19,18 @@ export const Childsignup = () => {
     }
 
     const token = getToken();
+    console.log('Token:', token);
 
     if (!token) {
       alert('トークンが見つかりません。親アカウントからやり直してください。');
       return;
     }
     try {
-      const response = await axios.post('CHILD_SIGNUP', 
+      const response = await axios.post(CHILD_SIGNUP, 
       {
         c_name,
         keyword,
+        parent_id: parentUUID,
       },
       {
         headers: {
@@ -37,11 +41,9 @@ export const Childsignup = () => {
     );
 
       console.log('登録成功:', response.data);
-      alert('入力完了！');
-      navigate('./')
+      navigate('/Childurl')
     } catch (error) {
       console.error('エラー:', error);
-      alert('登録に失敗しました');
     }
   };
 

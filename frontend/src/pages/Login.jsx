@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton"
 import { InputField } from "../components/ui/InputField"
 import { Link, useNavigate } from "react-router-dom"
-import { getToken } from "../config/Token";
+import { setToken } from "../config/Token";
 import axios from "axios";
 import { LOGIN_ENDPOINT } from "../config/api";
 
@@ -29,12 +29,10 @@ export const Login = () => {
         }
       );
       const Token = response.data.token;
-      getToken(Token);
-      alert('成功', 'ログインに成功しました！');
-      navigate('./top', { state: { token: getToken(Token) } });
+      setToken(Token);
+      navigate('./top', { state: { token: setToken(Token) } });
     } catch (error) {
       console.error('ログインエラー:', error);
-      alert('失敗', 'ログインに失敗しました');
     }
   };
 
