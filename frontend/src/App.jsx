@@ -12,7 +12,7 @@ export function App() {
   return (
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/keyword/:parentUUID" element={<Keyword />} />
+        <Route path="/child/login/:childUUID" element={<Keyword />} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path="/top" element={<Top />} />
         <Route path="/childname" element={<Childsignup />} />

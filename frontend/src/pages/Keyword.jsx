@@ -7,30 +7,35 @@ import { CHILD_LOGIN } from "../config/api";
 
 export const Keyword = () => {
   const [keyword, setKeyword] = useState('');
-  const { parentUUID } = useParams();
+  const { childUUID } = useParams();
   const navigate = useNavigate();
 
   const handleClick = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(CHILD_LOGIN, 
-      {
-        parent_id: parentUUID,
+    const response = await axios.post(CHILD_LOGIN(childUUID),
+        {
         keyword: keyword,
-      });
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("child_id", response.data.child_id);
+        },
+        {
+        headers: {
+            'Content-Type': 'application/json',
+             child_id: childUUID,
+        },
+        }
+    );
+console.log(response)
+    if (response.data.token) {
         navigate(`/child/home/${response.data.child_id}`);
-      } else {
+    } else {
         console.log("あいことば違う");
-      }
-    } catch (error) {
-      console.error("通信エラー:", error);
     }
-  };
+    } catch (error) {
+    console.error("通信エラー:", error);
+    }
+  }
+
 
   return (
     <div className="bg-orange-100 h-screen">

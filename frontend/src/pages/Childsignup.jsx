@@ -7,7 +7,7 @@ import { CHILD_SIGNUP } from "../config/api";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
-  const { parentUUID } = useParams();
+  const { childUUID } = useParams();
   const [c_name, setName] = useState('');
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
@@ -30,12 +30,12 @@ export const Childsignup = () => {
       {
         c_name,
         keyword,
-        parent_id: parentUUID,
       },
       {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+           child_id: childUUID,
         },
       }
     );
