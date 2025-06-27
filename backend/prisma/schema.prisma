@@ -48,6 +48,7 @@ model Child {
   registered_at DateTime @default(now())
   updated_at DateTime @default(now())
   parent User @relation(fields: [parent_id], references: [user_id], onDelete: Cascade)
+  keyword String
 
   @@map("child_acc")
   @@schema("ctrl-Y")
