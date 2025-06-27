@@ -1,8 +1,9 @@
+// lib/cors.js
 const cors = require("cors");
 
-const corset = {
+const corsOptions = {
     origin: "http://localhost:5173",
     credentials: true,
 };
 
-module.exports = cors(corset);
+module.exports = cors(corsOptions);

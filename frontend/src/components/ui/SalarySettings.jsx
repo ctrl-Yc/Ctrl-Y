@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Select } from "./Select";
 import { CustomButton } from "./CustomButton";
 
-export const SalarySettings = () => {
+export const SalarySettings = ({ setActiveTab }) => {
 
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
@@ -29,7 +29,7 @@ export const SalarySettings = () => {
   // 戻るボタン
   const handleBackClick = (e) => {
     e.preventDefault();
-    console.log('戻るボタンが押されました');
+    setActiveTab('settings');
   };
 
   // 決定ボタン
@@ -43,7 +43,7 @@ export const SalarySettings = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">給与</h2>
       </div>
-      <div className="mx-16 space-y-4">
+      <div className="mx-20 space-y-4">
         <p className="text-xl">給料日の変更</p>
         <Select
           options={paydayOptions}

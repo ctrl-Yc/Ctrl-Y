@@ -16,6 +16,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 
+const { verifyToken } = require('./lib/jwt');
+
 app.use(express.json());
 
 //ルートインポート
@@ -80,8 +82,8 @@ app.post('/api/users/login', async (req, res) => {
 		}
 
 		// password合致
-		const passcheck = await bcrypt.compare(password, select_user.password);
-		if (!passcheck) {
+		const passCheck = await bcrypt.compare(password, select_user.password);
+		if (!passCheck) {
 			return res.status(400).json({ message: 'passwordが間違っています' });
 		}
 
@@ -125,19 +127,19 @@ app.post('/child/login/:child_id', async (req, res) => {
 
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装
-app.post('/api/users/rePassword', async (req, res) => {
-	try {
-		const { email } = req.body;
-		// DBから検索
-		const select_user = await prisma.user.findUnique({
-			where: { email },
-		});
-		res.status(200).json({ message: 'パスワード再設定用のメールを送信しました' });
-	} catch (error) {
-		console.error('パスワード再設定エラー:', error);
-		res.status(500).json({ message: 'パスワード再設定エラー', error: error.message });
-	}
-});
+// app.post('/api/users/rePassword', async (req, res) => {
+// 	try {
+// 		const { email } = req.body;
+// 		// DBから検索
+// 		const select_user = await prisma.user.findUnique({
+// 			where: { email },
+// 		});
+// 		res.status(200).json({ message: 'パスワード再設定用のメールを送信しました' });
+// 	} catch (error) {
+// 		console.error('パスワード再設定エラー:', error);
+// 		res.status(500).json({ message: 'パスワード再設定エラー', error: error.message });
+// 	}
+// });
 
 //token変わってないかの処理
 
@@ -212,16 +214,16 @@ app.get('/api/tasks/salary', async (req, res) => {
 
 app.post('/api/child/childCreate', async (req, res) => {
 	try {
-		// トークンの検証・デコード
-		const { c_name, token } = req.body;
+		const { c_name } = req.body;
+
 		let decoded;
 		try {
-			decoded = jwt.verify(token, process.env.JWT_SECRET);
-		} catch (err) {
-			return res.status(403).json({ message: 'トークンが無効です' });
+			decoded = verifyToken(req);
+		} catch (error) {
+			return res.status(403).json({ message: error.message });
 		}
 
-		// デコードしたuser_idをparent_idに使う
+		// 親のidを取得
 		const parent_id = decoded.user_id;
 
 		const childCreate = await prisma.child.create({
@@ -272,25 +274,6 @@ app.get('/api/child/setting', async (req, res) => {
 //         res.status(500).json({ message: "締め日登録エラー", error: error.message });
 //     }
 // })
-
-// デコードしたトークンを返すメソッド
-function verifyToken(req) {
-	const token = req.body.token || req.headers.authorization?.split(' ')[1];
-
-	if (!token) {
-		throw new Error('トークンが見つかりません');
-	}
-
-	try {
-		return jwt.verify(token, process.env.JWT_SECRET);
-	} catch (err) {
-		throw new Error('トークンが無効です');
-	}
-}
-
-module.exports = {
-	verifyToken,
-};
 
 //一番下
 module.exports = app;

@@ -5,7 +5,7 @@ import axios from "axios";
 import { TASK_DELETE_API, TASK_ONE_GET, TASK_UPDATE_API } from "../../config/api";
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
-    const [name, setName] = useState('');
+    const [title, setTitle] = useState('');
     const [reward, setReward] = useState('');
     const [deadline, setDeadline] = useState('');
     const [memo, setMemo] = useState('');
@@ -17,13 +17,12 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                 const task = response.data;
 
                 // フォーム初期値をセット
-                setName(task.t_name);
+                setTitle(task.t_name);
                 setReward(task.reward);
                 setDeadline(task.deadline ? new Date(task.deadline).toISOString().slice(0, 16) : '');
                 setMemo(task.memo || '');
             } catch (error) {
                 console.error("タスク詳細取得エラー:", error);
-                alert("タスクの読み込みに失敗しました");
                 setActiveTab('tasks');
             }
         };
@@ -39,17 +38,15 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`${TASK_UPDATE_API}${taskId}`, {
-                t_name: name,
+            await axios.patch(`${TASK_UPDATE_API}${taskId}`, {
+                t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
                 memo: memo,
             });
-            alert("タスクを更新しました");
             setActiveTab('tasks');
         } catch (error) {
             console.error("更新エラー:", error);
-            alert("更新に失敗しました");
         }
     };
 
@@ -58,57 +55,84 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         if (!window.confirm("このタスクを削除しますか？")) return;
         try {
             await axios.delete(`${TASK_DELETE_API}${taskId}`);
-            alert("削除しました");
             setActiveTab('tasks');
         } catch (error) {
             console.error("削除エラー:", error);
-            alert("削除に失敗しました");
         }
     };
 
     return (
-        <div>
-            <h1>おてつだいの詳細・編集</h1>
-            <p>・名前</p>
-            <InputField
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-            />
-            <CustomButton
-                type="button"
-                label="削除"
-                onClick={handleDeleteClick}
-            />
-            <p>・金額</p>
-            <InputField
-                type="number"
-                value={reward}
-                onChange={e => setReward(e.target.value)}
-            />
-            （円）
-            <p>・期限</p>
-            <InputField
-                type="datetime-local"
-                value={deadline}
-                onChange={e => setDeadline(e.target.value)}
-            />
-            <p>・説明</p>
-            <InputField
-                type="text"
-                value={memo}
-                onChange={e => setMemo(e.target.value)}
-            />
-            <CustomButton
-                type="button"
-                label="戻る"
-                onClick={handleBackClick}
-            />
-            <CustomButton
-                type="button"
-                label="決定"
-                onClick={handleSubmitClick}
-            />
+        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+            <div className="m-10">
+
+                <h1 className="text-5xl font-bold p-8">おてつだいの詳細・編集</h1>
+                <div className="w-3/5 mx-auto mt-8 space-y-16">
+                    <div className="flex mb-8">
+                        <p className="text-4xl mr-4">・名前</p>
+                        <InputField
+                            type="text"
+                            value={title}
+                            onChange={e => setTitle(e.target.value)}
+                            className="w-70 h-11 px-4 text-3xl border bg-white rounded-lg"
+                        />
+                        <div className="flex ml-auto">
+                            <CustomButton
+                                type="button"
+                                label="削除"
+                                onClick={handleDeleteClick}
+                                className="w-30 h-12 px-4 text-3xl border rounded-lg bg-red-500 hover:bg-red-400
+                                      text-black font-bold"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-start items-center space-x-4 mb-8">
+                        <p className="text-4xl">・金額</p>
+                        <InputField
+                            type="number"
+                            value={reward}
+                            onChange={e => setReward(e.target.value)}
+                            className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
+                        />
+                        <span className="text-4xl">（円）</span>
+                    </div>
+                    <div className="flex justify-start items-center space-x-4 mb-8">
+                        <p className="text-4xl">・期限</p>
+                        <InputField
+                            type="datetime-local"
+                            value={deadline}
+                            onChange={e => setDeadline(e.target.value)}
+                            className="text-2xl w-67 h-11 px-4 border bg-white rounded-lg"
+                        />
+                    </div>
+                    <div className="flex justify-start space-x-4 mb-8">
+                        <p className="text-4xl">・説明</p>
+                        <InputField
+                            type="text"
+                            value={memo}
+                            onChange={e => setMemo(e.target.value)}
+                            className="text-2xl w-3/5 h-11 px-4 border bg-white rounded-lg"
+                        />
+                    </div>
+                </div>
+
+                <div className="w-3/5 mt-24 flex justify-between mx-auto">
+                    <CustomButton
+                        type="button"
+                        label="戻る"
+                        onClick={handleBackClick}
+                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200
+                                      text-black font-bold"
+                    />
+                    <CustomButton
+                        type="button"
+                        label="決定"
+                        onClick={handleSubmitClick}
+                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-orange-300 hover:bg-orange-200
+                                      text-black font-bold"
+                    />
+                </div>
+            </div>
         </div>
     )
 }
