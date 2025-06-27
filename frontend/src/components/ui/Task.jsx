@@ -7,16 +7,15 @@ export const Task = ({ task, onEdit }) => {
     }
 
     return (
-        <li className="px-6 py-2 bg-white shadow rounded h-38 flex items-center my-4">
+        <li className="px-6 py-2 bg-gray-50 shadow h-34 w-3/4 flex items-center my-2 border-gray-200 rounded-lg shadow-sm">
 
             <div className="space-y-4">
-                <p className="text-4xl font-medium">{task.t_name}</p>
+                <p className="text-3xl font-medium">{task.t_name}</p>
                 <p className="text-xl text-gray-700">{task.memo}</p>
             </div>
             <div className="ml-auto flex items-center space-x-12">
 
-                <p className="text-3xl text-black">¥{task.reward}</p>
-
+                <p className="text-3xl text-green-600">¥{task.reward}</p>
 
                 <CustomButton
                     type="button"
@@ -27,9 +26,6 @@ export const Task = ({ task, onEdit }) => {
                 />
 
             </div>
-
-
-
         </li>
     )
 }
