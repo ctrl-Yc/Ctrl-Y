@@ -3,7 +3,7 @@ import { CustomButton } from "./CustomButton";
 import { Select } from "./Select";
 import { InputField } from "./InputField";
 
-export const ChildSettings = () => {
+export const ChildSettings = ({ setActiveTab }) => {
   const [keyword, setKeyword] = useState('');
   const [selectedChildId, setSelectedChildId] = useState('');
   const [children, setChildren] = useState([]);
@@ -26,7 +26,7 @@ export const ChildSettings = () => {
   // 戻るボタン
   const handleBackClick = (e) => {
     e.preventDefault();
-    console.log('戻るボタンが押されました');
+    setActiveTab('settings');
   };
 
   // 決定ボタン

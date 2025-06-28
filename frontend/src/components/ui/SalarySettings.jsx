@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Select } from "./Select";
 import { CustomButton } from "./CustomButton";
 
-export const SalarySettings = () => {
+export const SalarySettings = ({ setActiveTab }) => {
 
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
@@ -29,7 +29,7 @@ export const SalarySettings = () => {
   // 戻るボタン
   const handleBackClick = (e) => {
     e.preventDefault();
-    console.log('戻るボタンが押されました');
+    setActiveTab('settings');
   };
 
   // 決定ボタン

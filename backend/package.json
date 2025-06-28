@@ -7,11 +7,13 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",
-    "prisma": "^6.10.1"
+    "prisma": "^6.10.1",
+    "swagger-autogen": "^2.23.7"
   },
   "name": "backend",
   "version": "1.0.0",
@@ -20,7 +22,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node server.js",
-    "dev:doppler": "doppler run -- npm run dev"
+    "dev:doppler": "doppler run -- npm run dev",
+    "swagger": "node src/swagger.js"
   },
   "keywords": [],
   "author": "",

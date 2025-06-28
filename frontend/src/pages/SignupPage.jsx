@@ -6,7 +6,7 @@ import { InputField } from "../components/ui/InputField";
 import {useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 import { SIGNUP_ENDPOINT } from "/src/config/api";
-import { responseToken } from "../config/Token";
+import { setToken } from "../config/Token";
 
 export const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -31,13 +31,11 @@ export const SignupPage = () => {
       }
     );
     const Token = response.data.token;
-    responseToken(Token);
+    setToken(Token);
       console.log('登録成功:', response.data);
-      alert('アカウント作成に成功しました！');
       navigate('/childname')
     } catch (error) {
       console.error('エラー:', error);
-      alert('登録に失敗しました');
     }
   };
 

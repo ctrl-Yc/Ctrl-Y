@@ -42,7 +42,26 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return tasks.length === 0 ? (
-    <p className="text-center text-gray-400">表示できるタスクがありません。</p>
+    <>
+      <p className="text-center text-gray-400">表示できるタスクがありません。</p>
+      <div className="mt-6 flex flex-col items-center space-y-4">
+        <CustomButton
+          type="button"
+          label={isViewingFinished ? "もどる" : "完了報告を見る"}
+          onClick={handleToggleView}
+          className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+          transition-colors duration-300 mx-auto'
+        />
+        {!isViewingFinished && (
+          <CustomButton
+            type="button"
+            label="お手伝いを作成"
+            onClick={handleCreateClick}
+            className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300"
+          />
+        )}
+      </div>
+    </>
   ) : (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <div className="m-10">

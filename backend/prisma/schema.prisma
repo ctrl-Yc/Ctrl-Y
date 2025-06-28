@@ -34,6 +34,7 @@ model User {
   pay_day      Boolean?
   registered_at DateTime  @default(now())
   updated_at    DateTime @default(now())
+  children  Child[]
 
   @@map("parent_acc")
   @@schema("ctrl-Y")
@@ -46,6 +47,8 @@ model Child {
   icon_path String? @db.Text
   registered_at DateTime @default(now())
   updated_at DateTime @default(now())
+  
+  parent User @relation(fields: [parent_id], references: [user_id], onDelete: Cascade)
 
   @@map("child_acc")
   @@schema("ctrl-Y")
