@@ -1,25 +1,21 @@
-import { jwtDecode } from "jwt-decode";
-import { getChildToken } from "../config/Token";
+import { useLocation } from 'react-router-dom';
 
 export const Childurl = () => {
-  const childtoken = getChildToken();
+  const location = useLocation();
+  const childId = location.state?.childId;
 
-  if (!childtoken) {
-    return <p>ログインしてください</p>;
+  if (!childId) {
+    return <p>子供IDがありません</p>;
   }
 
-  const decoded = jwtDecode(childtoken);
-  const childUUID = decoded.user_id;
-
-  const childSignupUrl = `${window.location.origin}/child/login/${childUUID}`;
+  const childSignupUrl = `${window.location.origin}/child/login/${childId}`;
 
   return (
     <div>
-      <p>子供用アカウント作成ページのURL:</p>
+      <p>子供用ログインページのURL:</p>
       <a href={childSignupUrl} target="_blank" rel="noopener noreferrer">
         {childSignupUrl}
       </a>
     </div>
   );
 };
-

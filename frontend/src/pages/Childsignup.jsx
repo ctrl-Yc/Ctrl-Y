@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
 import { CHILD_SIGNUP } from "../config/api";
-import { setChildToken } from "../config/Token";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
-  const { childUUID } = useParams();
   const [c_name, setName] = useState('');
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
@@ -35,15 +33,12 @@ export const Childsignup = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
-           child_id: childUUID,
         },
       }
     );
-      const childtoken = response.data.token;
-      setChildToken(childtoken);
-      console.log(childtoken)
+    
       console.log('登録成功:', response.data);
-      navigate('/Childurl')
+      navigate('/Childurl',{ state: { childId: response.data.user_id } });
     } catch (error) {
       console.error('エラー:', error);
     }

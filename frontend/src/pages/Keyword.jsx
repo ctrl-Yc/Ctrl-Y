@@ -4,6 +4,7 @@ import axios from "axios";
 import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { CHILD_LOGIN } from "../config/api";
+import { setChildToken } from "../config/Token"
 
 export const Keyword = () => {
   const [keyword, setKeyword] = useState('');
@@ -21,12 +22,13 @@ export const Keyword = () => {
         {
         headers: {
             'Content-Type': 'application/json',
-             child_id: childUUID,
         },
         }
     );
-    console.log(response)
+    console.log(childUUID)
     if (response.data.token) {
+        const childtoken = response.data.token;
+        setChildToken(childtoken);
         navigate(`/child/home/${response.data.child_id}`);
     } else {
         console.log("あいことば違う");
