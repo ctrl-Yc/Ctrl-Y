@@ -3,6 +3,7 @@ import { CustomButton } from "../components/ui/CustomButton";
 import { InputField } from "../components/ui/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
+import { CHILD_SIGNUP } from "../config/api";
 import axios from 'axios'; 
 
 export const Childsignup = () => {
@@ -19,11 +20,11 @@ export const Childsignup = () => {
     const token = getToken();
 
     if (!token) {
-      alert('トークンが見つかりません。親アカウントからやり直してください。');
+      alert('親アカウントからやり直してください。');
       return;
     }
     try {
-      const response = await axios.post('CHILD_SIGNUP', 
+      const response = await axios.post(CHILD_SIGNUP, 
       {
         c_name,
         keyword,
@@ -35,18 +36,14 @@ export const Childsignup = () => {
         },
       }
     );
-
+    
       console.log('登録成功:', response.data);
-      alert('入力完了！');
-      navigate('./')
+      navigate('/Childurl',{ state: { childId: response.data.user_id } });
     } catch (error) {
       console.error('エラー:', error);
-      alert('登録に失敗しました');
     }
   };
-
   return (
-    <>
       <div className="bg-orange-100 h-screen">
         <h1 className="text-6xl font-bold text-center w-full py-25">子供用アカウント作成</h1>
         <form className="space-y-4">
@@ -88,6 +85,5 @@ export const Childsignup = () => {
           </div>
         </form>
       </div>
-    </>
   );
 };
