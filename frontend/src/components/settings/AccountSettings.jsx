@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { InputField } from "./InputField"
-import { CustomButton } from "./CustomButton";
+import { InputField } from "../common/InputField"
+import { CustomButton } from "../common/CustomButton";
 
 export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');

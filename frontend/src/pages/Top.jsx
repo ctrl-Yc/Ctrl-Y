@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Sidebar } from "../components/ui/Sidebar"
-import { Tasks } from "../components/ui/Tasks";
-import { Settings } from "../components/ui/Settings";
+import { Tasks } from "../components/tasks/Tasks";
+import { Settings } from "../components/settings/Settings";
 import { MoneyRecords } from "../components/ui/MoneyRecords";
-import { SalarySettings } from "../components/ui/SalarySettings";
-import { ChildSettings } from "../components/ui/ChildSettings";
-import { NoticeSettings } from "../components/ui/NoticeSettings";
-import { AccountSettings } from "../components/ui/AccountSettings";
-import { TaskCreate } from "../components/ui/TaskCreate";
-import { TaskEdit } from "../components/ui/TaskEdit";
+import { SalarySettings } from "../components/settings/SalarySettings";
+import { ChildSettings } from "../components/settings/ChildSettings";
+import { NoticeSettings } from "../components/settings/NoticeSettings";
+import { AccountSettings } from "../components/settings/AccountSettings";
+import { TaskCreate } from "../components/tasks/TaskCreate";
+import { TaskEdit } from "../components/tasks/TaskEdit";
 
 export const Top = () => {
     const [activeTab, setActiveTab] = useState('tasks');

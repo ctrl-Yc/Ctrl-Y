@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { CustomButton } from "./CustomButton";
-import { InputField } from "./InputField";
 import axios from "axios";
 import { TASK_DELETE_API, TASK_ONE_GET, TASK_UPDATE_API } from "../../config/api";
+import { CustomButton } from "../common/CustomButton";
+import { InputField } from "../common/InputField";
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
     const [title, setTitle] = useState('');

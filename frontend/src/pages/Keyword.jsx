@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CustomButton } from "../components/ui/CustomButton";
-import { InputField } from "../components/ui/InputField";
+import { CustomButton } from "../components/common/CustomButton";
+import { InputField } from "../components/common/InputField";
 import { CHILD_LOGIN } from "../config/api";
 import { setChildToken } from "../config/Token"
 

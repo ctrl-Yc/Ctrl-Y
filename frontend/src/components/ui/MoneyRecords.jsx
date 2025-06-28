@@ -1,7 +1,8 @@
 // components/ui/MoneyRecords.jsx
 
 import { useState } from 'react'; // useState をインポート
-import { Select } from './Select'; // 作成した Select コンポーネントをインポート
+import { Select } from '../common/Select';
+
 
 export const MoneyRecords = () => {
     // 現在選択されている年を状態として管理

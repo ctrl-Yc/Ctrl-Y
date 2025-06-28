@@ -1,8 +1,8 @@
 //親アカウントの初回登録画面
 
 import { useState } from "react";
-import { CustomButton } from "../components/ui/CustomButton";
-import { InputField } from "../components/ui/InputField";
+import { CustomButton } from "../components/common/CustomButton";
+import { InputField } from "../components/common/InputField";
 import {useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 import { SIGNUP_ENDPOINT } from "/src/config/api";

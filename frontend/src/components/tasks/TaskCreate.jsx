@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { InputField } from "./InputField"
 import axios from "axios";
-import { CustomButton } from "./CustomButton";
 import { TASK_CREATE_POST } from "../../config/api";
+import { CustomButton } from "../common/CustomButton";
+import { InputField } from "../common/InputField";
 
 export const TaskCreate = ({ setActiveTab }) => {
     const [name, setName] = useState('');
