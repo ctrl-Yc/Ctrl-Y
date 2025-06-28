@@ -29,7 +29,7 @@ export const Keyword = () => {
     if (response.data.token) {
         const childtoken = response.data.token;
         setChildToken(childtoken);
-        navigate(`/child/home/${response.data.child_id}`);
+        navigate(`/child/top/${response.data.child_id}`);
     } else {
         console.log("あいことば違う");
     }
