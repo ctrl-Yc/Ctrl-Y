@@ -65,9 +65,7 @@ export const NoticeSettings = ({ setActiveTab }) => {
                       transition-colors duration-300'
           />
         </div>
-
       </div>
-
     </div>
   )
 }
