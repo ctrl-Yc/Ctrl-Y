@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Select } from "./Select";
-import { CustomButton } from "./CustomButton";
+import { CustomButton } from "../common/CustomButton";
+import { Select } from "../common/Select";
 
 export const SalarySettings = ({ setActiveTab }) => {
 

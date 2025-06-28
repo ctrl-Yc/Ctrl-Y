@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ToggleSwitch } from "./ToggleSwitch";
-import { CustomButton } from "./CustomButton";
+import { ToggleSwitch } from "../ui/ToggleSwitch";
+import { CustomButton } from "../common/CustomButton";
 
 export const NoticeSettings = ({ setActiveTab }) => {
   const [cutoffNoticeOn, setCutoffNoticeOn] = useState(false);

@@ -1,4 +1,4 @@
-import { Cards } from "./Cards"
+import { Cards } from "../ui/Cards"
 
 export const Settings = ({ onSettingItemClick }) => {
  const settingItems = [

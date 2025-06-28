@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { CustomButton } from "./CustomButton";
-import { Select } from "./Select";
-import { InputField } from "./InputField";
+import { CustomButton } from "../common/CustomButton";
+import { InputField } from "../common/InputField";
+import { Select } from "../common/Select";
 
 export const ChildSettings = ({ setActiveTab }) => {
   const [keyword, setKeyword] = useState('');

@@ -1,4 +1,4 @@
-import { CustomButton } from "./CustomButton"
+import { CustomButton } from "../common/CustomButton";
 
 export const Task = ({ task, onEdit }) => {
     const handleClick = (e) => {

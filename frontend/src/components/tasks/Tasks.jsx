@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
-import { CustomButton } from "./CustomButton";
+
 import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../config/api";
+import { CustomButton } from "../common/CustomButton";
 
 export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState([]);
