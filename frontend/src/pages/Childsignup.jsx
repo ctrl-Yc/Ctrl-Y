@@ -44,7 +44,6 @@ export const Childsignup = () => {
     }
   };
   return (
-    <>
       <div className="bg-orange-100 h-screen">
         <h1 className="text-6xl font-bold text-center w-full py-25">子供用アカウント作成</h1>
         <form className="space-y-4">
@@ -86,6 +85,5 @@ export const Childsignup = () => {
           </div>
         </form>
       </div>
-    </>
   );
 };
