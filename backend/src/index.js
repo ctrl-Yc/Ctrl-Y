@@ -275,6 +275,57 @@ app.get("/api/child/setting", async (req, res) => {
     }
 });
 
+app.post("/api/pay/yearly", async (req, res) => {
+    try {
+        const { year } = req.body;
+        const decoded = verifyToken(req); 
+
+        // 最新登録の子供をとってきます
+        const newestChild = await prisma.child.findFirst({
+            where: {
+                parent_id: decoded.user_id
+            },
+            orderBy: {
+                registered_at: 'desc'
+            },
+            select: {
+                user_id: true,
+                c_name: true
+            }
+        });
+
+        if (!newestChild) {
+            return res.status(404).json({ message: "子どもが見つかりません" });
+        }
+
+        // 年指定
+
+        const START_OF_YEAR = new Date(`${year}-01-01T00:00:00.000Z`);
+        const END_OF_YEAR = new Date(`${year}-12-31T23:59:59.999Z`);
+
+        // 年ごとでとってきたいつもり。
+        const pays = await prisma.pay.findMany({
+            where: {
+                user_id: newestChild.user_id,
+                inserted_month: {
+                    gte: START_OF_YEAR,
+                    lte: END_OF_YEAR
+                }
+            },
+            orderBy: {
+                inserted_month: 'asc'
+            }
+        });
+
+        res.status(200).json({ child: newestChild, pays });
+    } catch (error) {
+        console.error("年別給与取得エラー:", error);
+        res.status(500).json({ message: "年別給与取得エラー", error: error.message });
+    }
+});
+
+
+
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {
 //     try {
