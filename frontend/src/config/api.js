@@ -15,3 +15,5 @@ export const TASK_UPDATE_API = `${API_BASE_URL}/api/tasks/taskEdit/`;
 export const TASK_DELETE_API = `${API_BASE_URL}/api/tasks/taskDelete/`;
 export const TASK_ONE_GET = `${API_BASE_URL}/api/tasks/getOnetask/`;
 export const TASK_CREATE_POST = `${API_BASE_URL}/api/tasks/newtaskadd`;
+export const CHILDREN_ALL_GET = `${API_BASE_URL}/api/child/list`;
+export const RECORDS_ALL_GET = `${API_BASE_URL}/api/children/`;
