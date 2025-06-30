@@ -1,9 +1,12 @@
-//タスクコントローラー
+ //タスクコントローラー
 const tasksServices = require("../services/tasksServices.js");
+const { verifyToken } = require("../lib/jwt.js");
 
 exports.getAllTasks = async (req,res)=>{
     try{
-        const AllTasks = await tasksServices.findAllTasks();
+        const decoded = verifyToken(req); // JWTからユーザー情報を取得
+        const parent_id = decoded.user_id;
+        const AllTasks = await tasksServices.findAllTasks(parent_id);
         res.status(200).json(AllTasks);
     }catch (error) {
         console.log("tasksの全件取得エラー");

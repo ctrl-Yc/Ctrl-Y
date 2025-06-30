@@ -4,9 +4,11 @@
 const prisma = require("../lib/prisma.js");
 
 //Tasks全件取得
-exports.findAllTasks = async () =>{
-    return await prisma.task.findMany();
-};
+exports.findAllTasks = async (parent_id) =>{
+    return await prisma.task.findMany({
+        where:{ parent_id: parent_id, },
+    });
+}
 
 // taskの1件取得(task_no指定)
 exports.getOneTask = async (taskId) =>{

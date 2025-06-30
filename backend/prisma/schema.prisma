@@ -20,11 +20,15 @@ model Task {
   reward     Int      @db.SmallInt
   deadline   DateTime @db.Timestamptz
   s_id       Int      @db.SmallInt
+  parent_id  String?  @db.Uuid
+
+  parent     User?       @relation(fields: [parent_id], references: [user_id])
+  status     TaskStatus  @relation(fields: [s_id], references: [s_id])
+  childTasks ChildTask[]
 
   @@map("tasks") 
   @@schema("ctrl-Y")
 }
-
 model User {
   user_id String  @id @default(uuid())
   email        String   @db.Text @unique
@@ -34,7 +38,9 @@ model User {
   pay_day      Boolean?
   registered_at DateTime  @default(now())
   updated_at    DateTime @default(now())
+
   children  Child[]
+  tasks     Task[]
 
   @@map("parent_acc")
   @@schema("ctrl-Y")
@@ -49,8 +55,21 @@ model Child {
   updated_at DateTime @default(now())
   
   parent User @relation(fields: [parent_id], references: [user_id], onDelete: Cascade)
+  childTasks ChildTask[]
 
   @@map("child_acc")
+  @@schema("ctrl-Y")
+}
+
+model ChildTask {
+  user_id String
+  task_id Int
+
+  child   Child @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  task    Task  @relation(fields: [task_id], references: [task_id], onDelete: Cascade)
+
+  @@id([user_id, task_id])
+  @@map("child_tasks")
   @@schema("ctrl-Y")
 }
 
@@ -62,5 +81,15 @@ model Pay {
 
   @@id([user_id, inserted_month])
   @@map("payroll")
+  @@schema("ctrl-Y")
+}
+
+model TaskStatus {
+  s_id Int   @id  @db.SmallInt
+  s_name String @db.Text
+
+  tasks Task[]
+
+  @@map("task_status")
   @@schema("ctrl-Y")
 }
