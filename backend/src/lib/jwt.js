@@ -13,12 +13,8 @@ function signToken(user_id, opts = {}) {
 	return jwt.sign(payload, SECRET);
 }
 
-function verifyToken(req) {
-	const token = req.body.token || req.headers.authorization?.split(' ')[1];
-
-	if (!token) {
-		throw new Error('トークンが見つかりません');
-	}
+function verifyToken(token) {
+	if (!token || token.length > 500) throw new Error('トークンが無効です');
 
 	try {
 		return jwt.verify(token, SECRET);
