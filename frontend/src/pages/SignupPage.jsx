@@ -5,7 +5,7 @@ import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import {useNavigate } from "react-router-dom";
 import axios from 'axios'; 
-import { SIGNUP_ENDPOINT } from "/src/config/api";
+import { SIGNUP_PARENT } from "../config/api";
 import { setToken } from "../config/Token";
 
 export const SignupPage = () => {
@@ -20,7 +20,7 @@ export const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post(SIGNUP_ENDPOINT, {
+      const response = await axios.post(SIGNUP_PARENT, {
         email,
         password,
       },

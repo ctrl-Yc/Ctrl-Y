@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
-import { CHILD_LOGIN } from "../config/api";
+import { LOGIN_CHILD } from "../config/api";
 import { setChildToken } from "../config/Token"
 
 export const Keyword = () => {
@@ -15,7 +15,7 @@ export const Keyword = () => {
     event.preventDefault();
 
     try {
-    const response = await axios.post(CHILD_LOGIN(childUUID),
+    const response = await axios.post(LOGIN_CHILD(childUUID),
         {
         keyword: keyword,
         },
