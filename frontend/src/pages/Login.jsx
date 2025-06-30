@@ -4,7 +4,7 @@ import { InputField } from "../components/common/InputField"
 import { Link, useNavigate } from "react-router-dom"
 import { setToken } from "../config/Token";
 import axios from "axios";
-import { LOGIN_ENDPOINT } from "../config/api";
+import { LOGIN_PARENT } from "../config/api";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ export const Login = () => {
       return;
     }
     try {
-      const response = await axios.post(LOGIN_ENDPOINT,
+      const response = await axios.post(LOGIN_PARENT,
         {
           email,
           password,

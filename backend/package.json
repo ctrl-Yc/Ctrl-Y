@@ -7,6 +7,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "postgres": "^3.4.7",
     "swagger-ui-express": "^5.0.1"
   },
@@ -24,6 +25,9 @@
     "dev": "node server.js",
     "dev:doppler": "doppler run -- npm run dev",
     "swagger": "node src/swagger.js"
+  },
+  "_moduleAliases": {
+    "@prisma": "src/lib/prisma.js"
   },
   "keywords": [],
   "author": "",
