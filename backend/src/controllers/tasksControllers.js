@@ -37,7 +37,9 @@ exports.getOneTasks = async (req,res) =>{
 
 exports.getIncompleteTasks = async (req,res)=>{
     try{
-        const IncompleteTasks = await tasksServices.findIncompleteTasks();
+        const decoded = verifyToken(req); // JWTからユーザー情報を取得
+        const parent_id = decoded.user_id;
+        const IncompleteTasks = await tasksServices.findIncompleteTasks(parent_id);
         res.status(200).json(IncompleteTasks);
     }catch (error) {
         console.log("未着手・着手tasksの全件取得エラー");
@@ -47,7 +49,9 @@ exports.getIncompleteTasks = async (req,res)=>{
 
 exports.getFinishedHelpingTasks = async (req,res)=>{
     try{
-        const FinishedHelpingTasks = await tasksServices.findFinishedHelpingTasks();
+        const decoded = verifyToken(req); // JWTからユーザー情報を取得
+        const parent_id = decoded.user_id;
+        const FinishedHelpingTasks = await tasksServices.findFinishedHelpingTasks(parent_id);
         res.status(200).json(FinishedHelpingTasks);
     }catch (error) {
         console.log("お手伝い完了tasksの全件取得エラー");
@@ -57,7 +61,9 @@ exports.getFinishedHelpingTasks = async (req,res)=>{
 
 exports.getCompletedTasks = async (req,res)=>{
     try{
-        const CompletedTasks = await tasksServices.findCompletedTasks();
+        const decoded = verifyToken(req); // JWTからユーザー情報を取得
+        const parent_id = decoded.user_id;
+        const CompletedTasks = await tasksServices.findCompletedTasks(parent_id);
         res.status(200).json(CompletedTasks);
     }catch (error) {
         console.log("承認済みのtasksの全件取得エラー");
@@ -67,7 +73,9 @@ exports.getCompletedTasks = async (req,res)=>{
 
 exports.postNewTasks = async (req,res)=>{
     try{
-        const NewTasks = await tasksServices.createNewTasks(req.body);
+        const decoded = verifyToken(req); // JWTからユーザー情報を取得
+        const parent_id = decoded.user_id;
+        const NewTasks = await tasksServices.createNewTasks(req.body,parent_id);
         res.status(200).json(NewTasks);
     }catch (error) {
         console.log("新しいのtasksの追加エラー");

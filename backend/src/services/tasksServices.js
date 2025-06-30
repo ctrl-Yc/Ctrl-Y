@@ -20,9 +20,10 @@ exports.getOneTask = async (taskId) =>{
 }
 
 //未着手,実行中tasksの全件取得
-exports.findIncompleteTasks = async () =>{
+exports.findIncompleteTasks = async (parent_id) =>{
     return await prisma.task.findMany({
         where:{
+            parent_id: parent_id,
             s_id:{
                 in:[0,1]
             }
@@ -31,33 +32,36 @@ exports.findIncompleteTasks = async () =>{
 }
 
 //お手伝い終了タスクの全権取得
-exports.findFinishedHelpingTasks = async () =>{
+exports.findFinishedHelpingTasks = async (parent_id) =>{
     return await prisma.task.findMany({
             where:{
+                parent_id: parent_id,
                 s_id:2
             }
         });
 }
 
 //承認済みtasksの全件取得
-exports.findCompletedTasks = async () =>{
+exports.findCompletedTasks = async (parent_id) =>{
     return await prisma.task.findMany({
             where:{
+                parent_id: parent_id,
                 s_id:3
             }
         });
 }
 
 //タスクのさくせい
-exports.createNewTasks = async (taskData)=>{
+exports.createNewTasks = async (taskData,parent_id)=>{
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.create({
             data:{
-                t_name:t_name,
-                memo:memo,
-                reward:reward,
-                deadline:deadline,
-                s_id:0
+                t_name: t_name,
+                memo: memo,
+                reward: reward,
+                deadline: deadline,
+                s_id:0,
+                parent_id: parent_id
             }
         })
 }
