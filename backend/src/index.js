@@ -297,42 +297,40 @@ app.get("/api/child/list", async (req, res) => {
 });
 
 
-app.get("/api/pay/childPayment", async (req, res) => {
+app.get("/api/children/:child_id/payments", async (req, res) => {
     try {
-        const { child_id, year } = req.query;
+    const { child_id } = req.params; // URL パスから child_id を取得
+    const { year } = req.query;      // クエリパラメータから year を取得
 
-        // とーくんの検証
-        const decoded = verifyToken(req);
-        const parent_id = decoded.user_id;
+    const decoded = verifyToken(req);
+    const parent_id = decoded.user_id;
 
-        const child = await prisma.child.findUnique({
-            where: { user_id: child_id },
-        });
+    const child = await prisma.child.findUnique({
+        where: { user_id: child_id },
+    });
 
-        if (!child) {
-            return res.status(404).json({ message: "指定された子供が存在しません" });
-        }
+    if (!child) {
+        return res.status(404).json({ message: "指定された子供が存在しません" });
+    }
 
-        if (child.parent_id !== parent_id) {
-            return res.status(403).json({ message: "この子供は認証された親に紐づいていません" });
-        }
+    if (child.parent_id !== parent_id) {
+        return res.status(403).json({ message: "この子供は認証された親に紐づいていません" });
+    }
 
-        // れこーど取得
-        const records = await prisma.pay.findMany({
-            where: {
-                user_id: child_id,
-                inserted_month: {
-                    gte: new Date(`${year}-01-01T00:00:00.000Z`),
-                    lte: new Date(`${year}-12-31T23:59:59.999Z`),
-                },
-            },
-        });
+    const records = await prisma.pay.findMany({
+        where: {
+        user_id: child_id,
+        inserted_month: {
+            gte: new Date(`${year}-01-01T00:00:00.000Z`),
+            lte: new Date(`${year}-12-31T23:59:59.999Z`),
+        },
+        },
+    });
 
-        res.status(200).json(records);
-
+    res.status(200).json(records);
     } catch (error) {
-        console.error("子供の給与取得エラー:", error);
-        res.status(500).json({ message: "子供の給与取得エラー", error: error.message });
+    console.error("子供の給与取得エラー:", error);
+    res.status(500).json({ message: "子供の給与取得エラー", error: error.message });
     }
 });
 
