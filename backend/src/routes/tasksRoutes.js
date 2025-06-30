@@ -1,26 +1,40 @@
 //タスクルーター
-
 const express = require('express');
 const router = express.Router();
-
+const auth = require('../middlewares/auth')
 const TasksController = require('../controllers/tasksControllers.js');
 
-router.get('/Allget', TasksController.getAllTasks);
+//Tasks全件取得(多分いらん？)
+router.get('/Allget', auth, TasksController.getAllTasks);
 
-router.get('/getIncomplete', TasksController.getIncompleteTasks);
+//未着手,実行中tasksの全件取得
+router.get('/getIncomplete', auth, TasksController.getIncompleteTasks);
 
-router.get('/finishedHelping', TasksController.getFinishedHelpingTasks);
+//お手伝い終了タスクの全権取得
+router.get('/finishedHelping', auth, TasksController.getFinishedHelpingTasks);
 
-router.get('/Approved', TasksController.getCompletedTasks);
+//承認済みtasksの全件取得
+router.get('/Approved', auth, TasksController.getCompletedTasks);
 
-router.post('/newtaskadd', TasksController.postNewTasks);
+//taskの追加
+router.post('/newtaskadd' , auth, TasksController.postNewTasks);
 
-router.patch('/taskEdit/:task_id', TasksController.patchEdiTasks);
+//taskの編集
+router.patch('/taskEdit/:task_id', auth, TasksController.patchEdiTasks);
 
-router.delete('/taskDelete/:task_id', TasksController.deleteTasks);
+//taskの削除
+router.delete('/taskDelete/:task_id', auth, TasksController.deleteTasks);
 
+//一件のtask取得
 router.get('/getOnetask/:task_id', TasksController.getOneTasks);
 
-router.get('/complete', TasksController.getCompletedTasks);
+//終了した合計タスク数
+router.get('/totalTaskNum',auth, TasksController.CompleteTaskNum);
+
+//終了したタスクの合計金額
+router.get('/totalSalary', auth,TasksController.TotalSalary);
+
+// //s_idの変更
+// router.patch('/sidEdit/:task_id/:s_id', auth,TasksController.SidEdit);
 
 module.exports = router;
