@@ -2,7 +2,17 @@
 const jwt = require("jsonwebtoken");
 
 function verifyToken(req) {
-    const token = req.body.token || req.headers.authorization?.split(" ")[1];
+    let token;
+
+    // GET
+    if (req.headers.authorization?.startsWith("Bearer ")) {
+        token = req.headers.authorization.split(" ")[1];
+    }
+
+    // bodyにtokenが含まれている場合 (今回は必要ないかも)
+    else if (req.body?.token) {
+        token = req.body.token;
+    }
 
     if (!token) {
         throw new Error("トークンが見つかりません");
@@ -10,7 +20,7 @@ function verifyToken(req) {
 
     try {
         return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
+    } catch (error) {
         throw new Error("トークンが無効です");
     }
 }
