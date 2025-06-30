@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.JWT_SECRET;
 
+
 function signToken(user_id, opts = {}) {
 	const payload = {
 		user_id,
