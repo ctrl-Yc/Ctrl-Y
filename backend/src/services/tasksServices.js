@@ -6,7 +6,7 @@ const prisma = require("../lib/prisma.js");
 //Tasks全件取得
 exports.findAllTasks = async (parent_id,s_id) => {
     return await prisma.task.findMany({
-        where:{ parent_id,s_id ,},
+        where:{ parent_id, s_id },
     });
 }
 
@@ -111,6 +111,6 @@ exports.totalSalary = async (parent_id) => {
 	});
 }	 
 
-// exports.SidEdit = async () => {
+exports.SidEdit = async () => {
 
-// }
+}
