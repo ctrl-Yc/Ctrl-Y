@@ -8,12 +8,15 @@ export const PARENT_SIGNUP = PARENT_BASE;
 export const PARENT_LOGIN = `${PARENT_BASE}/login`;
 
 //子供ユーザー
-export const CHILDREN_BASE = `${API_BASE_URL}/api/parents`;
-export const CHILDREN_SIGNUP = PARENT_BASE;
-export const CHILDREN_LOGIN = ( child_id ) => `${PARENT_BASE}/${child_id}/login`;
+export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
+export const CHILDREN_SIGNUP = CHILDREN_BASE;
+export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`;
 
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
 
 //一覧取得
 export const TASKS_COLLECTION = TASKS_BASE;
+
+//個別タスクURLを返す
+export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;

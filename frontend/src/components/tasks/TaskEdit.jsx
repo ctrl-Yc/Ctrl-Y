@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { TASK_DELETE_API, TASK_ONE_GET, TASK_UPDATE_API } from "../../config/api";
+import { taskUrl } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 
@@ -13,7 +13,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const response = await axios.get(`${TASK_ONE_GET}${taskId}`);
+                const response = await axios.get(`${taskUrl(taskId)}`);
                 const task = response.data;
 
                 // フォーム初期値をセット
@@ -38,7 +38,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${TASK_UPDATE_API}${taskId}`, {
+            await axios.patch(`${taskId(taskId)}`, {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
@@ -54,7 +54,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         e.preventDefault();
         if (!window.confirm("このタスクを削除しますか？")) return;
         try {
-            await axios.delete(`${TASK_DELETE_API}${taskId}`);
+            await axios.delete(`${taskUrl(taskId)}`);
             setActiveTab('tasks');
         } catch (error) {
             console.error("削除エラー:", error);

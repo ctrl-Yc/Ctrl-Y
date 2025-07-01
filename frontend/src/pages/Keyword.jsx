@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
-import { LOGIN_CHILD } from "../config/api";
+import { CHILDREN_LOGIN } from "../config/api";
 import { setChildToken } from "../config/Token"
 
 export const Keyword = () => {
@@ -15,7 +15,7 @@ export const Keyword = () => {
     event.preventDefault();
 
     try {
-    const response = await axios.post(LOGIN_CHILD(childUUID),
+    const response = await axios.post(CHILDREN_LOGIN(childUUID),
         {
         keyword: keyword,
         },
@@ -27,8 +27,8 @@ export const Keyword = () => {
     );
     console.log(childUUID)
     if (response.data.token) {
-        const childtoken = response.data.token;
-        setChildToken(childtoken);
+        const childToken = response.data.token;
+        setChildToken(childToken);
         navigate(`/child/top/${response.data.child_id}`);
     } else {
         console.log("あいことば違う");

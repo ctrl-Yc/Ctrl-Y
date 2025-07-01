@@ -1,11 +1,9 @@
-//親アカウントの初回登録画面
-
 import { useState } from "react";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import {useNavigate } from "react-router-dom";
 import axios from 'axios'; 
-import { SIGNUP_PARENT } from "../config/api";
+import { PARENT_SIGNUP } from "../config/api";
 import { setToken } from "../config/Token";
 
 export const SignupPage = () => {
@@ -20,7 +18,7 @@ export const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post(SIGNUP_PARENT, {
+      const response = await axios.post(PARENT_SIGNUP, {
         email,
         password,
       },

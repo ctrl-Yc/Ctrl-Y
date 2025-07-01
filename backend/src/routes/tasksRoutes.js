@@ -6,11 +6,14 @@ const TasksController = require('../controllers/tasksControllers.js');
 
 //親側のAPI
 
+//taskの新規作成
+router.post('/' , auth, TasksController.postNewTasks);
+
 //Tasks全件取得(s_idでステータス管理)
 router.get('/:s_id', auth, TasksController.getAllTasks);
 
-//taskの新規作成
-router.post('/' , auth, TasksController.postNewTasks);
+//全件取得(ステータス管理なし)
+router.get('/', auth, TasksController.getAllTasks);
 
 //taskの編集
 router.patch('/:task_id', auth, TasksController.patchEdiTasks);
