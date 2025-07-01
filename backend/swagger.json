@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/tasks/Allget/{s_id}": {
+    "/tasks/all/{s_id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/tasks/newtaskadd": {
+    "/tasks/create": {
       "post": {
         "description": "",
         "parameters": [
@@ -66,7 +66,7 @@
         }
       }
     },
-    "/tasks/taskEdit/{task_id}": {
+    "/tasks/edit/{task_id}": {
       "patch": {
         "description": "",
         "parameters": [
@@ -95,7 +95,7 @@
         }
       }
     },
-    "/tasks/taskDelete/{task_id}": {
+    "/tasks/delete/{task_id}": {
       "delete": {
         "description": "",
         "parameters": [
@@ -124,7 +124,7 @@
         }
       }
     },
-    "/tasks/getOnetask/{task_id}": {
+    "/tasks/oen/{task_id}": {
       "get": {
         "description": "",
         "parameters": [
@@ -148,7 +148,7 @@
         }
       }
     },
-    "/tasks/totalTaskNum": {
+    "/tasks/totalnumber": {
       "get": {
         "description": "",
         "parameters": [
@@ -171,7 +171,7 @@
         }
       }
     },
-    "/tasks/totalSalary": {
+    "/tasks/totalsalary": {
       "get": {
         "description": "",
         "parameters": [

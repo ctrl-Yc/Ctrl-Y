@@ -65,10 +65,10 @@ exports.editTask = async (taskId,taskData,parent_id) => {
                 task_id: taskId
             },
             data:{
-                t_name:t_name,
-                memo:memo,
-                reward:reward,
-                deadline:deadline,
+                t_name,
+                memo,
+                reward,
+                deadline,
             }
         });
 }
@@ -111,6 +111,14 @@ exports.totalSalary = async (parent_id) => {
 	});
 }	 
 
-exports.SidEdit = async () => {
+// exports.SidEdit = async () => {
+//     const task = await exports.getOneTask(taskId);
+//     if (task.parent_id !== parent_id) {
+//         const error = new Error("このタスクを削除する権限がありません");
+//         error.statusCode = 403;
+//     throw error;
+//     }
+//     return await prisma.task.update({
 
-}
+//     })
+// }

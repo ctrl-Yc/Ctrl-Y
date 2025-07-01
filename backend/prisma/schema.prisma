@@ -37,7 +37,7 @@ model User {
   cutoff_day   Boolean?
   pay_day      Boolean?
   registered_at DateTime  @default(now())
-  updated_at    DateTime @default(now())
+  updated_at    DateTime  @updatedAt
 
   children  Child[]
   tasks     Task[]
