@@ -19,7 +19,7 @@ function verifyToken(token) {
 
 	try {
 		return jwt.verify(token, SECRET);
-	} catch (err) {
+	} catch (error) {
 		throw new Error('トークンが無効です');
 	}
 }
