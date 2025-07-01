@@ -7,19 +7,19 @@ const TasksController = require('../controllers/tasksControllers.js');
 //親側のAPI
 
 //Tasks全件取得(s_idでステータス管理)
-router.get('/all/:s_id', auth, TasksController.getAllTasks);
+router.get('/:s_id', auth, TasksController.getAllTasks);
 
 //taskの新規作成
-router.post('/create' , auth, TasksController.postNewTasks);
+router.post('/' , auth, TasksController.postNewTasks);
 
 //taskの編集
-router.patch('/edit/:task_id', auth, TasksController.patchEdiTasks);
+router.patch('/:task_id', auth, TasksController.patchEdiTasks);
 
 //taskの削除
-router.delete('/delete/:task_id', auth, TasksController.deleteTasks);
+router.delete('/:task_id', auth, TasksController.deleteTasks);
 
 //一件のtask取得
-router.get('/oen/:task_id', TasksController.getOneTasks);
+router.get('/:task_id', TasksController.getOneTasks);
 
 //終了した合計タスク数
 router.get('/totalnumber',auth, TasksController.CompleteTaskNum);
