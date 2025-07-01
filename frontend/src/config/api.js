@@ -8,7 +8,7 @@ export const SIGNUP_CHILD = `${API_BASE_URL}/child/create`;
 export const LOGIN_PARENT = `${API_BASE_URL}/api/user/login`;
 export const LOGIN_CHILD = (child_id) => `${API_BASE_URL}/child/login/${child_id}`;
 
-export const TASKS_ALL_GET = `${API_BASE_URL}/api/tasks/Allget`;
+export const TASKS_ALL_GET = `${API_BASE_URL}/api/tasks/Allget/`;
 export const TASKS_INCOMP_GET = `${API_BASE_URL}/api/tasks/getIncomplete`;
 export const TASKS_FINISH_GET = `${API_BASE_URL}/api/tasks/finishedHelping`;
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 
-import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../config/api";
+import { TASKS_ALL_GET } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
 export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
@@ -15,9 +15,23 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
-        const response = await axios.get(endpoint);
-        setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
+        const token = localStorage.getItem("token");
+
+        const response = await axios.get(TASKS_ALL_GET, {
+          params: {
+            id: isViewingFinished ? 2 : [0, 1]
+          },
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setTasks(
+          response.data.sort(
+            (a, b) => new Date(a.deadline) - new Date(b.deadline)
+          )
+        )
       } catch (error) {
         console.error(error);
         setError("タスクの取得に失敗しました");
