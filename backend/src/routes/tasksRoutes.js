@@ -1,26 +1,36 @@
 //タスクルーター
-
 const express = require('express');
 const router = express.Router();
+const auth = require('../middlewares/auth')
+const TasksController = require('../controllers/tasksControllers.js');
 
-const TasksController = require("../controllers/tasksControllers.js");
+//親側のAPI
+
+//Tasks全件取得(s_idでステータス管理)
+router.get('/:s_id', auth, TasksController.getAllTasks);
+
+//taskの新規作成
+router.post('/' , auth, TasksController.postNewTasks);
+
+//taskの編集
+router.patch('/:task_id', auth, TasksController.patchEdiTasks);
+
+//taskの削除
+router.delete('/:task_id', auth, TasksController.deleteTasks);
+
+//一件のtask取得
+router.get('/:task_id', TasksController.getOneTasks);
+
+//終了した合計タスク数
+router.get('/totalnumber',auth, TasksController.CompleteTaskNum);
+
+//終了したタスクの合計金額
+router.get('/totalsalary', auth,TasksController.TotalSalary);
 
 
-router.get('/Allget',TasksController.getAllTasks);
+//子供側のAPI
 
-router.get('/getIncomplete',TasksController.getIncompleteTasks);
-
-router.get('/finishedHelping',TasksController.getFinishedHelpingTasks);
-
-router.get('/Approved',TasksController.getCompletedTasks);
-
-router.post('/newtaskadd',TasksController.postNewTasks);
-
-router.patch('/taskEdit/:task_id',TasksController.patchEdiTasks);
-
-router.delete('/taskDelete/:task_id',TasksController.deleteTasks);
-
-router.get('/getOnetask/:task_id',TasksController.getOneTasks);
-
+// s_idの変更
+// router.patch('/edit/:task_id/s_id/:s_id', auth,TasksController.SidEdit);
 
 module.exports = router;

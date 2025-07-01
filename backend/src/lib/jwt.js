@@ -1,30 +1,30 @@
 // lib/jwt.js
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.JWT_SECRET;
 
-function verifyToken(req) {
-    let token;
 
-    // GET
-    if (req.headers.authorization?.startsWith("Bearer ")) {
-        token = req.headers.authorization.split(" ")[1];
-    }
+function signToken(user_id, opts = {}) {
+	const payload = {
+		user_id,
+		timestamp: new Date().toISOString(),
+	};
 
-    // bodyにtokenが含まれている場合 (今回は必要ないかも)
-    else if (req.body?.token) {
-        token = req.body.token;
-    }
+	if (opts.role) payload.role = opts.role;
 
-    if (!token) {
-        throw new Error("トークンが見つかりません");
-    }
+	return jwt.sign(payload, SECRET);
+}
 
-    try {
-        return jwt.verify(token, process.env.JWT_SECRET);
-    } catch (error) {
-        throw new Error("トークンが無効です");
-    }
+function verifyToken(token) {
+	if (!token || token.length > 500) throw new Error('トークンが無効です');
+
+	try {
+		return jwt.verify(token, SECRET);
+	} catch (error) {
+		throw new Error('トークンが無効です');
+	}
 }
 
 module.exports = {
-    verifyToken,
+	verifyToken,
+	signToken,
 };
