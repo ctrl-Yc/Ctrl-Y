@@ -49,22 +49,6 @@ app.use('/api/setting', settingRoutes);
 // 	}
 // });
 
-//token変わってないかの処理
-
-//終了タスクの合計
-app.get('/api/tasks/complete', async (req, res) => {
-	try {
-		const completedTask = await prisma.task.count({
-			where: {
-				s_id: 3,
-			},
-		});
-		res.status(200).json({ completedTask: completedTask });
-	} catch (error) {
-		res.status(500).json({ message: '終了タスクの合計取得エラー', error: error.message });
-	}
-});
-
 // 月が変わった時のユーザーの処理
 app.get('/api/pay/payroll', async (req, res) => {
 	try {
@@ -100,23 +84,6 @@ app.get('/api/pay/payroll', async (req, res) => {
 	} catch (error) {
 		console.error('給与に関するエラー:', error);
 		res.status(500).json({ message: '給与計算エラー', error: error.message });
-	}
-});
-
-//給料合計金額
-app.get('/api/tasks/salary', async (req, res) => {
-	try {
-		const totalSalary = await prisma.task.aggregate({
-			where: {
-				s_id: 3,
-			},
-			_sum: {
-				reward: true,
-			},
-		});
-		res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 });
-	} catch (error) {
-		res.status(500).json({ message: '給料合計金額取得エラー', error: error.message });
 	}
 });
 

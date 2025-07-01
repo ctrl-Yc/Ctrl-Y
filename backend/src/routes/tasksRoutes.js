@@ -1,26 +1,36 @@
 //タスクルーター
-
 const express = require('express');
 const router = express.Router();
-
+const auth = require('../middlewares/auth')
 const TasksController = require('../controllers/tasksControllers.js');
 
-router.get('/Allget', TasksController.getAllTasks);
+//親側のAPI
 
-router.get('/getIncomplete', TasksController.getIncompleteTasks);
+//Tasks全件取得(s_idでステータス管理)
+router.get('/:s_id', auth, TasksController.getAllTasks);
 
-router.get('/finishedHelping', TasksController.getFinishedHelpingTasks);
+//taskの新規作成
+router.post('/' , auth, TasksController.postNewTasks);
 
-router.get('/Approved', TasksController.getCompletedTasks);
+//taskの編集
+router.patch('/:task_id', auth, TasksController.patchEdiTasks);
 
-router.post('/newtaskadd', TasksController.postNewTasks);
+//taskの削除
+router.delete('/:task_id', auth, TasksController.deleteTasks);
 
-router.patch('/taskEdit/:task_id', TasksController.patchEdiTasks);
+//一件のtask取得
+router.get('/:task_id', TasksController.getOneTasks);
 
-router.delete('/taskDelete/:task_id', TasksController.deleteTasks);
+//終了した合計タスク数
+router.get('/totalnumber',auth, TasksController.CompleteTaskNum);
 
-router.get('/getOnetask/:task_id', TasksController.getOneTasks);
+//終了したタスクの合計金額
+router.get('/totalsalary', auth,TasksController.TotalSalary);
 
-router.get('/complete', TasksController.getCompletedTasks);
+
+//子供側のAPI
+
+// s_idの変更
+// router.patch('/edit/:task_id/s_id/:s_id', auth,TasksController.SidEdit);
 
 module.exports = router;
