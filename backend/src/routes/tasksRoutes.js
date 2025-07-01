@@ -4,17 +4,8 @@ const router = express.Router();
 const auth = require('../middlewares/auth')
 const TasksController = require('../controllers/tasksControllers.js');
 
-//Tasks全件取得(多分いらん？)
-router.get('/Allget', auth, TasksController.getAllTasks);
-
-//未着手,実行中tasksの全件取得
-router.get('/getIncomplete', auth, TasksController.getIncompleteTasks);
-
-//お手伝い終了タスクの全権取得
-router.get('/finishedHelping', auth, TasksController.getFinishedHelpingTasks);
-
-//承認済みtasksの全件取得
-router.get('/Approved', auth, TasksController.getCompletedTasks);
+//Tasks全件取得
+router.get('/Allget/:s_id', auth, TasksController.getAllTasks);
 
 //taskの追加
 router.post('/newtaskadd' , auth, TasksController.postNewTasks);
