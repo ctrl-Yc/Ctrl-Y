@@ -18,4 +18,3 @@ export const TASK_DELETE_API = `${API_BASE_URL}/api/tasks/delete/`;
 export const TASK_ONE_GET = `${API_BASE_URL}/api/tasks/one/`;
 //{ /create }
 export const TASK_CREATE_POST = `${API_BASE_URL}/api/tasks/create`;
-
