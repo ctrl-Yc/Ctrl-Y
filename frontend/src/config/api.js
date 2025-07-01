@@ -1,20 +1,19 @@
-const isLocal = window.location.hostname === 'localhost';
+const isLocal = window.location.hostname === "localhost";
 
-export const API_BASE_URL = isLocal ? 'http://localhost:3000' : '';
+export const API_BASE_URL = isLocal ? "http://localhost:3000" : "";
 
-export const SIGNUP_PARENT = `${API_BASE_URL}/api/user/create`;
-export const SIGNUP_CHILD = `${API_BASE_URL}/child/create`;
+//親ユーザー
+export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
+export const PARENT_SIGNUP = PARENT_BASE;
+export const PARENT_LOGIN = `${PARENT_BASE}/login`;
 
-export const LOGIN_PARENT = `${API_BASE_URL}/api/user/login`;
-export const LOGIN_CHILD = (child_id) => `${API_BASE_URL}/child/login/${child_id}`;
+//子供ユーザー
+export const CHILDREN_BASE = `${API_BASE_URL}/api/parents`;
+export const CHILDREN_SIGNUP = PARENT_BASE;
+export const CHILDREN_LOGIN = ( child_id ) => `${PARENT_BASE}/${child_id}/login`;
 
-// { /all/:s_id } s_idで未着手・実行中などを管理
-export const TASKS_ALL_GET = `${API_BASE_URL}/api/tasks/all`;
-//{ /edit/:task_id }
-export const TASK_UPDATE_API = `${API_BASE_URL}/api/tasks/edit/`;
-//{ /delete/:task_id }
-export const TASK_DELETE_API = `${API_BASE_URL}/api/tasks/delete/`;
-//{ /oen/:task_id }
-export const TASK_ONE_GET = `${API_BASE_URL}/api/tasks/one/`;
-//{ /create }
-export const TASK_CREATE_POST = `${API_BASE_URL}/api/tasks/create`;
+//タスク系
+export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
+
+//一覧取得
+export const TASKS_COLLECTION = TASKS_BASE;
