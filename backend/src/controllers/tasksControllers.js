@@ -69,7 +69,6 @@ exports.patchEdiTasks = async (req, res) => {
         const taskId = parseInt(req.params.task_id, 10);
         const parent_id = req.user.user_id;
         const EditTask = await tasksServices.editTask(taskId, req.body, parent_id);
-        // res.status(200).json(EditTask);
 
         res.status(200).json({
             ...EditTask, task_id: EditTask.task_id.toString()
