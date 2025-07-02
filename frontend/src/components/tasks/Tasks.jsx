@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 
-import { TASKS_ALL_GET } from "../../config/api";
+import { TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
+
+// タスクのステータスを定義
+const STATUS = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAIT_REVIEW: 'WAIT_REVIEW',
+  DONE: 'DONE',
+};
 
 export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState([]);
@@ -17,7 +25,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(TASKS_ALL_GET, {
+        const response = await axios.get(TASKS_COLLECTION, {
           params: {
             id: isViewingFinished ? 2 : [0, 1]
           },

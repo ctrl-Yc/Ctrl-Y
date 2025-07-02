@@ -11,24 +11,19 @@ app.use(corsMiddleware);
 
 const prisma = require('./lib/prisma');
 
-// JWTとbcryptのインポート
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const SALT_ROUNDS = 10;
-
-const { verifyToken, signToken } = require('./lib/jwt');
+const { verifyToken } = require('./lib/jwt');
 
 app.use(express.json());
 
-//ルートインポート
+//タスクのルートインポート
 const tasksRoutes = require('./routes/tasksRoutes');
 app.use('/api/tasks', tasksRoutes);
 //ユーザーのルートインポート
 const userRoutes = require('./routes/userRoutes');
-app.use('/api/user', userRoutes);
+app.use('/api/parents', userRoutes);
 //子供のルートインポート
 const childRoutes = require('./routes/childRoutes.js');
-app.use('/child', childRoutes);
+app.use('/api/children', childRoutes);
 
 const settingRoutes = require('./routes/settingRoutes.js');
 app.use('/api/setting', settingRoutes);
