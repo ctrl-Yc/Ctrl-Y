@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Task {
-  task_id    BigInt         @id @default(autoincrement())
+  task_id    Int            @id @default(autoincrement())
   t_name     String
   memo       String?
   reward     Int            @db.SmallInt
@@ -60,7 +60,7 @@ model Child {
 }
 
 model ChildTask {
-  task_id BigInt
+  task_id Int
   user_id String @default(dbgenerated("auth.uid()")) @db.Uuid
   task    Task   @relation(fields: [task_id], references: [task_id], onDelete: NoAction, onUpdate: NoAction)
   child   Child  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)

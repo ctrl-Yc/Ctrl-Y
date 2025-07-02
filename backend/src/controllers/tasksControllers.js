@@ -16,12 +16,7 @@ exports.getAllTasks = async (req, res) => {
 
         const AllTasks = await tasksServices.findAllTasks(parent_id, labels);
 
-        const serialized = AllTasks.map((task) => ({
-            ...task,
-            task_id: task.task_id.toString(),
-        }))
-
-        res.status(200).json(serialized);
+        res.status(200).json(AllTasks);
     } catch (error) {
         console.log("tasksの取得エラー", error.message);
         res.status(500).json({ message: error.message });
@@ -37,8 +32,7 @@ exports.getOneTasks = async (req, res) => {
             return res.status(404).json({ message: "指定されたタスクが存在しません" });
         }
 
-        res.status(200).json({
-            ...task,task_id: task.task_id.toString()});
+        res.status(200).json(task);
     } catch (error) {
         console.error("taskの1件取得エラー");
         if (error.statusCode) {
@@ -53,11 +47,7 @@ exports.postNewTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
         const NewTasks = await tasksServices.createNewTasks(req.body, parent_id);
-        res.status(200).json(
-            {
-                ...NewTasks, task_id: NewTasks.task_id.toString()
-            }
-        );
+        res.status(200).json(NewTasks);
     } catch (error) {
         console.log("新しいのtasksの追加エラー", error.message);
         res.status(500).json({ message: error.message });
@@ -70,9 +60,7 @@ exports.patchEdiTasks = async (req, res) => {
         const parent_id = req.user.user_id;
         const EditTask = await tasksServices.editTask(taskId, req.body, parent_id);
 
-        res.status(200).json({
-            ...EditTask, task_id: EditTask.task_id.toString()
-        });
+        res.status(200).json(EditTask);
 
     } catch (error) {
         console.log("tasksの編集エラー");
@@ -96,7 +84,7 @@ exports.CompleteTaskNum = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
         const totalNum = await tasksServices.completeTaskNum(parent_id);
-        res.status(200).json({ totalNum: totalNum });
+        res.status(200).json(totalNum);
     } catch (error) {
         console.log("終了済みtaskの数取得エラー");
         res.status(500).json({ message: error.message });
