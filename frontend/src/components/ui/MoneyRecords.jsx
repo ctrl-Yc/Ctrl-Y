@@ -103,7 +103,7 @@ export const MoneyRecords = () => {
                     <div className="w-3/4 h-6 space-y-8">
                         {records.map((record) => (
                             <div
-                                key={`${(record.user_id, record)}-${record.inserted_month}`}
+                                key={`${record.user_id}-${record.inserted_month}`}
                                 className="bg-gray-50 h-30 border border-gray-200 rounded-lg px-20 flex items-center justify-between shadow-sm"
                             >
                                 <div className="text-gray-900 font-semibold text-2xl">
