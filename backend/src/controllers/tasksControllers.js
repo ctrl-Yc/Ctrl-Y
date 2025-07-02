@@ -6,18 +6,24 @@ exports.getAllTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
 
-        const labelPram = req.params.label;
+        const labelParam = req.params.label;
 
-        const queryLabels = req.query.labels ? req.query.labels.split(",") : undefined;
+        const queryLabels = req.query.labels ? req.query.labels?.split(",") : undefined;
 
-        const labels = labelPram
-            ? [labelPram.toUpperCase()]
+        const labels = labelParam
+            ? [labelParam.toUpperCase()]
             : queryLabels?.map((label) => label.toUpperCase());
 
         const AllTasks = await tasksServices.findAllTasks(parent_id, labels);
-        res.status(200).json(AllTasks);
+
+        const serialized = AllTasks.map((task) => ({
+            ...task,
+            task_id: task.task_id.toString(),
+        }))
+
+        res.status(200).json(serialized);
     } catch (error) {
-        console.log("tasksの取得エラー");
+        console.log("tasksの取得エラー", error.message);
         res.status(500).json({ message: error.message });
     }
 };
@@ -31,7 +37,8 @@ exports.getOneTasks = async (req, res) => {
             return res.status(404).json({ message: "指定されたタスクが存在しません" });
         }
 
-        res.status(200).json(task);
+        res.status(200).json({
+            ...task,task_id: task.task_id.toString()});
     } catch (error) {
         console.error("taskの1件取得エラー");
         if (error.statusCode) {
