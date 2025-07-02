@@ -25,7 +25,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       try {
         const token = localStorage.getItem("token");
 
-        const labels = isViewingFinished ? 'WAIT_PREVIEW' : ['TODO', 'IN_PROGRESS'];
+        const labels = isViewingFinished ? STATUS.WAIT_REVIEW : ['TODO', 'IN_PROGRESS'];
 
         const response = await axios.get(TASKS_COLLECTION(labels), {
           headers: {

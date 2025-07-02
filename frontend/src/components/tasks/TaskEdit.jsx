@@ -13,7 +13,16 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const response = await axios.get(`${taskUrl(taskId)}`);
+                const token = localStorage.getItem("token");
+                const response = await axios.get(
+                    `${taskUrl(taskId)}`,
+                    {
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
                 const task = response.data;
 
                 // フォーム初期値をセット
@@ -43,6 +52,12 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                 reward: Number(reward),
                 deadline: new Date(deadline),
                 memo: memo,
+            },
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
             });
             setActiveTab('tasks');
         } catch (error) {
@@ -54,7 +69,13 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         e.preventDefault();
         if (!window.confirm("このタスクを削除しますか？")) return;
         try {
-            await axios.delete(`${taskUrl(taskId)}`);
+            await axios.delete(`${taskUrl(taskId)}`,
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
             setActiveTab('tasks');
         } catch (error) {
             console.error("削除エラー:", error);
