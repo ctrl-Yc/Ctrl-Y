@@ -38,7 +38,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${taskId(taskId)}`, {
+            await axios.patch(`${taskUrl(taskId)}`, {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),

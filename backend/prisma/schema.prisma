@@ -1,83 +1,81 @@
-// schema.prisma
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+  provider  = "postgresql"
+  url       = env("DB_URL")
   directUrl = env("SB_CONNECT")
-  schemas   = ["public", "ctrl-Y"]
+  schemas   = ["ctrl-Y", "public"]
 }
 
-//model書く時一番下に"  @@schema("ctrl-Y")  "追加でスキーマを指定
-//その一つ上にテーブル指定
 model Task {
-  task_id    Int      @id @default(autoincrement())
-  t_name       String   @db.Text
-  memo       String?  @db.Text
-  reward     Int      @db.SmallInt
-  deadline   DateTime @db.Timestamptz
-  s_id       Int      @db.SmallInt
-  parent_id  String?  @db.Uuid
-
-  parent     User?       @relation(fields: [parent_id], references: [user_id])
-  status     TaskStatus  @relation(fields: [s_id], references: [s_id])
+  task_id    BigInt         @id @default(autoincrement())
+  t_name     String
+  memo       String?
+  reward     Int            @db.SmallInt
+  deadline   DateTime       @db.Timestamptz(6)
+  s_id       Int            @db.SmallInt
+  parent_id  String?        @default(dbgenerated("auth.uid()")) @db.Uuid
+  status     TaskStatusCode @default(TODO)
   childTasks ChildTask[]
+  parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  taskStatus TaskStatus     @relation(fields: [s_id], references: [s_id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@map("tasks") 
+  @@map("tasks")
   @@schema("ctrl-Y")
 }
-model User {
-  user_id String  @id @default(uuid())
-  email        String   @db.Text @unique
-  password     String   @db.Text
-  keyword      String?   @db.Text
-  cutoff_day   Boolean?
-  pay_day      Boolean?
-  registered_at DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
 
-  children  Child[]
-  tasks     Task[]
+model User {
+  user_id       String   @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  email         String   @unique
+  password      String
+  keyword       String
+  cutoff_day    Boolean
+  pay_day       Boolean
+  registered_at DateTime @db.Timestamptz(6)
+  updated_at    DateTime @updatedAt @db.Timestamptz(6)
+  children      Child[]
+  tasks         Task[]
 
   @@map("parent_acc")
   @@schema("ctrl-Y")
 }
 
 model Child {
-  user_id String @id @default(uuid())
-  parent_id String  @db.Uuid
-  c_name String @db.Text
-  icon_path String? @db.Text
-  registered_at DateTime @default(now())
-  updated_at DateTime  @updatedAt
-  
-  parent User @relation(fields: [parent_id], references: [user_id], onDelete: Cascade)
-  childTasks ChildTask[]
+  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  parent_id     String      @default(dbgenerated("auth.uid()")) @db.Uuid
+  c_name        String
+  icon_path     String?
+  registered_at DateTime    @db.Timestamptz(6)
+  updated_at    DateTime    @updatedAt @db.Timestamptz(6)
+  keyword       String?
+  parent        User        @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  childTasks    ChildTask[]
+  payroll       Pay[]
 
   @@map("child_acc")
   @@schema("ctrl-Y")
 }
 
 model ChildTask {
-  user_id String @unique
-  task_id Int    @unique
+  task_id BigInt
+  user_id String @default(dbgenerated("auth.uid()")) @db.Uuid
+  task    Task   @relation(fields: [task_id], references: [task_id], onDelete: NoAction, onUpdate: NoAction)
+  child   Child  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
-  child   Child @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  task    Task  @relation(fields: [task_id], references: [task_id], onDelete: Cascade)
-
-  @@id([user_id, task_id])
+  @@id([task_id, user_id])
   @@map("child_tasks")
   @@schema("ctrl-Y")
 }
 
 model Pay {
-  user_id String
-  inserted_month DateTime @default(now())
-  number Int @db.SmallInt
-  reward Int @db.SmallInt
+  user_id        String   @default(dbgenerated("auth.uid()")) @db.Uuid
+  inserted_month DateTime @db.Date
+  number         Int      @db.SmallInt
+  reward         Int      @db.SmallInt
+  child_acc      Child    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([user_id, inserted_month])
   @@map("payroll")
@@ -85,11 +83,30 @@ model Pay {
 }
 
 model TaskStatus {
-  s_id Int   @id  @db.SmallInt
-  s_name String @db.Text
-
-  tasks Task[]
+  s_id   Int    @id @default(autoincrement()) @db.SmallInt
+  s_name String @unique
+  tasks  Task[]
 
   @@map("task_status")
+  @@schema("ctrl-Y")
+}
+
+model tasks {
+  task_id  Int      @id @default(autoincrement())
+  t_name   String
+  memo     String?
+  reward   Int      @db.SmallInt
+  deadline DateTime @db.Timestamptz(6)
+  s_id     Int      @db.SmallInt
+
+  @@schema("public")
+}
+
+enum TaskStatusCode {
+  TODO
+  IN_PROGRESS
+  WAIT_REVIEW
+  DONE
+
   @@schema("ctrl-Y")
 }
