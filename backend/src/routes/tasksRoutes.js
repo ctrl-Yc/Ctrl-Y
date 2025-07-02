@@ -30,10 +30,7 @@ router.get('/totalnumber',auth, TasksController.CompleteTaskNum);
 //終了したタスクの合計金額
 router.get('/totalsalary', auth,TasksController.TotalSalary);
 
-
-//子供側のAPI
-
 // s_idの変更
-// router.patch('/edit/:task_id/s_id/:s_id', auth,TasksController.SidEdit);
+router.patch('/:task_id/:s_id', auth,TasksController.SidEdit);
 
 module.exports = router;

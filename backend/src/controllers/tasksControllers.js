@@ -97,15 +97,15 @@ exports.TotalSalary = async (req,res) => {
 
 }
 
-// exports.SidEdit = async (req,res) => {
-//     try{
-//         const taskId = parseInt(req.params.task_id, 10);
-//         const s_id = parseInt(req.params.s_id, 10); 
-//         const parent_id = req.user.user_id;
-//         const sidEdit = await tasksServices.SidEdit(parent_id,s_id,taskId)
-//         res.status(200).json({ sidEdit });
-//     } catch (error) {
-//         console.log("s_id変更エラー");
-//         res.status(500).json({ message : error.message});
-//     }
-// }
+exports.SidEdit = async (req,res) => {
+    try{
+        const taskId = parseInt(req.params.task_id, 10);
+        const s_id = parseInt(req.params.s_id, 10); 
+        const parent_id = req.user.user_id;
+        const sidEdit = await tasksServices.SidEdit(parent_id,s_id,taskId)
+        res.status(200).json({ sidEdit });
+    } catch (error) {
+        console.log("s_id変更エラー");
+        res.status(500).json({ message : error.message});
+    }
+}

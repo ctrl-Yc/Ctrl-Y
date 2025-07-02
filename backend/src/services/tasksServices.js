@@ -42,10 +42,10 @@ exports.createNewTasks = async (taskData, parent_id) => {
 	const { t_name, memo, reward, deadline } = taskData;
 	return await prisma.task.create({
 		data: {
-			t_name: t_name,
-			memo: memo,
-			reward: reward,
-			deadline: deadline,
+			t_name,
+			memo,
+			reward,
+			deadline,
 			status: TaskStatusCode.TODO,
 			s_id: 0,
 			parent_id,
@@ -113,14 +113,22 @@ exports.totalSalary = async (parent_id) => {
 	});
 };
 
-// exports.SidEdit = async () => {
-//     const task = await exports.getOneTask(taskId);
-//     if (task.parent_id !== parent_id) {
-//         const error = new Error("このタスクを削除する権限がありません");
-//         error.statusCode = 403;
-//     throw error;
-//     }
-//     return await prisma.task.update({
 
-//     })
-// }
+
+exports.SidEdit = async (parent_id,s_id,taskId) => {
+    const task = await exports.getOneTask(taskId);
+    if (task.parent_id !== parent_id) {
+        const error = new Error("このタスクを削除する権限がありません");
+        error.statusCode = 403;
+    throw error;
+    }
+
+    return await prisma.task.update({
+		where: {
+			task_id: taskId,
+		},
+		data: {
+			s_id
+		},
+    })
+}
