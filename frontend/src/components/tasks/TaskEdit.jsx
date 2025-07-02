@@ -13,7 +13,16 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const response = await axios.get(`${taskUrl(taskId)}`);
+                const token = localStorage.getItem("token");
+                const response = await axios.get(
+                    `${taskUrl(taskId)}`,
+                    {
+                        headers: {
+                            'Content-type': 'application/json',
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+
                 const task = response.data;
 
                 // フォーム初期値をセット
@@ -38,7 +47,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${taskId(taskId)}`, {
+            await axios.patch(`${taskUrl(taskId)}`, {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
