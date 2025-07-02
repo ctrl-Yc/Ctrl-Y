@@ -1,32 +1,33 @@
 //index.js
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('./swagger');
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./swagger");
+const auth = require("../src/middlewares/auth.js");
 
 const app = express();
 
 //lib cors
-const corsMiddleware = require('./lib/cors');
+const corsMiddleware = require("./lib/cors");
 app.use(corsMiddleware);
 
-const prisma = require('./lib/prisma');
+const prisma = require("./lib/prisma");
 
-const { verifyToken } = require('./lib/jwt');
+const { verifyToken } = require("./lib/jwt");
 
 app.use(express.json());
 
 //タスクのルートインポート
-const tasksRoutes = require('./routes/tasksRoutes');
-app.use('/api/tasks', tasksRoutes);
+const tasksRoutes = require("./routes/tasksRoutes");
+app.use("/api/tasks", tasksRoutes);
 //ユーザーのルートインポート
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/parents', userRoutes);
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/parents", userRoutes);
 //子供のルートインポート
-const childRoutes = require('./routes/childRoutes.js');
-app.use('/api/children', childRoutes);
+const childRoutes = require("./routes/childRoutes.js");
+app.use("/api/children", childRoutes);
 
-const settingRoutes = require('./routes/settingRoutes.js');
-app.use('/api/setting', settingRoutes);
+const settingRoutes = require("./routes/settingRoutes.js");
+app.use("/api/setting", settingRoutes);
 
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装
@@ -45,41 +46,41 @@ app.use('/api/setting', settingRoutes);
 // });
 
 // 月が変わった時のユーザーの処理
-app.get('/api/pay/payroll', async (req, res) => {
-	try {
-		// トークンの検証・デコード
-		const decoded = verifyToken(req); // 親の user_id が入ってる前提
+app.get("/api/pay/payroll", auth, async (req, res) => {
+    try {
+        // トークンの検証・デコード
+        const decoded = req; // 親の user_id が入ってる前提
 
-		// ① 親に紐づく子どもを取得
-		const children = await prisma.child.findMany({
-			where: {
-				parent_id: decoded.user_id, // ここは親のUUID
-			},
-			select: {
-				user_id: true,
-			},
-		});
+        // ① 親に紐づく子どもを取得
+        const children = await prisma.child.findMany({
+            where: {
+                parent_id: decoded.user_id, // ここは親のUUID
+            },
+            select: {
+                user_id: true,
+            },
+        });
 
-		const childrenUserIds = children.map((child) => child.user_id);
+        const childrenUserIds = children.map((child) => child.user_id);
 
-		if (childrenUserIds.length === 0) {
-			return res.status(404).json({ message: '子どもが存在しません' });
-		}
+        if (childrenUserIds.length === 0) {
+            return res.status(404).json({ message: "子どもが存在しません" });
+        }
 
-		// ② 子の user_id に該当する給与情報を取得
-		const payrolls = await prisma.pay.findMany({
-			where: {
-				user_id: {
-					in: childrenUserIds,
-				},
-			},
-		});
+        // ② 子の user_id に該当する給与情報を取得
+        const payrolls = await prisma.pay.findMany({
+            where: {
+                user_id: {
+                    in: childrenUserIds,
+                },
+            },
+        });
 
-		res.status(200).json(payrolls);
-	} catch (error) {
-		console.error('給与に関するエラー:', error);
-		res.status(500).json({ message: '給与計算エラー', error: error.message });
-	}
+        res.status(200).json(payrolls);
+    } catch (error) {
+        console.error("給与に関するエラー:", error);
+        res.status(500).json({ message: "給与計算エラー", error: error.message });
+    }
 });
 
 // 子供のuser_idとc_nameを返します。(変更用) //子供の名前変更用
@@ -101,13 +102,13 @@ app.get('/api/pay/payroll', async (req, res) => {
 // 	}
 // });
 
-app.get("/api/child/list", async (req, res) => {
+app.get("/api/child/list", auth, async (req, res) => {
     try {
-        const decoded = verifyToken(req); 
+        const decoded = req.user;
 
         const child = await prisma.child.findMany({
             where: {
-                parent_id: decoded.user_id, 
+                parent_id: decoded.user_id,
             },
             select: {
                 user_id: true,
@@ -119,44 +120,6 @@ app.get("/api/child/list", async (req, res) => {
     } catch (error) {
         console.error("子供一覧取得エラー:", error);
         res.status(500).json({ message: "子供一覧取得エラー", error: error.message });
-    }
-});
-
-
-app.get("/api/children/:child_id/payments", async (req, res) => {
-    try {
-    const { child_id } = req.params; // URL パスから child_id を取得
-    const { year } = req.query;      // クエリパラメータから year を取得
-
-    const decoded = verifyToken(req);
-    const parent_id = decoded.user_id;
-
-    const child = await prisma.child.findUnique({
-        where: { user_id: child_id },
-    });
-
-    if (!child) {
-        return res.status(404).json({ message: "指定された子供が存在しません" });
-    }
-
-    if (child.parent_id !== parent_id) {
-        return res.status(403).json({ message: "この子供は認証された親に紐づいていません" });
-    }
-
-    const records = await prisma.pay.findMany({
-        where: {
-        user_id: child_id,
-        inserted_month: {
-            gte: new Date(`${year}-01-01T00:00:00.000Z`),
-            lte: new Date(`${year}-12-31T23:59:59.999Z`),
-        },
-        },
-    });
-
-    res.status(200).json(records);
-    } catch (error) {
-    console.error("子供の給与取得エラー:", error);
-    res.status(500).json({ message: "子供の給与取得エラー", error: error.message });
     }
 });
 

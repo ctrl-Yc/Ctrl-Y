@@ -73,3 +73,29 @@ exports.loginChild = async (req, res) => {
 		res.status(500).json({ message: '子供のログインエラー', error: error.message });
 	}
 };
+
+exports.getChildPayments = async (req, res) => {
+	try {
+		const { child_id } = req.params;
+		const { year } = req.query;
+
+		const result = await prisma.pay.findMany({
+			where: {
+                user_id: child_id,
+                inserted_month: {
+                    gte: new Date(`${year}-01-01T00:00:00.000Z`),
+                    lte: new Date(`${year}-12-31T23:59:59.999Z`),
+                },
+            },
+		});
+
+		// if (!result || result.length === 0) {
+		// 	return res.status(404).json({ message: '指定された子供の給与記録が見つかりません' });
+		// }
+
+		res.status(200).json(result);
+	} catch (error) {
+		console.error('子供の給与取得エラー:', error);
+		res.status(500).json({ message: '子供の給与取得エラー', error: error.message });
+	}
+}
