@@ -37,7 +37,7 @@ model User {
   cutoff_day   Boolean?
   pay_day      Boolean?
   registered_at DateTime  @default(now())
-  updated_at    DateTime @default(now())
+  updated_at    DateTime  @updatedAt
 
   children  Child[]
   tasks     Task[]
@@ -48,11 +48,11 @@ model User {
 
 model Child {
   user_id String @id @default(uuid())
-  parent_id String
+  parent_id String  @db.Uuid
   c_name String @db.Text
   icon_path String? @db.Text
   registered_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime  @updatedAt
   
   parent User @relation(fields: [parent_id], references: [user_id], onDelete: Cascade)
   childTasks ChildTask[]
@@ -62,8 +62,8 @@ model Child {
 }
 
 model ChildTask {
-  user_id String
-  task_id Int
+  user_id String @unique
+  task_id Int    @unique
 
   child   Child @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   task    Task  @relation(fields: [task_id], references: [task_id], onDelete: Cascade)

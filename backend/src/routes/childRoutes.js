@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const ChildController = require('../controllers/childController.js');
-const auth = require('../middlewares/auth.js');
+const ChildController = require("../controllers/childController.js");
+const auth = require("../middlewares/auth.js");
 
-router.post('/create', auth, ChildController.createChild);
-router.post('/login/:child_id', ChildController.loginChild);
+router.post("/", auth, ChildController.createChild);
+router.post("/:child_id/login", ChildController.loginChild);
 
 module.exports = router;

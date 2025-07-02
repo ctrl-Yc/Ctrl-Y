@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { TASK_CREATE_POST } from "../../config/api";
+import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 
@@ -21,7 +21,7 @@ export const TaskCreate = ({ setActiveTab }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(TASK_CREATE_POST,
+            const response = await axios.post(TASKS_BASE,
                 {
                     t_name: name,
                     memo: memo,
