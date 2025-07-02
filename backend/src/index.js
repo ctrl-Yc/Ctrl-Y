@@ -2,7 +2,7 @@
 const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./swagger");
-const auth = require("../src/middlewares/auth.js");
+const auth = require("./middlewares/auth.js");
 
 const app = express();
 

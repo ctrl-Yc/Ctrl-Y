@@ -33,7 +33,7 @@ exports.createChild = async (req, res) => {
 			},
 		});
 
-		res.status(200).json({ user_id: childCreate.user_id });
+		res.status(201).json({ user_id: childCreate.user_id });
 	} catch (error) {
 		console.error('子供の登録エラー:', error);
 		res.status(500).json({ message: '子供の登録エラー', error: error.message });
