@@ -15,8 +15,13 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
+        const token = localStorage.getItem("token");
         const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
-        const response = await axios.get(endpoint);
+        const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
         setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
       } catch (error) {
         console.error(error);
