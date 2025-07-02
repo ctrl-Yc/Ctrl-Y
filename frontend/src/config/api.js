@@ -20,9 +20,9 @@ export const TASKS_COLLECTION = (labels) => {
 	if (labels === undefined) {
 		return TASKS_BASE;
 	} else if (Array.isArray(labels)) {
-		return `${TASKS_BASE}?label=${labels.join(',')}`;
+		return `${TASKS_BASE}?labels=${labels.join(',')}`;
 	} else {
-		return `${TASKS_BASE}?label=${labels}`;
+		return `${TASKS_BASE}?labels=${labels}`;
 	}
 };
 
