@@ -33,7 +33,7 @@ exports.getOneTask = async (taskId) => {
 };
 
 //タスクのさくせい
-exports.createNewTasks = async (taskData, parent_id) => {
+exports.createNewTasks = async (taskData, parent_id,) => {
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.create({
         data: {
@@ -49,8 +49,9 @@ exports.createNewTasks = async (taskData, parent_id) => {
 };
 
 //taskの編集
-exports.editTask = async (taskId, taskData, parent_id) => {
+exports.editTask = async (taskId, taskData, parent_id,role) => {
     const task = await exports.getOneTask(taskId);
+
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを編集する権限がありません");
         error.statusCode = 403;

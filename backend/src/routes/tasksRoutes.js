@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
+const parentOnly = require("../middlewares/parentOnly");
 const TasksController = require("../controllers/tasksControllers.js");
 
 //taskの新規作成
@@ -18,14 +19,14 @@ router.get("/status/:label", auth, TasksController.getAllTasks);
 router.get("/", auth, TasksController.getAllTasks);
 
 //新規タスクの追加
-router.post("/", auth, TasksController.postNewTasks);
+router.post("/", auth, parentOnly, TasksController.postNewTasks);
 
 //一件のtask取得
 router.get("/:task_id", auth, TasksController.getOneTasks);
 //taskの編集
-router.patch("/:task_id", auth, TasksController.patchEdiTasks);
+router.patch("/:task_id", auth, parentOnly, TasksController.patchEdiTasks);
 //taskの削除
-router.delete("/:task_id", auth, TasksController.deleteTasks);
+router.delete("/:task_id", auth, parentOnly, TasksController.deleteTasks);
 
 //子供側のAPI
 

@@ -52,7 +52,8 @@ exports.getOneTasks = async (req, res) => {
 exports.postNewTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
-        const NewTasks = await tasksServices.createNewTasks(req.body, parent_id);
+        const role = req.user.role;
+        const NewTasks = await tasksServices.createNewTasks(req.body, parent_id,role);
         res.status(200).json(
             {
                 ...NewTasks, task_id: NewTasks.task_id.toString()
@@ -68,7 +69,8 @@ exports.patchEdiTasks = async (req, res) => {
     try {
         const taskId = parseInt(req.params.task_id, 10);
         const parent_id = req.user.user_id;
-        const EditTask = await tasksServices.editTask(taskId, req.body, parent_id);
+        const role = req.user.role;
+        const EditTask = await tasksServices.editTask(taskId, req.body, parent_id,role);
         // res.status(200).json(EditTask);
 
         res.status(200).json({
@@ -84,8 +86,9 @@ exports.patchEdiTasks = async (req, res) => {
 exports.deleteTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
+        const role = req.user.role;
         const taskId = parseInt(req.params.task_id, 10);
-        await tasksServices.deleteTask(taskId, parent_id);
+        await tasksServices.deleteTask(taskId, parent_id,role);
         res.status(204).send();
     } catch (error) {
         console.log("tasksの削除エラー");
