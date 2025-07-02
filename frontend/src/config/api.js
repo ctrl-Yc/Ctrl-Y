@@ -1,6 +1,6 @@
-const isLocal = window.location.hostname === "localhost";
+const isLocal = window.location.hostname === 'localhost';
 
-export const API_BASE_URL = isLocal ? "http://localhost:3000" : "";
+export const API_BASE_URL = isLocal ? 'http://localhost:3000' : '';
 
 //親ユーザー
 export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
@@ -16,7 +16,15 @@ export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
 
 //一覧取得
-export const TASKS_COLLECTION = TASKS_BASE;
+export const TASKS_COLLECTION = (labels) => {
+	if (labels === undefined) {
+		return TASKS_BASE;
+	} else if (Array.isArray(labels)) {
+		return `${TASKS_BASE}?label=${labels.join(',')}`;
+	} else {
+		return `${TASKS_BASE}?label=${labels}`;
+	}
+};
 
 //個別タスクURLを返す
 export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;

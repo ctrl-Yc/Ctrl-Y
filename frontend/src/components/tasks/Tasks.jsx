@@ -25,10 +25,9 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       try {
         const token = localStorage.getItem("token");
 
-        const response = await axios.get(TASKS_COLLECTION, {
-          params: {
-            id: isViewingFinished ? 2 : [0, 1]
-          },
+        const labels = isViewingFinished ? 'WAIT_PREVIEW' : ['TODO', 'IN_PROGRESS'];
+
+        const response = await axios.get(TASKS_COLLECTION(labels), {
           headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${token}`
