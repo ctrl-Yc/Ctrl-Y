@@ -1,9 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 
-import { TASKS_FINISH_GET, TASKS_INCOMP_GET } from "../../../config/api";
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
+import { TASKS_COLLECTION } from "../../../config/api";
+
+const STATUS = {
+  TODO: 'TODO',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAIT_REVIEW: 'WAIT_REVIEW',
+  DONE: 'DONE',
+};
 
 export const ChildTasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -15,19 +22,29 @@ export const ChildTasks = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const endpoint = isViewingFinished ? TASKS_FINISH_GET : TASKS_INCOMP_GET;
-      const response = await axios.get(endpoint, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      });
-      setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
+
+      const response = await axios.get(TASKS_COLLECTION, {
+        params: {
+            id: isViewingFinished ? 2 : [0, 1]
+          },
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+      setTasks(
+        response.data.sort(
+          (a, b) => new Date(a.deadline) - new Date(b.deadline)
+        )
+      );
     } catch (error) {
       console.error(error);
       setError("タスクの取得に失敗しました");
     } finally {
       setLoading(false);
     }
+
   }, [isViewingFinished]);
 
   const completeTask = async (taskId) => {
