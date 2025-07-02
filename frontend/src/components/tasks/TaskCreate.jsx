@@ -26,7 +26,13 @@ export const TaskCreate = ({ setActiveTab }) => {
                     t_name: name,
                     memo: memo,
                     reward: Number(reward),
-                    deadline: new Date(deadline)
+                    deadline,
+                },
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 }
             );
             console.log("登録成功:", response.data);

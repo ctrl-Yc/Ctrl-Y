@@ -32,20 +32,13 @@ exports.getOneTask = async (taskId) => {
 
 //タスクのさくせい
 exports.createNewTasks = async (taskData, parent_id) => {
-	const task = await exports.getOneTask(taskId);
-	if (task.parent_id !== parent_id) {
-		const error = new Error('このタスクを編集する権限がありません');
-		error.statusCode = 403;
-		throw error;
-	}
-
 	const { t_name, memo, reward, deadline } = taskData;
 	return await prisma.task.create({
 		data: {
 			t_name: t_name,
 			memo: memo,
 			reward: reward,
-			deadline: deadline,
+			deadline: new Date(deadline),
 			status: TaskStatusCode.TODO,
 			s_id: 0,
 			parent_id,
