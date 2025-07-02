@@ -76,8 +76,19 @@ exports.loginChild = async (req, res) => {
 
 exports.getChildPayments = async (req, res) => {
 	try {
+		const decoded = req.user;
+
 		const { child_id } = req.params;
 		const { year } = req.query;
+
+		const parent_id = await prisma.child.findUnique({
+			where: { user_id: child_id },
+			select: { parent_id: true },
+		});
+
+		if (!parent_id || parent_id.parent_id !== decoded.user_id) {
+			return res.status(403).json({ message: 'この子供の給与を取得する権限がありません' });
+		}
 
 		const result = await prisma.pay.findMany({
 			where: {
@@ -88,10 +99,6 @@ exports.getChildPayments = async (req, res) => {
                 },
             },
 		});
-
-		// if (!result || result.length === 0) {
-		// 	return res.status(404).json({ message: '指定された子供の給与記録が見つかりません' });
-		// }
 
 		res.status(200).json(result);
 	} catch (error) {

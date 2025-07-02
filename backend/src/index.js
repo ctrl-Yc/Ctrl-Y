@@ -9,11 +9,8 @@ const app = express();
 //lib cors
 const corsMiddleware = require("./lib/cors");
 app.use(corsMiddleware);
-
+ 
 const prisma = require("./lib/prisma");
-
-const { verifyToken } = require("./lib/jwt");
-
 app.use(express.json());
 
 //タスクのルートインポート
@@ -49,7 +46,7 @@ app.use("/api/setting", settingRoutes);
 app.get("/api/pay/payroll", auth, async (req, res) => {
     try {
         // トークンの検証・デコード
-        const decoded = req; // 親の user_id が入ってる前提
+        const decoded = req.user; // 親の user_id が入ってる前提
 
         // ① 親に紐づく子どもを取得
         const children = await prisma.child.findMany({
