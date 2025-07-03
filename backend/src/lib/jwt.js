@@ -10,6 +10,7 @@ function signToken(user_id, opts = {}) {
 	};
 
 	if (opts.role) payload.role = opts.role;
+	if (opts.parent_id) payload.parent_id = opts.parent_id;
 
 	return jwt.sign(payload, SECRET);
 }
