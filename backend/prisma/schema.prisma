@@ -17,7 +17,7 @@ model Task {
   reward     Int            @db.SmallInt
   deadline   DateTime       @db.Timestamptz(6)
   s_id       Int            @db.SmallInt
-  parent_id  String?        @default(dbgenerated("auth.uid()")) @db.Uuid
+  parent_id  String?        @db.Uuid
   status     TaskStatusCode @default(TODO)
   childTasks ChildTask[]
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
@@ -28,13 +28,13 @@ model Task {
 }
 
 model User {
-  user_id       String   @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String   @id @default(uuid()) @db.Uuid
   email         String   @unique
   password      String
   keyword       String
   cutoff_day    Boolean
   pay_day       Boolean
-  registered_at DateTime @db.Timestamptz(6)
+  registered_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at    DateTime @updatedAt @db.Timestamptz(6)
   children      Child[]
   tasks         Task[]
@@ -44,11 +44,11 @@ model User {
 }
 
 model Child {
-  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
-  parent_id     String      @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String      @id @default(uuid()) @db.Uuid
+  parent_id     String      @db.Uuid
   c_name        String
   icon_path     String?
-  registered_at DateTime    @db.Timestamptz(6)
+  registered_at DateTime    @default(now()) @db.Timestamptz(6)
   updated_at    DateTime    @updatedAt @db.Timestamptz(6)
   keyword       String?
   parent        User        @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
@@ -61,7 +61,7 @@ model Child {
 
 model ChildTask {
   task_id Int
-  user_id String @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id String @db.Uuid
   task    Task   @relation(fields: [task_id], references: [task_id], onDelete: NoAction, onUpdate: NoAction)
   child   Child  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -71,7 +71,7 @@ model ChildTask {
 }
 
 model Pay {
-  user_id        String   @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id        String   @default(uuid()) @db.Uuid
   inserted_month DateTime @db.Date
   number         Int      @db.SmallInt
   reward         Int      @db.SmallInt
