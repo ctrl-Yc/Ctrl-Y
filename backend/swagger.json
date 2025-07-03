@@ -235,7 +235,7 @@
         }
       }
     },
-    "/tasks/{task_id}/{s_id}": {
+    "/tasks/{task_id}/{label}": {
       "patch": {
         "description": "",
         "parameters": [
@@ -246,7 +246,7 @@
             "type": "string"
           },
           {
-            "name": "s_id",
+            "name": "label",
             "in": "path",
             "required": true,
             "type": "string"

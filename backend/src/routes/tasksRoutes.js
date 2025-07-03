@@ -27,10 +27,7 @@ router.get("/:task_id", auth, TasksController.getOneTasks);
 router.patch("/:task_id", auth, parentOnly, TasksController.patchEdiTasks);
 //taskの削除
 router.delete("/:task_id", auth, parentOnly, TasksController.deleteTasks);
-
-//子供側のAPI
-
 // s_idの変更
-router.patch('/:task_id/:s_id', auth,TasksController.SidEdit);
+router.patch('/:task_id/:label', auth,TasksController.SidEdit);
 
 module.exports = router;

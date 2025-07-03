@@ -111,7 +111,7 @@ exports.totalSalary = async (parent_id) => {
 
 
 
-exports.SidEdit = async (parent_id,s_id,taskId) => {
+exports.SidEdit = async (parent_id, taskId, labels) => {
     const task = await exports.getOneTask(taskId);
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを削除する権限がありません");
@@ -124,7 +124,7 @@ exports.SidEdit = async (parent_id,s_id,taskId) => {
 			task_id: taskId,
 		},
 		data: {
-			s_id
+			status: labels
 		},
     })
 }
