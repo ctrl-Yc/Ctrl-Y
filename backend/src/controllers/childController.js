@@ -33,7 +33,7 @@ exports.createChild = async (req, res) => {
 			},
 		});
 
-		res.status(200).json({ user_id: childCreate.user_id });
+		res.status(201).json({ user_id: childCreate.user_id });
 	} catch (error) {
 		console.error('子供の登録エラー:', error);
 		res.status(500).json({ message: '子供の登録エラー', error: error.message });
@@ -73,3 +73,36 @@ exports.loginChild = async (req, res) => {
 		res.status(500).json({ message: '子供のログインエラー', error: error.message });
 	}
 };
+
+exports.getChildPayments = async (req, res) => {
+	try {
+		const decoded = req.user;
+
+		const { child_id } = req.params;
+		const { year } = req.query;
+
+		const parent_id = await prisma.child.findUnique({
+			where: { user_id: child_id },
+			select: { parent_id: true },
+		});
+
+		if (!parent_id || parent_id.parent_id !== decoded.user_id) {
+			return res.status(403).json({ message: 'この子供の給与を取得する権限がありません' });
+		}
+
+		const result = await prisma.pay.findMany({
+			where: {
+                user_id: child_id,
+                inserted_month: {
+                    gte: new Date(`${year}-01-01T00:00:00.000Z`),
+                    lte: new Date(`${year}-12-31T23:59:59.999Z`),
+                },
+            },
+		});
+
+		res.status(200).json(result);
+	} catch (error) {
+		console.error('子供の給与取得エラー:', error);
+		res.status(500).json({ message: '子供の給与取得エラー', error: error.message });
+	}
+}
