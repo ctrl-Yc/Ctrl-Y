@@ -30,4 +30,4 @@ export const TASKS_COLLECTION = (labels) => {
 export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;
 
 //メールアドレス変更
-export const EMAIL_CHANGE = `${API_BASE_URL}/api/email-change/request`;
+export const EMAIL_CHANGE = `${API_BASE_URL}/email`;

@@ -7,7 +7,7 @@ const auth = require('../middlewares/auth');
 const prisma = require('../lib/prisma'); 
 
 // 変更申請受け取り
-router.post('/email-change/request', auth, async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
     const userId = req.user.user_id; 
     const { newEmail } = req.body;
@@ -21,7 +21,7 @@ router.post('/email-change/request', auth, async (req, res) => {
     }
 });
 
-router.get('/email-change/verify', async (req, res) => {
+router.get('/verify', async (req, res) => {
     try {
     const { token } = req.query;
     const payload = verifyEmailChangeToken(token);
