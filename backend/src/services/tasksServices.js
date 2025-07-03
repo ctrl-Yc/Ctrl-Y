@@ -33,13 +33,13 @@ exports.getOneTask = async (taskId) => {
 };
 
 //タスクのさくせい
-exports.createNewTasks = async (taskData, parent_id) => {
+exports.createNewTasks = async (taskData, parent_id,) => {
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.create({
         data: {
-            t_name: t_name,
-            memo: memo,
-            reward: reward,
+            t_name,
+            memo,
+            reward,
             deadline: new Date(deadline),
             status: TaskStatusCode.TODO,
             s_id: 0,
@@ -49,8 +49,9 @@ exports.createNewTasks = async (taskData, parent_id) => {
 };
 
 //taskの編集
-exports.editTask = async (taskId, taskData, parent_id) => {
+exports.editTask = async (taskId, taskData, parent_id,role) => {
     const task = await exports.getOneTask(taskId);
+
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを編集する権限がありません");
         error.statusCode = 403;
@@ -108,14 +109,23 @@ exports.totalSalary = async (parent_id) => {
     });
 };
 
-// exports.SidEdit = async () => {
-//     const task = await exports.getOneTask(taskId);
-//     if (task.parent_id !== parent_id) {
-//         const error = new Error("このタスクを削除する権限がありません");
-//         error.statusCode = 403;
-//     throw error;
-//     }
-//     return await prisma.task.update({
 
-//     })
-// }
+
+exports.SidEdit = async (parent_id, taskId, labels) => {
+    const task = await exports.getOneTask(taskId);
+    if (task.parent_id !== parent_id) {
+        const error = new Error("このタスクを削除する権限がありません");
+        error.statusCode = 403;
+    throw error;
+    }
+    const label = labels[0];
+
+    return await prisma.task.update({
+		where: {
+			task_id: taskId,
+		},
+		data: {
+			status: label
+		},
+    })
+}

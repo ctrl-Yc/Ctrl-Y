@@ -46,7 +46,8 @@ exports.getOneTasks = async (req, res) => {
 exports.postNewTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
-        const NewTasks = await tasksServices.createNewTasks(req.body, parent_id);
+        const role = req.user.role;
+        const NewTasks = await tasksServices.createNewTasks(req.body, parent_id,role);
         res.status(200).json(NewTasks);
     } catch (error) {
         console.log("新しいのtasksの追加エラー", error.message);
@@ -58,8 +59,8 @@ exports.patchEdiTasks = async (req, res) => {
     try {
         const taskId = parseInt(req.params.task_id, 10);
         const parent_id = req.user.user_id;
-        const EditTask = await tasksServices.editTask(taskId, req.body, parent_id);
-
+        const role = req.user.role;
+        const EditTask = await tasksServices.editTask(taskId, req.body, parent_id,role);
         res.status(200).json(EditTask);
 
     } catch (error) {
@@ -71,8 +72,9 @@ exports.patchEdiTasks = async (req, res) => {
 exports.deleteTasks = async (req, res) => {
     try {
         const parent_id = req.user.user_id;
+        const role = req.user.role;
         const taskId = parseInt(req.params.task_id, 10);
-        await tasksServices.deleteTask(taskId, parent_id);
+        await tasksServices.deleteTask(taskId, parent_id,role);
         res.status(204).send();
     } catch (error) {
         console.log("tasksの削除エラー");
@@ -102,15 +104,18 @@ exports.TotalSalary = async (req, res) => {
     }
 };
 
-// exports.SidEdit = async (req,res) => {
-//     try{
-//         const taskId = parseInt(req.params.task_id, 10);
-//         const s_id = parseInt(req.params.s_id, 10);
-//         const parent_id = req.user.user_id;
-//         const sidEdit = await tasksServices.SidEdit(parent_id,s_id,taskId)
-//         res.status(200).json({ sidEdit });
-//     } catch (error) {
-//         console.log("s_id変更エラー");
-//         res.status(500).json({ message : error.message});
-//     }
-// }
+exports.SidEdit = async (req,res) => {
+    try{
+        const taskId = parseInt(req.params.task_id, 10);
+        const parent_id = req.user.user_id;
+        const labelParam = req.params.label;
+        const labels = labelParam
+            ? [labelParam.toUpperCase()]
+            :[]
+        const sidEdit = await tasksServices.SidEdit(parent_id,taskId,labels)
+        res.status(200).json({ sidEdit });
+    } catch (error) {
+        console.log("s_id変更エラー");
+        res.status(500).json({ message : error.message});
+    }
+}

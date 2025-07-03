@@ -61,7 +61,7 @@ exports.loginChild = async (req, res) => {
 			return res.status(401).json({ message: 'あいことばが間違っています' });
 		}
 
-		const token = signToken(childData.user_id, { role: 'child' });
+		const token = signToken(childData.user_id, { role: 'child' , parent_id: childData.parent.user_id ,});
 
 		res.status(200).json({
 			token,

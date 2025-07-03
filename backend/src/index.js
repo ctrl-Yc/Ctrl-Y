@@ -9,7 +9,7 @@ const app = express();
 //lib cors
 const corsMiddleware = require("./lib/cors");
 app.use(corsMiddleware);
- 
+
 const prisma = require("./lib/prisma");
 app.use(express.json());
 
@@ -25,6 +25,9 @@ app.use("/api/children", childRoutes);
 
 const settingRoutes = require("./routes/settingRoutes.js");
 app.use("/api/setting", settingRoutes);
+
+const emailChangeRouter = require('./routes/emailChange.js');
+app.use('/api', emailChangeRouter);
 
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装
