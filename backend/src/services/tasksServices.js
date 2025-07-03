@@ -118,13 +118,14 @@ exports.SidEdit = async (parent_id, taskId, labels) => {
         error.statusCode = 403;
     throw error;
     }
+    const label = labels[0];
 
     return await prisma.task.update({
 		where: {
 			task_id: taskId,
 		},
 		data: {
-			status: labels
+			status: label
 		},
     })
 }
