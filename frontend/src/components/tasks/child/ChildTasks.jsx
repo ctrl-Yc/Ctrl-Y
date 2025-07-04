@@ -24,7 +24,7 @@ export const ChildTasks = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const label = isViewingFinished ? [2, 3] : [0, 1];
+      const label = isViewingFinished ? [STATUS.WAIT_REVIEW, STATUS.DONE] : [STATUS.TODO, STATUS.IN_PROGRESS];
 
       const response = await axios.get(TASKS_COLLECTION(label), {
           headers: {
