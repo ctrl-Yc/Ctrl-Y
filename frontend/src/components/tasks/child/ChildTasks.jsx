@@ -3,8 +3,7 @@ import axios from "axios";
 
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
-import { TASKS_COLLECTION } from "../../../config/api";
-import { STATUS_TASK } from "../../../config/api";
+import { TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
 
 const STATUS = {
   TODO: 'TODO',
@@ -65,7 +64,7 @@ export const ChildTasks = () => {
     try {
       const token = localStorage.getItem("token")
       console.log("送信するステータス:", next);
-      await axios.patch(STATUS_TASK(task.task_id,next), {},{
+      await axios.patch(TASK_STATUS(task.task_id,next), {},{
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
