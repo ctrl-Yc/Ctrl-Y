@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const SettingController = require('../controllers/settingController.js');
+const settingController = require('../controllers/settingController.js');
 const auth = require('../middlewares/auth.js');
 
-router.get('/getChild', auth, SettingController.getChildSettings);
+router.get('/getChild', auth, settingController.getChildSettings);
+
+router.post('/payCutOff', auth, settingController.updatePayCutoff);
 
 module.exports = router;
