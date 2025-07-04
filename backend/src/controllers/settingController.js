@@ -30,3 +30,32 @@ exports.getChildSettings = async (req, res) => {
 		res.status(500).json({ message: 'サーバーエラー' });
 	}
 };
+
+exports.updatePayCutoff = async (req, res) => {
+	try {
+    const parentId = req.user.user_id;
+    const { pay_day, cutoff_day } = req.body;
+
+    const updatedUser = await prisma.user.update({
+		where: { user_id: parentId },
+		data: {
+        pay_day,
+        cutoff_day,
+    },
+    });
+
+    res.status(200).json({
+		message: '締め日と給料日を更新しました。',
+		data: {
+        payday: updatedUser.pay_day,
+        cutoff_day: updatedUser.cutoff_day,
+	},
+    });
+	} catch (error) {
+    console.error('締め日・給料日更新エラー:', error);
+    res.status(500).json({
+		message: '更新に失敗しました',
+		error: error.message,
+    });
+	}
+};
