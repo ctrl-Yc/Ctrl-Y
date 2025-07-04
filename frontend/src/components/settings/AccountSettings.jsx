@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
+import { EMAIL_CHANGE } from "../../config/api";
+import axios from "axios";
 
 export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
 
     // 戻るボタン
     const handleBackClick = (e) => {
@@ -14,14 +19,43 @@ export const AccountSettings = ({ setActiveTab }) => {
     }
 
     // 決定ボタン
-    const handleSubmitClick = (e) => {
+    const handleSubmitClick = async (e) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
-            alert("パスワードと確認用パスワードが一致しません。");
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("ログイン情報がありません。再ログインしてください。");
             return;
         }
-        // パスワード更新処理
-        console.log('決定ボタンが押されました。パスワード変更処理へ');
+
+        // パスワード変更はまだ実装していないのでemailが空ならはじく
+        if (!email) {
+            alert("メールアドレスを入力してください。");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                EMAIL_CHANGE,
+                { newEmail: email }, // ← 第2引数に送信データ
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setSuccessMessage(response.data.message || "確認メールを送信しました。");
+            setErrorMessage('');
+
+        } catch (error) {
+            console.error("メールアドレス変更エラー:", error);
+            setSuccessMessage('');
+            setErrorMessage(
+                error.response?.data?.error || "メールアドレスの変更に失敗しました。"
+            );
+        }
     };
 
     return (
@@ -30,6 +64,16 @@ export const AccountSettings = ({ setActiveTab }) => {
                 <h2 className="text-5xl font-bold p-16">アカウント</h2>
             </div>
             <div className="mx-20 space-y-4">
+                {successMessage && (
+                    <div className="p-4 mb-4 text-green-800 bg-green-100 rounded">
+                        {successMessage}
+                    </div>
+                )}
+                {errorMessage && (
+                    <div className="p-4 mb-4 text-red-800 bg-red-100 rounded">
+                        {errorMessage}
+                    </div>
+                )}
                 <div className="space-y-4">
                     <p className="text-2xl">メールアドレスの変更</p>
                     <InputField

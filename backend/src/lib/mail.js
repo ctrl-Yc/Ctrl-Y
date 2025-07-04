@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmailChangeMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-    const verifyUrl = `http://localhost:3000/api/email-change/verify?token=${encodedToken}`;
+    const verifyUrl = `http://localhost:3000/email/verify?token=${encodedToken}`;
 
     await transporter.sendMail({
     from: process.env.MAIL_USER,

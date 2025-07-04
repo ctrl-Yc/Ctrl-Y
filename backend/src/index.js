@@ -27,7 +27,7 @@ const settingRoutes = require("./routes/settingRoutes.js");
 app.use("/api/setting", settingRoutes);
 
 const emailChangeRouter = require('./routes/emailChange.js');
-app.use('/api', emailChangeRouter);
+app.use('/email', emailChangeRouter);
 
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装

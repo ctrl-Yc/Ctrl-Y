@@ -28,3 +28,6 @@ export const TASKS_COLLECTION = (labels) => {
 
 //個別タスクURLを返す
 export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;
+
+//メールアドレス変更
+export const EMAIL_CHANGE = `${API_BASE_URL}/email`;
