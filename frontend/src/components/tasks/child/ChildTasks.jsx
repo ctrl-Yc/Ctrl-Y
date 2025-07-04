@@ -4,6 +4,7 @@ import axios from "axios";
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
 import { TASKS_COLLECTION } from "../../../config/api";
+import { STATUS_TASK } from "../../../config/api";
 
 const STATUS = {
   TODO: 'TODO',
@@ -23,10 +24,9 @@ export const ChildTasks = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.get(TASKS_COLLECTION, {
-        params: {
-            id: isViewingFinished ? 2 : [0, 1]
-          },
+      const label = isViewingFinished ? [2, 3] : [0, 1];
+
+      const response = await axios.get(TASKS_COLLECTION(label), {
           headers: {
             'Content-type': 'application/json',
             Authorization: `Bearer ${token}`
@@ -47,15 +47,50 @@ export const ChildTasks = () => {
 
   }, [isViewingFinished]);
 
-  const completeTask = async (taskId) => {
+
+  const getNextStatus = (currentStatus) => {
+    const values = Object.values(STATUS)
+    const normalized = currentStatus.toUpperCase();
+    const index = values  .indexOf(normalized);
+    return index < values.length - 1 ? values[index + 1] : null;
+  };
+
+  const nextTaskStatus = async (task) => {
+    const next = getNextStatus(task.status);
+    if (!next) {
+        console.warn("ステータスが見つからない", task.status);
+      return;
+    }
+
     try {
-      await axios.put(`${taskId}`);
+      const token = localStorage.getItem("token")
+      console.log("送信するステータス:", next);
+      await axios.patch(STATUS_TASK(task.task_id,next), {},{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log("成功");
       fetchTasks(); 
     } catch (error) {
       console.error(error);
-      alert("完了処理に失敗しました");
+      if (error.response) {
+      console.error("レスポンスデータ:", error.response.data);
+      console.error("ステータスコード:", error.response.status);
+      console.error("レスポンスヘッダー:", error.response.headers);
+    } else if (error.request) {
+      console.error("リクエスト:", error.request);
+    } else {
+
+      console.error("エラーメッセージ:", error.message);
     }
-  };
+
+    alert("完了処理に失敗しました");
+  }
+};
+
+
 
   useEffect(() => {
     fetchTasks();
@@ -72,13 +107,15 @@ export const ChildTasks = () => {
   return tasks.length === 0 ? (
     <>
       <p className="text-center text-gray-400">表示できるタスクがありません。</p>
-      <div className="mt-6 flex flex-col items-center space-y-4">
+       <div className="mt-6 flex flex-col items-center space-y-4">
         <CustomButton
+          type="button"
           label={isViewingFinished ? "もどる" : "完了報告を見る"}
           onClick={handleToggleView}
-          className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300 mx-auto"
+          className='w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+          transition-colors duration-300 mx-auto'
         />
-      </div>
+        </div>
     </>
   ) : (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
@@ -92,7 +129,7 @@ export const ChildTasks = () => {
             <ChildTask
               key={task.task_id}
               task={task}
-              onComplete={() => completeTask(task.task_id)}
+              onNext={() => nextTaskStatus(task)}
             />
           ))}
         </ul>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sidebar } from "../components/ui/Sidebar"
+import { ChildSidebar } from "../components/ui/child/ChildSidebar";
 import { ChildTasks } from "../components/tasks/child/ChildTasks";
 
 export const ChildTop = () => {
@@ -24,7 +24,7 @@ export const ChildTop = () => {
 
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar
+            <ChildSidebar
                 activeMenuItem={activeTab}
                 onMenuItemClick={handleSidebarItemClick}
             />

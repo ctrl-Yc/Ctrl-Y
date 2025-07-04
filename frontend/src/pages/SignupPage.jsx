@@ -13,7 +13,7 @@ export const SignupPage = () => {
 
   const handleSignup = async () => {
     if (!email || !password) {
-      alert('入力エラー', 'メールアドレスとパスワードを入力してください');
+      alert('メールアドレスとパスワードを入力してください');
       return;
     }
 
