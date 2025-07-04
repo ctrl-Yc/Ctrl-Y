@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-export const Childurl = () => {
+export const ChildUrl = () => {
   const location = useLocation();
   const childId = location.state?.childId;
 

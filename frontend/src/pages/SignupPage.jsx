@@ -31,7 +31,7 @@ export const SignupPage = () => {
     const Token = response.data.token;
     setToken(Token);
       console.log('登録成功:', response.data);
-      navigate('/childname')
+      navigate('/childName')
     } catch (error) {
       console.error('エラー:', error);
     }

@@ -6,7 +6,7 @@ import { getToken } from "../config/Token";
 import { CHILDREN_SIGNUP } from "../config/api";
 import axios from 'axios';
 
-export const Childsignup = () => {
+export const ChildSignup = () => {
   const [c_name, setName] = useState('');
   const [keyword, setKeyword] = useState('');
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ export const Childsignup = () => {
     );
     
       console.log('登録成功:', response.data);
-      navigate('/Childurl',{ state: { childId: response.data.user_id } });
+      navigate('/ChildUrl',{ state: { childId: response.data.user_id } });
     } catch (error) {
       console.error('エラー:', error);
     }
