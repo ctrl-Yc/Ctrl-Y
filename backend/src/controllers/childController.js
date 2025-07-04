@@ -106,3 +106,24 @@ exports.getChildPayments = async (req, res) => {
 		res.status(500).json({ message: '子供の給与取得エラー', error: error.message });
 	}
 }
+
+exports.ChildList = async (req,res) => {
+	try{
+		const decoded = req.user;
+
+		const child = await prisma.child.findMany({
+			where: {
+				parent_id: decoded.user_id,
+			},
+			select: {
+				user_id: true,
+				c_name: true,
+			},
+		});
+
+		res.status(200).json(child);
+	}catch (error) {
+		console.error("子供一覧取得エラー:", error);
+		res.status(500).json({ message: "子供一覧取得エラー", error: error.message });
+	}
+}
