@@ -14,6 +14,7 @@ export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`
 
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
+export const TASK_STATUS = (taskId, nextStatus) => `${TASKS_BASE}/${taskId}/${nextStatus}`;
 
 //一覧取得
 export const TASKS_COLLECTION = (labels) => {

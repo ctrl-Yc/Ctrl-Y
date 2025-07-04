@@ -1,10 +1,10 @@
-import { Routes,Route,Link } from 'react-router-dom'
+import { Routes,Route } from 'react-router-dom'
 import { Login } from './pages/Login.jsx';
 import { Keyword } from './pages/Keyword.jsx';
 import  { Top }  from './pages/Top.jsx';
 import { SignupPage } from './pages/SignupPage.jsx';
-import { Childsignup } from './pages/Childsignup.jsx';
-import { Childurl } from './pages/Childurl.jsx';
+import { ChildSignup } from './pages/ChildSignup.jsx';
+import { ChildUrl } from './pages/ChildUrl.jsx';
 import { ChildTop } from './pages/ChildTop.jsx';
 
 
@@ -17,8 +17,8 @@ export function App() {
         <Route path='/child/top/:childUUID' element={<ChildTop/>} />
         <Route path='/signup' element={<SignupPage />} />
         <Route path='/top' element={<Top />} />
-        <Route path='/childname' element={<Childsignup />} />
-        <Route path='/childurl' element={<Childurl />} />
+        <Route path='/childName' element={<ChildSignup />} />
+        <Route path='/childUrl' element={<ChildUrl />} />
       </Routes>
   )
 }

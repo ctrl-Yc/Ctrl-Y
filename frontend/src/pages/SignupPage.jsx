@@ -13,7 +13,7 @@ export const SignupPage = () => {
 
   const handleSignup = async () => {
     if (!email || !password) {
-      alert('入力エラー', 'メールアドレスとパスワードを入力してください');
+      alert('メールアドレスとパスワードを入力してください');
       return;
     }
 
@@ -31,7 +31,7 @@ export const SignupPage = () => {
     const Token = response.data.token;
     setToken(Token);
       console.log('登録成功:', response.data);
-      navigate('/childname')
+      navigate('/childName')
     } catch (error) {
       console.error('エラー:', error);
     }
