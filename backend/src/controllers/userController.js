@@ -1,9 +1,6 @@
 // ユーザーがリクエストを送ってきた際のレスポンス用
 const userService = require('../services/userServices');
-const { signToken } = require('../lib/jwt');
-const { createPasswordResetToken } = require('../lib/jwt');
-const { sendResetPasswordMail } = require('../lib/mail');
-const { sendPasswordChangeNoticeMail } = require('../lib/mail');
+const { signToken, createPasswordResetToken, sendResetPasswordMail, sendPasswordChangeNoticeMail } = require('../lib/jwt');
 const bcrypt = require('bcrypt');
 const prisma = require('@prisma');
 
