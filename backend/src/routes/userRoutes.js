@@ -15,7 +15,10 @@ router.post('/login', userController.loginUser);
 // メール送信用
 router.post('/rePassword', userController.rePassword);
 
-// パスワード変更用
+// パスワードリセット用
 router.post('/reset', auth, userController.resetPassword);
+
+// パスワード変更用
+router.post('/change', auth, userController.changePassword);
 
 module.exports = router;

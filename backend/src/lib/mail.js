@@ -46,9 +46,19 @@ async function sendResetPasswordMail(to, token) {
 };
 
 
+async function sendPasswordChangeNoticeMail(to) {
+    const mailOptions = {
+    from: process.env.MAIL_USER,
+    to,
+    subject: '【Ctrl+Y】パスワード変更通知',
+    text: `このメールは、あなたのアカウントのパスワードが変更されたことをお知らせするために送信されています。\n\nもしあなたがこの操作を行っていない場合は、速やかにご連絡ください。`,
+    };
 
+    await transporter.sendMail(mailOptions);
+}
 module.exports = { 
     sendEmailChangeMail,
     sendEmailChangeNotice,
-    sendResetPasswordMail
+    sendResetPasswordMail,
+    sendPasswordChangeNoticeMail
 };
