@@ -31,6 +31,26 @@ exports.getChildSettings = async (req, res) => {
 	}
 };
 
+exports.getEmail = async (req, res) => {
+	try {
+		const parentId = req.user.user_id;
+
+		const user = await prisma.user.findUnique({
+			where: { user_id: parentId },
+			select: { email: true },
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'ユーザーが見つかりません' });
+		}
+
+		res.status(200).json({ email: user.email });
+	} catch (error) {
+		console.error('メール取得エラー:', error);
+		res.status(500).json({ message: 'メール取得エラー', error: error.message });
+	}
+};
+
 exports.updatePayCutoff = async (req, res) => {
 	try {
     const parentId = req.user.user_id;

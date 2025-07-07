@@ -3,7 +3,6 @@ const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./swagger");
 const auth = require("./middlewares/auth.js");
-
 const app = express();
 
 //lib cors
@@ -28,7 +27,6 @@ app.use("/api/setting", settingRoutes);
 
 const emailChangeRouter = require('./routes/emailChange.js');
 app.use('/email', emailChangeRouter);
-
 //ユーザーのパスワード再設定
 //mail送信の処理は未実装
 // app.post('/api/users/rePassword', async (req, res) => {
