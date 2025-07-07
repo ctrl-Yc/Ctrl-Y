@@ -1,5 +1,4 @@
 // lib/mail.js
-const { BASE_URL } = require("./config");
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
