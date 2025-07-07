@@ -30,7 +30,25 @@ async function sendEmailChangeNotice(oldEmail, newEmail) {
     });
 }
 
+
+async function sendResetPasswordMail(to, token) {
+    const encodedToken = encodeURIComponent(token);
+	const resetUrl = `http://localhost:3000/reset?token=${encodedToken}`;
+
+	const mailOptions = {
+		from: process.env.MAIL_USER,
+		to,
+		subject: '【Ctrl+Y】パスワード再設定のご案内',
+		text: `以下のリンクからパスワードの再設定を行ってください。\n\n${resetUrl}\n\n※このリンクは15分間のみ有効です。`,
+	};
+
+	await transporter.sendMail(mailOptions);
+};
+
+
+
 module.exports = { 
     sendEmailChangeMail,
-    sendEmailChangeNotice
+    sendEmailChangeNotice,
+    sendResetPasswordMail
 };
