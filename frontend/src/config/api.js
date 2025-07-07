@@ -6,6 +6,7 @@ export const API_BASE_URL = isLocal ? 'http://localhost:3000' : '';
 export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
 export const PARENT_SIGNUP = PARENT_BASE;
 export const PARENT_LOGIN = `${PARENT_BASE}/login`;
+export const PARENT_PASS_CHANGE = `${PARENT_BASE}/change`; // メールアドレス変更
 
 //子供ユーザー
 export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
@@ -30,5 +31,5 @@ export const TASKS_COLLECTION = (labels) => {
 //個別タスクURLを返す
 export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;
 
-//メールアドレス変更
-export const EMAIL_CHANGE = `${API_BASE_URL}/email`;
+export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`;		// メールアドレス変更
+export const PARENT_EMAIL_GET = `${API_BASE_URL}/api/setting/`; // メールアドレス取得
