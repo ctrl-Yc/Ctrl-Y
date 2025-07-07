@@ -1,6 +1,6 @@
 const express = require('express');
 const app = require('./src/index.js');
-const port = process.env.PORT || 3000;;
+const port = process.env.PORT || 3000;
 
 const url = process.env.SB_URL;
 const anonKey = process.env.SB_SERVICE_ROLE;
