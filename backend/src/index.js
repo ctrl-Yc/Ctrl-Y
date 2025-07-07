@@ -3,11 +3,6 @@ const express = require("express");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./swagger");
 const auth = require("./middlewares/auth.js");
-
-const BASE_URL = "http://localhost:3000";
-app.locals.BASE_URL = BASE_URL;
-
-
 const app = express();
 
 //lib cors
@@ -143,4 +138,4 @@ app.get("/api/child/list", auth, async (req, res) => {
 // })
 
 //一番下
-module.exports = { app, BASE_URL };
+module.exports = app;

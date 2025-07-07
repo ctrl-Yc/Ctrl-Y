@@ -1,5 +1,5 @@
 // lib/mail.js
-const { BASE_URL } = require("../index");
+const { BASE_URL } = require("./config");
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmailChangeMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-    const verifyUrl = `${BASE_URL}/email/verify?token=${encodedToken}`;
+    const verifyUrl = `${process.env.API_BASE_URL}/email/verify?token=${encodedToken}`;
 
     await transporter.sendMail({
     from: process.env.MAIL_USER,
@@ -34,7 +34,7 @@ async function sendEmailChangeNotice(oldEmail, newEmail) {
 
 async function sendResetPasswordMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-	const resetUrl = `${BASE_URL}/reset?token=${encodedToken}`;
+	const resetUrl = `${process.env.API_BASE_URL}/reset?token=${encodedToken}`;
 
 	const mailOptions = {
 		from: process.env.MAIL_USER,
