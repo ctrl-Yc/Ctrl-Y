@@ -19,7 +19,7 @@ exports.payroll = async (parent_id) => {
             throw error;
         }
         // ② 子の user_id に該当する給与情報を取得
-        return payrolls = await prisma.pay.findMany({
+        return prisma.pay.findMany({
             where: {
                 user_id: {
                     in: childrenUserIds,

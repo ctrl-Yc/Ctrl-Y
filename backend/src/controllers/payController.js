@@ -8,7 +8,8 @@ exports.payroll = async (req,res) => {
         res.status(200).json(payroll);
     } catch (error) {
         console.log("給与リスト取得エラー", error.message);
-        res.status(500).json({ message: error.message });
+        const statusCode = error.statusCode || 500;
+        res.status(statusCode).json({ message: error.message });
     }
     
 
