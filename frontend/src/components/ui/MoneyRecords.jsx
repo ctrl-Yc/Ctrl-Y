@@ -88,10 +88,10 @@ export const MoneyRecords = () => {
                         options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
                         value={selectedChild ? selectedChild.user_id : ""}
                         onChange={handleChildChange}
-                        className="w-26 mr-10"
+                        className="w-26 mr-10 w-auto"
                     />
-                </div>
-                <div className="flex justify-end mb-8 mr-28">
+                
+                
                     <Select
                         options={yearList}
                         value={selectedYear}
