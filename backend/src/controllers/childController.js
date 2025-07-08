@@ -1,6 +1,6 @@
 const { signToken } = require('../lib/jwt');
 require('module-alias/register');
-const prisma = require('../lib/prisma');
+const prisma = require("@prisma");
 
 exports.createChild = async (req, res) => {
 	try {

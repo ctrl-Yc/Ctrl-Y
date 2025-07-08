@@ -2,7 +2,7 @@
 
 //prismaインスタンス
 const { TaskStatusCode } = require("@prisma/client");
-const prisma = require("../lib/prisma.js");
+const prisma = require("@prisma");
 
 //Tasks全件取得
 exports.findAllTasks = async (parent_id, labels) => {
