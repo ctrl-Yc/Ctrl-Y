@@ -44,9 +44,28 @@ function verifyEmailChangeToken(token) {
 }
 
 
+// パスワードリセット用トークン発行（有効期限15分）
+function createPasswordResetToken(user_id) {
+	const payload = { user_id };
+	return jwt.sign(payload, SECRET, { expiresIn: '15m' });
+}
+
+// パスワードリセット用トークン検証
+function verifyPasswordResetToken(token) {
+	if (!token || token.length > 500) throw new Error('トークンが無効です');
+
+	try {
+		return jwt.verify(token, SECRET);
+	} catch (error) {
+		throw new Error('トークンが無効または期限切れです');
+	}
+}
+
 module.exports = {
 	verifyToken,
 	signToken,
 	createEmailChangeToken,
 	verifyEmailChangeToken,
+	createPasswordResetToken,
+	verifyPasswordResetToken,
 };

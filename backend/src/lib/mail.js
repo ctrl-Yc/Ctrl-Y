@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmailChangeMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-    const verifyUrl = `http://localhost:3000/email/verify?token=${encodedToken}`;
+    const verifyUrl = `${process.env.API_BASE_URL}:${process.env.PORT}/email/verify?token=${encodedToken}`;
 
     await transporter.sendMail({
     from: process.env.MAIL_USER,
@@ -30,7 +30,35 @@ async function sendEmailChangeNotice(oldEmail, newEmail) {
     });
 }
 
+
+async function sendResetPasswordMail(to, token) {
+    const encodedToken = encodeURIComponent(token);
+	const resetUrl = `${process.env.API_BASE_URL}:${process.env.PORT}/reset?token=${encodedToken}`;
+
+	const mailOptions = {
+		from: process.env.MAIL_USER,
+		to,
+		subject: '【Ctrl+Y】パスワード再設定のご案内',
+		text: `以下のリンクからパスワードの再設定を行ってください。\n\n${resetUrl}\n\n※このリンクは15分間のみ有効です。`,
+	};
+
+	await transporter.sendMail(mailOptions);
+};
+
+
+async function sendPasswordChangeNoticeMail(to) {
+    const mailOptions = {
+    from: process.env.MAIL_USER,
+    to,
+    subject: '【Ctrl+Y】パスワード変更通知',
+    text: `このメールは、あなたのアカウントのパスワードが変更されたことをお知らせするために送信されています。\n\nもしあなたがこの操作を行っていない場合は、速やかにご連絡ください。`,
+    };
+
+    await transporter.sendMail(mailOptions);
+}
 module.exports = { 
     sendEmailChangeMail,
-    sendEmailChangeNotice
+    sendEmailChangeNotice,
+    sendResetPasswordMail,
+    sendPasswordChangeNoticeMail
 };

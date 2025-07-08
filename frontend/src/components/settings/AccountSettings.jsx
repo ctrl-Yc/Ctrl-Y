@@ -1,60 +1,107 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
-import { EMAIL_CHANGE } from "../../config/api";
+import { PARENT_EMAIL_CHANGE, PARENT_EMAIL_GET, PARENT_PASS_CHANGE } from "../../config/api";
 import axios from "axios";
 
 export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [editField, setEditField] = useState(null);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+    // 現在のメアド取得
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const token = localStorage.getItem("token");
+            try {
+                const response = await axios.get(PARENT_EMAIL_GET, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                setEmail(response.data.email);
+            } catch (error) {
+                console.error("プロフィール取得エラー:", error);
+                setErrorMessage("プロフィールの取得に失敗しました。再ログインしてください。");
+            }
+        };
+        fetchProfile();
+    }, []);
+
+    // パスワード変更処理
+    const handlePasswordChange = async () => {
+        if (!currentPassword || !newPassword || !confirmNewPassword) {
+            setErrorMessage("すべてのパスワード項目を入力してください。");
+            return;
+        }
+
+        if (newPassword !== confirmNewPassword) {
+            setErrorMessage("新しいパスワードが一致しません。");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.post(PARENT_PASS_CHANGE, {
+                currentPassword,
+                newPassword
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setSuccessMessage(response.data.message || "パスワードを変更しました。");
+            setErrorMessage('');
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+        } catch (error) {
+            console.error("パスワード変更エラー:", error);
+            setSuccessMessage('');
+            setErrorMessage(error.response?.data?.error || "パスワード変更に失敗しました。");
+        }
+    };
 
 
-    // 戻るボタン
+
+    // 戻るボタン処理
     const handleBackClick = (e) => {
         e.preventDefault();
         setActiveTab('settings');
     }
 
-    // 決定ボタン
-    const handleSubmitClick = async (e) => {
-        e.preventDefault();
-
+    // メールアドレス編集ボタン処理
+    const handleSaveClick = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
-            alert("ログイン情報がありません。再ログインしてください。");
-            return;
-        }
-
-        // パスワード変更はまだ実装していないのでemailが空ならはじく
-        if (!email) {
-            alert("メールアドレスを入力してください。");
+            setErrorMessage("ログイン情報がありません。再ログインしてください。");
             return;
         }
 
         try {
-            const response = await axios.post(
-                EMAIL_CHANGE,
-                { newEmail: email }, // ← 第2引数に送信データ
+            const response = await axios.post(PARENT_EMAIL_CHANGE,
+                { newEmail: email },
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    }
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
-
             setSuccessMessage(response.data.message || "確認メールを送信しました。");
             setErrorMessage('');
-
+            setEditField(null);
         } catch (error) {
-            console.error("メールアドレス変更エラー:", error);
+            console.error("変更エラー:", error);
             setSuccessMessage('');
-            setErrorMessage(
-                error.response?.data?.error || "メールアドレスの変更に失敗しました。"
-            );
+            setErrorMessage(error.response?.data?.error || "変更に失敗しました。");
         }
     };
 
@@ -75,31 +122,100 @@ export const AccountSettings = ({ setActiveTab }) => {
                     </div>
                 )}
                 <div className="space-y-4">
-                    <p className="text-2xl">メールアドレスの変更</p>
+                    <p className="text-2xl">メールアドレス</p>
                     <InputField
                         type="email"
                         placeholder=""
                         value={email}
                         onChange={e => setEmail(e.target.value)}
+                        disabled={editField !== 'email'}
                         className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
                     />
+                    {editField === 'email' ? (
+                        <div className="space-x-2">
+                            <CustomButton
+                                type="button"
+                                label="決定"
+                                onClick={handleSaveClick}
+                                className="w-24 h-10 bg-green-500 text-white text-lg font-bold rounded hover:bg-green-400 transition"
+                            />
+                            <CustomButton
+                                type="button"
+                                label="キャンセル"
+                                onClick={() => setEditField(null)}
+                                className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
+                            />
+                        </div>
+                    ) : (
+                        <CustomButton
+                            type="button"
+                            label="編集"
+                            onClick={() => setEditField('email')}
+                            className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
+                        />
+                    )}
                 </div>
                 <div className="space-y-4 flex flex-col">
                     <p className="text-2xl">パスワードの変更</p>
                     <InputField
                         type="password"
-                        placeholder="パスワード"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        placeholder="現在のパスワード"
+                        value={currentPassword}
+                        onChange={e => setCurrentPassword(e.target.value)}
                         className="mb-8 w-100 h-12 px-4 border rounded-lg bg-white"
                     />
-                    <InputField
-                        type="password"
-                        placeholder="パスワード(確認)"
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
-                    />
+
+                    {editField === 'password' ? (
+                        <CustomButton
+                            type="button"
+                            label="キャンセル"
+                            onClick={() => {
+                                setEditField(null);
+                                setCurrentPassword('');
+                                setNewPassword('');
+                                setConfirmNewPassword('');
+                                setErrorMessage('');
+                                setSuccessMessage('');
+                            }}
+                            className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
+                        />
+                    ) : (
+                        <CustomButton
+                            type="button"
+                            label="編集"
+                            onClick={() => setEditField('password')}
+                            className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
+                        />
+                    )}
+
+                    {editField === 'password' && (
+                        <>
+                            <InputField
+                                type="password"
+                                placeholder="新しいパスワード"
+                                value={newPassword}
+                                onChange={e => setNewPassword(e.target.value)}
+                                className="mb-8 w-100 h-12 px-4 border rounded-lg bg-white"
+                            />
+                            <InputField
+                                type="password"
+                                placeholder="新しいパスワード(確認)"
+                                value={confirmNewPassword}
+                                onChange={e => setConfirmNewPassword(e.target.value)}
+                                className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
+                            />
+                            <div className="space-x-4">
+                                <CustomButton
+                                    type="button"
+                                    label="決定"
+                                    onClick={handlePasswordChange}
+                                    className="w-24 h-10 bg-orange-400 text-white text-lg font-bold rounded hover:bg-orange-300 transition"
+                                />
+                            </div>
+                        </>
+                    )}
+
+
                 </div>
                 <div className="mt-8 space-x-12">
                     <CustomButton
@@ -107,13 +223,6 @@ export const AccountSettings = ({ setActiveTab }) => {
                         label="戻る"
                         onClick={handleBackClick}
                         className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300'
-                    />
-                    <CustomButton
-                        type="button"
-                        label="決定"
-                        onClick={handleSubmitClick}
-                        className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
                       transition-colors duration-300'
                     />
                 </div>
