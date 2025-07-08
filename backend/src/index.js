@@ -25,6 +25,9 @@ app.use("/api/children", childRoutes);
 const settingRoutes = require("./routes/settingRoutes.js");
 app.use("/api/setting", settingRoutes);
 
+const payRouter = require('./routes/payRouter.js');
+app.use('/api/pay', payRouter);
+
 const emailChangeRouter = require('./routes/emailChange.js');
 app.use('/email', emailChangeRouter);
 //ユーザーのパスワード再設定
@@ -43,43 +46,6 @@ app.use('/email', emailChangeRouter);
 // 	}
 // });
 
-// 月が変わった時のユーザーの処理
-app.get("/api/pay/payroll", auth, async (req, res) => {
-    try {
-        // トークンの検証・デコード
-        const decoded = req.user; // 親の user_id が入ってる前提
-
-        // ① 親に紐づく子どもを取得
-        const children = await prisma.child.findMany({
-            where: {
-                parent_id: decoded.user_id, // ここは親のUUID
-            },
-            select: {
-                user_id: true,
-            },
-        });
-
-        const childrenUserIds = children.map((child) => child.user_id);
-
-        if (childrenUserIds.length === 0) {
-            return res.status(404).json({ message: "子どもが存在しません" });
-        }
-
-        // ② 子の user_id に該当する給与情報を取得
-        const payrolls = await prisma.pay.findMany({
-            where: {
-                user_id: {
-                    in: childrenUserIds,
-                },
-            },
-        });
-
-        res.status(200).json(payrolls);
-    } catch (error) {
-        console.error("給与に関するエラー:", error);
-        res.status(500).json({ message: "給与計算エラー", error: error.message });
-    }
-});
 
 // 子供のuser_idとc_nameを返します。(変更用) //子供の名前変更用
 // app.get('/api/child/setting', async (req, res) => {
@@ -100,26 +66,6 @@ app.get("/api/pay/payroll", auth, async (req, res) => {
 // 	}
 // });
 
-app.get("/api/child/list", auth, async (req, res) => {
-    try {
-        const decoded = req.user;
-
-        const child = await prisma.child.findMany({
-            where: {
-                parent_id: decoded.user_id,
-            },
-            select: {
-                user_id: true,
-                c_name: true,
-            },
-        });
-
-        res.status(200).json(child);
-    } catch (error) {
-        console.error("子供一覧取得エラー:", error);
-        res.status(500).json({ message: "子供一覧取得エラー", error: error.message });
-    }
-});
 
 //締め日登録
 // app.post('/api/users/cutoffDay', async (req, res) => {
