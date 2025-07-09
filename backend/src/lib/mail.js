@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendEmailChangeMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-    const verifyUrl = `${process.env.API_BASE_URL}:${process.env.PORT}/email/verify?token=${encodedToken}`;
+    const verifyUrl = `http://localhost:5173/email/verify?token=${encodedToken}`;
 
     await transporter.sendMail({
     from: process.env.MAIL_USER,
@@ -33,7 +33,7 @@ async function sendEmailChangeNotice(oldEmail, newEmail) {
 
 async function sendResetPasswordMail(to, token) {
     const encodedToken = encodeURIComponent(token);
-	const resetUrl = `${process.env.API_BASE_URL}:${process.env.PORT}/reset?token=${encodedToken}`;
+	const resetUrl = `http://localhost:5173/reset?token=${encodedToken}`;
 
 	const mailOptions = {
 		from: process.env.MAIL_USER,

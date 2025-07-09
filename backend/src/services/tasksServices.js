@@ -1,8 +1,8 @@
 //タスクサービス
 
 //prismaインスタンス
-const { TaskStatusCode } = require("@prisma/client");
-const prisma = require("@prisma");
+const { PrismaClient, TaskStatusCode } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 //Tasks全件取得
 exports.findAllTasks = async (parent_id, labels) => {
