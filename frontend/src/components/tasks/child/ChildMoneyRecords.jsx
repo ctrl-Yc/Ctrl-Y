@@ -10,7 +10,7 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [doneTasks, setDoneTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDoneTasks = async () => {
