@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { ChildSidebar } from "../components/ui/child/ChildSidebar";
 import { ChildTasks } from "../components/tasks/child/ChildTasks";
+import { ChildMoneyRecords } from "../components/tasks/child/ChildMoneyRecords";
 
 export const ChildTop = () => {
     const [activeTab, setActiveTab] = useState('ChildTasks');
-    // const [selectedTaskId, setSelectedTaskId] = useState(null);
-
 
     const handleSidebarItemClick = (itemId) => {
         setActiveTab(itemId); 
@@ -16,7 +15,8 @@ export const ChildTop = () => {
         switch (activeTab) {
             case 'ChildTasks':
                 return <ChildTasks key={activeTab} setActiveTab={setActiveTab} />;
-           
+            case 'ChildMoneyRecords':
+                return <ChildMoneyRecords key={activeTab} setActiveTab={setActiveTab} />;
             default:
                 return <div>コンテンツがありません。</div>;
         }
