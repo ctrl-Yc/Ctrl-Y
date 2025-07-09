@@ -14,7 +14,7 @@ const STATUS = {
 export const ChildTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
@@ -36,7 +36,6 @@ export const ChildTasks = () => {
       );
     } catch (error) {
       console.error(error);
-      setError("タスクの取得に失敗しました");
     } finally {
       setLoading(false);
     }
@@ -51,11 +50,8 @@ export const ChildTasks = () => {
 
   const nextTaskStatus = async (task) => {
     const next = getNextStatus(task.status);
-    if (!next) {
-      console.warn("ステータスが見つからない", task.status);
-      return;
-    }
-
+    if (!next) return;
+    
     try {
       const token = localStorage.getItem("token");
       await axios.patch(TASK_STATUS(task.task_id, next), {}, {
@@ -67,7 +63,6 @@ export const ChildTasks = () => {
       fetchTasks();
     } catch (error) {
       console.error(error);
-      alert("完了処理に失敗しました");
     }
   };
 
@@ -90,6 +85,7 @@ export const ChildTasks = () => {
             tasks.map((task) => (
               <div key={task.task_id} className="w-full flex flex-col items-center">
                 <ChildTask task={task} onNext={() => nextTaskStatus(task)} />
+                {/* ここがモックの承認ボタン   */}
                 {task.status === STATUS.WAIT_REVIEW && (
                   <button
                     onClick={() => nextTaskStatus(task)}

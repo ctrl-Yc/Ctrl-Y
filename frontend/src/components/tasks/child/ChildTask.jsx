@@ -16,12 +16,17 @@ export const ChildTask = ({ task, onNext }) => {
       <div>
         <p className="text-3xl font-medium">{task.t_name}</p>
         <p className="text-xl text-gray-700">{task.memo}</p>
+        {task.status === "DONE" && task.updated_at && (
+          <p className="text-sm text-gray-500 mt-1">
+            完了日: {new Date(task.updated_at).toLocaleDateString()}
+          </p>
+        )}
       </div>
       <div className="ml-auto flex items-center space-x-12">
         <p className="text-3xl text-green-600">¥{task.reward}</p>
 
         {!isDone && (
-          <CustomButton
+        <CustomButton
             label={nextLabel}
             onClick={onNext}
             disabled={isWaitingReview}

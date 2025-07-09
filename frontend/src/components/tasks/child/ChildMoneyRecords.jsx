@@ -4,12 +4,13 @@ import { TASKS_COLLECTION } from "../../../config/api";
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
 import { DateSelector } from "../../ui/DateSelector";
+import { isSameDay } from "date-fns";
 
 export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [doneTasks, setDoneTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error] = useState(null);
 
   useEffect(() => {
     const fetchDoneTasks = async () => {
@@ -22,23 +23,27 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("完了タスク一覧:", response.data);
         setDoneTasks(response.data);
       } catch (error) {
         console.error(error);
-        setError("おこづかい記録の取得に失敗しました");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDoneTasks();
+  fetchDoneTasks();
   }, []);
 
   const handleBackClick = (e) => {
-        e.preventDefault();
-        setActiveTab('ChildTasks');
+     e.preventDefault();
+    setActiveTab('ChildTasks');
   };
+
+  const filteredTasks = selectedDate
+  ? doneTasks.filter(task =>
+      isSameDay(new Date(task.updated_at), selectedDate)
+    )
+  : doneTasks;
 
   if (loading) return <p className="text-center text-gray-500">読み込み中...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -56,7 +61,7 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
           /> 
           </div>
           <ul className="space-y-3 flex justify-center items-center flex-col">
-          {doneTasks.map((task) => (
+          {filteredTasks.map((task) => (
             <ChildTask key={task.task_id} task={task} completedAt={task.deadline} />
             ))}
         </ul>
