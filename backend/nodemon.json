@@ -1,0 +1,8 @@
+{
+    "watch": ["src"],
+    "ext": "js",
+    "ignore": ["src/lib/prisma.js", "src/swagger.js", "src/middlewares/auth.js"],
+    "execMap": {
+        "js": "node -r module-alias/register"
+    }
+}

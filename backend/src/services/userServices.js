@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
-require('module-alias/register');
-const prisma = require('@prisma');
+const prisma = require('@db');
 
 // パスワードのハッシュ化
 const SALT_ROUNDS = 10;

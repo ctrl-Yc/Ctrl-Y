@@ -1,4 +1,5 @@
-const prisma = require("@prisma");
+const prisma = require("@db");
+
 exports.payroll = async (parent_id) => {
     // ① 親に紐づく子どもを取得
         const children = await prisma.child.findMany({

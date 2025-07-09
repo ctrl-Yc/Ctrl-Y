@@ -14,3 +14,5 @@ doppler run -- npx prisma generate
 
 //サーバ起動
 doppler run -- npm run dev
+or
+npm run:doppler
