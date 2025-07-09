@@ -1,6 +1,4 @@
-require('module-alias/register');
-const prisma = require('@prisma');
-const { child } = require('../lib/prisma');
+const prisma = require('@db');
 
 exports.getChildSettings = async (req, res) => {
 	try {
