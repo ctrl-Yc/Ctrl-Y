@@ -16,7 +16,7 @@ export const ChildTop = () => {
             case 'ChildTasks':
                 return <ChildTasks key={activeTab} setActiveTab={setActiveTab} />;
             case 'ChildMoneyRecords':
-                return <ChildMoneyRecords key="money-records" setActiveTab={setActiveTab} />;
+                return <ChildMoneyRecords key={activeTab} setActiveTab={setActiveTab} />;
             default:
                 return <div>コンテンツがありません。</div>;
         }
