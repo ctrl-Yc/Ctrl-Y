@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-require('module-alias/register');
 const prisma = require('@db');
 
 // パスワードのハッシュ化
