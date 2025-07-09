@@ -56,7 +56,7 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
         <h1 className="text-5xl font-bold p-8">おこづかい記録</h1>
          <div className="p-6">
           <DateSelector
-            electedDate={selectedDate}
+            selectedDate={selectedDate}
             onChange={(date) => setSelectedDate(date)}
           /> 
           </div>
