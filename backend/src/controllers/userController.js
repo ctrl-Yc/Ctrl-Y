@@ -3,7 +3,7 @@ const userService = require('../services/userServices');
 const { signToken,createPasswordResetToken } = require('../lib/jwt');
 const { sendResetPasswordMail,sendPasswordChangeNoticeMail } = require('../lib/mail');
 const bcrypt = require('bcrypt');
-const prisma = require('@prisma');
+const prisma = require('@db');
 
 // ユーザー登録
 exports.createUser = async (req, res) => {

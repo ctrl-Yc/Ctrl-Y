@@ -1,6 +1,5 @@
 //タスクコントローラー
 const tasksServices = require("../services/tasksServices.js");
-const { verifyToken } = require("../lib/jwt.js");
 
 exports.getAllTasks = async (req, res) => {
     try {
