@@ -14,10 +14,11 @@ const STATUS = {
 export const ChildTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const token = localStorage.getItem("token");
       const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
