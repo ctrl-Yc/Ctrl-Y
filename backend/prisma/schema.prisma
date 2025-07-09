@@ -22,6 +22,7 @@ model Task {
   childTasks ChildTask[]
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   taskStatus TaskStatus     @relation(fields: [s_id], references: [s_id], onDelete: NoAction, onUpdate: NoAction)
+  updated_at DateTime       @updatedAt @db.Timestamptz(6)
 
   @@map("tasks")
   @@schema("ctrl-Y")
