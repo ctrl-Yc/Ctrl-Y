@@ -4,11 +4,11 @@ const labelMap = {
   TODO: "はじめる",
   IN_PROGRESS: "完了報告",
   WAIT_REVIEW: "承認待ち",
-  DONE: "完了",
 };
 
 export const ChildTask = ({ task, onNext }) => {
-  const nextLabel = labelMap[task.status] || "次へ";
+  const nextLabel = labelMap[task.status];
+  const isWaitingReview = task.status === "WAIT_REVIEW";
   const isDone = task.status === "DONE";
 
   return (
@@ -19,14 +19,19 @@ export const ChildTask = ({ task, onNext }) => {
       </div>
       <div className="ml-auto flex items-center space-x-12">
         <p className="text-3xl text-green-600">¥{task.reward}</p>
-        <CustomButton
-          label={isDone ? "完了" : nextLabel}
-          onClick={onNext}
-          disabled={isDone}
-          className={`px-4 py-2 rounded text-white ${
-            isDone ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-400"
-          }`}
-        />
+
+        {!isDone && (
+          <CustomButton
+            label={nextLabel}
+            onClick={onNext}
+            disabled={isWaitingReview}
+            className={`px-4 py-2 rounded text-white ${
+              isWaitingReview
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-400"
+            }`}
+          />
+        )}
       </div>
     </li>
   );
