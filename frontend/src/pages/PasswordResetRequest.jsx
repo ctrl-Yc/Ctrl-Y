@@ -40,8 +40,15 @@ export const PasswordResetRequest = () => {
             return;
         }
 
+        // メール形式をチェック
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(email)) {
+            setErrorMessage("正しいメールアドレス形式を入力してください。");
+            return;
+        }
+
         try {
-            const response = await axios.post(PASS_RESET_REQUEST, { email });
+            await axios.post(PASS_RESET_REQUEST, { email });
             setSuccessMessage("パスワードリセットリンクを送信しました。メールをご確認ください。");
             setIsCooldown(true)
         } catch (error) {

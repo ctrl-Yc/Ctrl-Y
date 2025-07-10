@@ -25,7 +25,7 @@ export const PasswordReset = () => {
         }
 
         try {
-            const response = await axios.post(PASS_RESET,
+            await axios.post(PASS_RESET,
                 { newPassword },
                 {
                     headers: {
