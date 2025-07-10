@@ -1,4 +1,4 @@
-export const CustomButton = ({ label, onClick, type = 'button', className = '', disabled }) => {
+export const CustomButton = ({ label, onClick, type = 'button', className = '', disabled = false }) => {
   return (
      <button 
       type={type} 

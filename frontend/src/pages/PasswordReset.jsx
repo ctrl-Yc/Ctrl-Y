@@ -17,12 +17,10 @@ export const PasswordReset = () => {
 
     const handleSubmitClick = async () => {
         if (!newPassword || !confirmNewPassword) {
-            alert("パスワードをすべて入力してください。");
             return;
         }
 
         if (newPassword !== confirmNewPassword) {
-            alert("パスワードが一致しません。");
             return;
         }
 
@@ -36,11 +34,9 @@ export const PasswordReset = () => {
                     }
                 }
             );
-            alert("パスワードがリセットされました。");
             navigate("/");
         } catch (error) {
             console.error("リセットエラー:", error);
-            alert("パスワードリセットに失敗しました。");
         }
     };
 
