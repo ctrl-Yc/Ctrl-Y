@@ -4,8 +4,7 @@ import { SidebarItem } from "../SidebarItem";
 export const ChildSidebar = ({ activeMenuItem, onMenuItemClick }) => {
     const menuItems = [
         { id: 'ChildTasks', text: 'おてつだい一覧', icon: 'list' },
-        { id: 'records', text: 'おこづかい記録', icon: 'money' },
-        { id: 'settings', text: '設定', icon: 'settings' },
+        { id: 'ChildMoneyRecords', text: 'おこづかい記録', icon: 'money' },
     ];
 
     return (
