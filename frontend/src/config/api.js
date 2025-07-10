@@ -7,6 +7,8 @@ export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
 export const PARENT_SIGNUP = PARENT_BASE;
 export const PARENT_LOGIN = `${PARENT_BASE}/login`;
 export const PARENT_PASS_CHANGE = `${PARENT_BASE}/change`; // メールアドレス変更
+export const PASS_RESET_REQUEST = `${PARENT_BASE}/rePassword`; // パスワードリセット用のメール送信
+export const PASS_RESET = `${PARENT_BASE}/reset`;
 
 //子供ユーザー
 export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
