@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputField } from "../components/common/InputField"
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET_REQUEST } from "../config/api";
@@ -8,7 +8,29 @@ export const PasswordResetRequest = () => {
     const [email, setEmail] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [isCooldown, setIsCooldown] = useState(false);
+    const [cooldownTime, setCooldownTime] = useState(30);
 
+    // クールタイム処理
+    useEffect(() => {
+        if (isCooldown) {
+            const interval = setInterval(() => {
+                setCooldownTime(prev => {
+                    // クールタイムが一秒以下になったら再送信できるように
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setIsCooldown(false);
+                        return 30;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [isCooldown]);
+
+    // 送信ボタン処理
     const handleSendClick = async () => {
         setSuccessMessage('');
         setErrorMessage('');
@@ -21,6 +43,7 @@ export const PasswordResetRequest = () => {
         try {
             const response = await axios.post(PASS_RESET_REQUEST, { email });
             setSuccessMessage("パスワードリセットリンクを送信しました。メールをご確認ください。");
+            setIsCooldown(true)
         } catch (error) {
             console.error("送信エラー:", error);
             setErrorMessage("送信に失敗しました。メールアドレスをご確認ください。");
@@ -40,8 +63,9 @@ export const PasswordResetRequest = () => {
             />
             <CustomButton
                 type="button"
-                label="送信"
+                label={isCooldown ? `再送信 (${cooldownTime}s)` : "送信"}
                 onClick={handleSendClick}
+                disabled={isCooldown}
                 className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
                        transition-colors duration-300 mx-auto flex items-center justify-center mt-4"
             />
