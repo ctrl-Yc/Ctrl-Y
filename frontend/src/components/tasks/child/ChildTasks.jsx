@@ -86,15 +86,6 @@ export const ChildTasks = () => {
             tasks.map((task) => (
               <div key={task.task_id} className="w-full flex flex-col items-center">
                 <ChildTask task={task} onNext={() => nextTaskStatus(task)} />
-                {/* ここがモックの承認ボタン   */}
-                {task.status === STATUS.WAIT_REVIEW && (
-                  <button
-                    onClick={() => nextTaskStatus(task)}
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-400 transition"
-                  >
-                    承認する
-                  </button>
-                )}
               </div>
             ))
           )}
