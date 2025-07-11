@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "./Task";
 
-import { TASKS_COLLECTION } from "../../config/api";
+import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
 // タスクのステータスを定義
@@ -19,34 +19,34 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [error, setError] = useState(null);
   const [isViewingFinished, setIsViewingFinished] = useState(false);
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
 
-        const labels = isViewingFinished ? STATUS.WAIT_REVIEW : ['TODO', 'IN_PROGRESS'];
+      const labels = isViewingFinished ? STATUS.WAIT_REVIEW : ['TODO', 'IN_PROGRESS'];
 
-        const response = await axios.get(TASKS_COLLECTION(labels), {
-          headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        });
+      const response = await axios.get(TASKS_COLLECTION(labels), {
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-        setTasks(
-          response.data.sort(
-            (a, b) => new Date(a.deadline) - new Date(b.deadline)
-          )
+      setTasks(
+        response.data.sort(
+          (a, b) => new Date(a.deadline) - new Date(b.deadline)
         )
-      } catch (error) {
-        console.error(error);
-        setError("タスクの取得に失敗しました");
-      } finally {
-        setLoading(false);
-      }
-    };
+      )
+    } catch (error) {
+      console.error(error);
+      setError("タスクの取得に失敗しました");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchTasks();
   }, [isViewingFinished]);
 
@@ -59,6 +59,36 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     e.preventDefault();
     setActiveTab('tasks/create');
   };
+
+  const getNextStatus = (currentStatus) => {
+    const values = Object.values(STATUS);
+    const normalized = currentStatus.toUpperCase();
+    const index = values.indexOf(normalized);
+    return index < values.length - 1 ? values[index + 1] : null;
+  };
+
+  // 承認ボタンの処理
+  const nextTaskStatus = async (task) => {
+    const next = getNextStatus(task.status);
+    if (!next) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(TASK_STATUS(task.task_id, next), {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, [isViewingFinished]);
 
   if (loading) return <p className="text-center text-gray-500">読み込み中...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -97,9 +127,13 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
             <Task
               key={task.task_id}
               task={task}
+              isViewingFinished={isViewingFinished}
               onEdit={() => {
                 setSelectedTaskId(task.task_id);
                 setActiveTab('tasks/edit');
+              }}
+              onApprove={() => {
+                nextTaskStatus(task);
               }}
             />
           ))}
