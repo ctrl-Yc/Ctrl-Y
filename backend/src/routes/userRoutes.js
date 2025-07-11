@@ -22,7 +22,7 @@ router.post('/reset', auth, userController.resetPassword);
 router.post('/change', auth, userController.changePassword);
 
 
-router.get("/keyword", auth, userController.changeChildPass);
+router.post("/keyword", auth, userController.changeChildPass);
 
 
 module.exports = router;
