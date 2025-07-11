@@ -12,4 +12,9 @@ router.get("/:child_id/payments", auth, ChildController.getChildPayments);
 router.get("/list", auth, ChildController.ChildList);
 
 
+// 親のtokenで家庭の合言葉を変える
+router.get("/change", auth, ChildController.changeChildPass);
+
+
+
 module.exports = router;
