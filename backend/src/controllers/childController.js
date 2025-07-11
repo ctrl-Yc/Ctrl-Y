@@ -126,24 +126,3 @@ exports.ChildList = async (req,res) => {
 		res.status(500).json({ message: "子供一覧取得エラー", error: error.message });
 	}
 }
-
-exports.changeChildPass = async (req, res) => {
-	try {
-		const decoded = req.user;
-		const { newKeyword } = req.body;
-
-		if (!newKeyword) {
-			return res.status(400).json({ message: '新しいあいことばが必要です' });
-		}
-
-		await prisma.user.update({
-			where: { user_id: decoded.user_id },
-			data: { keyword: newKeyword },
-		});
-
-		res.status(200).json({ message: 'あいことばを更新しました' });
-	} catch (error) {
-		console.error('あいことば更新エラー:', error);
-		res.status(500).json({ message: 'あいことば更新エラー', error: error.message });
-	}
-};

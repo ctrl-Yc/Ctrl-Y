@@ -21,4 +21,8 @@ router.post('/reset', auth, userController.resetPassword);
 // パスワード変更用
 router.post('/change', auth, userController.changePassword);
 
+
+router.get("/keyword", auth, userController.changeChildPass);
+
+
 module.exports = router;

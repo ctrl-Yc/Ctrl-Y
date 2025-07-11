@@ -11,10 +11,4 @@ router.get("/:child_id/payments", auth, ChildController.getChildPayments);
 //親のtokenで自分の子供のuser_id・c_name取ってくるAPI
 router.get("/list", auth, ChildController.ChildList);
 
-
-// 親のtokenで家庭の合言葉を変える
-router.get("/change", auth, ChildController.changeChildPass);
-
-
-
 module.exports = router;
