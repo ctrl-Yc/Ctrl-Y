@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"; // useState をインポート
 import { Select } from "../common/Select";
 import axios from "axios";
-import { API_BASE_URL,CHILDREN_BASE } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST } from "../../config/api";
 
 export const MoneyRecords = () => {
     const currentYear = new Date().getFullYear();
@@ -22,7 +22,7 @@ export const MoneyRecords = () => {
     useEffect(() => {
         const fetchChildren = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/child/list`, {
+                const response = await axios.get(CHILDREN_LIST, {
                     headers: {
                         "Content-type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
