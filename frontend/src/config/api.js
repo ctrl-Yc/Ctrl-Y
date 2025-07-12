@@ -14,6 +14,7 @@ export const PASS_RESET = `${PARENT_BASE}/reset`;
 export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
 export const CHILDREN_SIGNUP = CHILDREN_BASE;
 export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`;
+export const CHILDREN_LIST = `${CHILDREN_BASE}/list`;
 
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
