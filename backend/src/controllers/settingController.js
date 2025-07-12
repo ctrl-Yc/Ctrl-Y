@@ -77,3 +77,29 @@ exports.updatePayCutoff = async (req, res) => {
     });
 	}
 };
+
+exports.getPayCut = async (req, res) => {
+	try {
+		const parentId = req.user.user_id;
+
+		const user = await prisma.user.findUnique({
+			where: { user_id: parentId },
+			select: {
+				pay_day: true,
+				cutoff_day: true,
+			},
+		});
+
+		if (!user) {
+			return res.status(404).json({ message: 'ユーザーが見つかりません' });
+		}
+
+		res.status(200).json({
+			pay_day: user.pay_day,
+			cutoff_day: user.cutoff_day,
+		});
+	} catch (error) {
+		console.error('締め日・給料日取得エラー:', error);
+		res.status(500).json({ message: '取得に失敗しました', error: error.message });
+	}
+} 
