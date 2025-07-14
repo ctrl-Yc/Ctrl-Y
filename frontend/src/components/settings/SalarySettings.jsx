@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { Select } from "../common/Select";
+import { PAYDAY_CUTOFF_CHANGE, PAYDAY_CUTOFF_GET } from "../../config/api";
+import axios from "axios";
 
 export const SalarySettings = ({ setActiveTab }) => {
 
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
+
   const paydayOptions = [
     { value: '月末', label: '月末' },
     { value: '15日', label: '15日' },
@@ -16,14 +19,37 @@ export const SalarySettings = ({ setActiveTab }) => {
     { value: '15日', label: '15日' },
   ];
 
+  const booleanToLabel = (value) => (value ? '15日' : '月末');
+  const labelToBoolean = (label) => label === '15日';
+
+  // 初期データ取得
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.get(PAYDAY_CUTOFF_GET, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSelectedPayday(booleanToLabel(response.data.pay_day));
+        setSelectedCutoff(booleanToLabel(response.data.cutoff_day));
+
+      } catch (err) {
+        setError('データの取得に失敗しました');
+        console.error(err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   const handlePaydayChange = (e) => {
     setSelectedPayday(e.target.value);
-    console.log('選択された給料日:', e.target.value);
   };
 
   const handleCutoffChange = (e) => {
     setSelectedCutoff(e.target.value);
-    console.log('選択された給料日:', e.target.value);
   };
 
   // 戻るボタン
@@ -33,15 +59,36 @@ export const SalarySettings = ({ setActiveTab }) => {
   };
 
   // 決定ボタン
-  const handleSubmitClick = (e) => {
+  const handleSubmitClick = async (e) => {
     e.preventDefault();
-    console.log('決定ボタンが押されました');
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        PAYDAY_CUTOFF_CHANGE,
+        {
+          pay_day: labelToBoolean(selectedPayday),
+          cutoff_day: labelToBoolean(selectedCutoff),
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response)
+      alert("保存しました");
+    } catch (err) {
+      alert("保存に失敗しました");
+      console.error(err);
+    }
   };
 
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">給与</h2>
+        {error && <p className="text-red-500">{error}</p>}
       </div>
       <div className="mx-20 space-y-4">
         <p className="text-xl">給料日の変更</p>
