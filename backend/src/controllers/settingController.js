@@ -65,7 +65,7 @@ exports.updatePayCutoff = async (req, res) => {
     res.status(200).json({
 		message: '締め日と給料日を更新しました。',
 		data: {
-        payday: updatedUser.pay_day,
+        pay_day: updatedUser.pay_day,
         cutoff_day: updatedUser.cutoff_day,
 	},
     });
