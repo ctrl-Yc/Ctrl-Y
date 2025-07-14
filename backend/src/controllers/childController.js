@@ -1,5 +1,5 @@
 const { signToken } = require('../lib/jwt');
-const prisma = require("@db");
+const prisma = require('@db');
 
 exports.createChild = async (req, res) => {
 	try {
@@ -15,7 +15,6 @@ exports.createChild = async (req, res) => {
 			return res.status(401).json({ message: '認証エラー: 親のIDが取得できません' });
 		}
 
-
 		const childCreate = await prisma.child.create({
 			data: {
 				c_name: c_name,
@@ -26,10 +25,9 @@ exports.createChild = async (req, res) => {
 		res.status(201).json({ child_id: childCreate.user_id });
 	} catch (error) {
 		console.error('子供の登録エラー:', error);
-		res.status(500).json({ message: '子供の登録エラー'  });
+		res.status(500).json({ message: '子供の登録エラー' });
 	}
 };
-
 
 exports.loginChild = async (req, res) => {
 	try {
@@ -52,7 +50,10 @@ exports.loginChild = async (req, res) => {
 			return res.status(401).json({ message: 'あいことばが間違っています' });
 		}
 
-		const token = signToken(childData.user_id, { role: 'child' , parent_id: childData.parent.user_id ,});
+		const token = signToken(childData.user_id, {
+			role: 'child',
+			parent_id: childData.parent.user_id,
+		});
 
 		res.status(200).json({
 			token,
@@ -83,12 +84,12 @@ exports.getChildPayments = async (req, res) => {
 
 		const result = await prisma.pay.findMany({
 			where: {
-                user_id: child_id,
-                inserted_month: {
-                    gte: new Date(`${year}-01-01T00:00:00.000Z`),
-                    lte: new Date(`${year}-12-31T23:59:59.999Z`),
-                },
-            },
+				user_id: child_id,
+				inserted_month: {
+					gte: new Date(`${year}-01-01T00:00:00.000Z`),
+					lte: new Date(`${year}-12-31T23:59:59.999Z`),
+				},
+			},
 		});
 
 		res.status(200).json(result);
@@ -96,9 +97,9 @@ exports.getChildPayments = async (req, res) => {
 		console.error('子供の給与取得エラー:', error);
 		res.status(500).json({ message: '子供の給与取得エラー', error: error.message });
 	}
-}
+};
 
-exports.ChildList = async (req,res) => {
+exports.ChildList = async (req, res) => {
 	try {
 		const decoded = req.user;
 
@@ -114,7 +115,7 @@ exports.ChildList = async (req,res) => {
 
 		res.status(200).json(child);
 	} catch (error) {
-		console.error("子供一覧取得エラー:", error);
-		res.status(500).json({ message: "子供一覧取得エラー", error: error.message });
+		console.error('子供一覧取得エラー:', error);
+		res.status(500).json({ message: '子供一覧取得エラー', error: error.message });
 	}
-}
+};

@@ -34,5 +34,7 @@ export const TASKS_COLLECTION = (labels) => {
 //個別タスクURLを返す
 export const taskUrl = (taskId) => `${TASKS_BASE}/${taskId}`;
 
-export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`;		// メールアドレス変更
+export const INIT_SETUP = `${API_BASE_URL}/api/setup`;
+
+export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`; // メールアドレス変更
 export const PARENT_EMAIL_GET = `${API_BASE_URL}/api/setting/`; // メールアドレス取得

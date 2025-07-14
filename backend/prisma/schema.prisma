@@ -51,7 +51,6 @@ model Child {
   icon_path     String?
   registered_at DateTime    @default(now()) @db.Timestamptz(6)
   updated_at    DateTime    @updatedAt @db.Timestamptz(6)
-  keyword       String?
   parent        User        @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   childTasks    ChildTask[]
   payroll       Pay[]
