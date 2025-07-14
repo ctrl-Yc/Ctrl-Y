@@ -8,7 +8,8 @@ export const SalarySettings = ({ setActiveTab }) => {
 
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
-
+  const [error, setError] = useState('');
+  
   const paydayOptions = [
     { value: '月末', label: '月末' },
     { value: '15日', label: '15日' },
