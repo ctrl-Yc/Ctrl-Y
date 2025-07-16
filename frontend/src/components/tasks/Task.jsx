@@ -1,6 +1,6 @@
 import { CustomButton } from "../common/CustomButton";
 
-export const Task = ({ task, onEdit, onApprove, isViewingFinished }) => {
+export const Task = ({ task, onEdit, onApprove }) => {
     const handleEditClick = (e) => {
         e.preventDefault();
         onEdit();
@@ -22,7 +22,7 @@ export const Task = ({ task, onEdit, onApprove, isViewingFinished }) => {
 
                 <p className="text-3xl text-green-600">¥{task.reward}</p>
 
-                {isViewingFinished ? (
+                {task.status === "WAIT_REVIEW" ? (
                     <CustomButton
                     type = "button"
                     label = "承認する"
