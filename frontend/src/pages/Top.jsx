@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "../components/ui/Sidebar"
 import { Tasks } from "../components/tasks/Tasks";
 import { Settings } from "../components/settings/Settings";
@@ -9,23 +9,31 @@ import { NoticeSettings } from "../components/settings/NoticeSettings";
 import { AccountSettings } from "../components/settings/AccountSettings";
 import { TaskCreate } from "../components/tasks/TaskCreate";
 import { TaskEdit } from "../components/tasks/TaskEdit";
+import { useNavigate } from "react-router";
+import { getToken } from "../config/Token";
 
 export const Top = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('tasks');
     const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-    // サイドバーの項目がクリックされたときに呼ばれる関数
+    useEffect(() => {
+        const token = getToken();
+        if (!token) {
+            navigate("/")
+        }
+    }, [navigate]);
+
+
     const handleSidebarItemClick = (itemId) => {
-        setActiveTab(itemId); // activeTab の状態を更新
+        setActiveTab(itemId); 
         console.log(`メインコンテンツを ${itemId} に切り替えます`);
     };
 
-    // Settings内カードのクリックで呼ばれる（Topで保持）
     const handleSettingsItemClick = (settingId) => {
         setActiveTab(`settings/${settingId}`);
     };
 
-    // mainに表示するコンテンツ
     const renderMainContent = () => {
         switch (activeTab) {
             case 'tasks':
@@ -57,7 +65,6 @@ export const Top = () => {
                 activeMenuItem={activeTab}
                 onMenuItemClick={handleSidebarItemClick}
             />
-            {/* メインコンテンツ部分 */}
             <main className="flex-grow items-center p-6 bg-orange-200 overflow-y-auto h-screen"> 
                 {renderMainContent()}
             </main>
