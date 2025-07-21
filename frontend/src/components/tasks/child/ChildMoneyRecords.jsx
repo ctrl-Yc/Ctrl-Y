@@ -10,7 +10,7 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [doneTasks, setDoneTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDoneTasks = async () => {
@@ -25,7 +25,8 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
         });
         setDoneTasks(response.data);
       } catch (error) {
-        console.error(error);
+        console.error(error)
+        setError('データの取得に失敗しました');
       } finally {
         setLoading(false);
       }
