@@ -96,7 +96,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       </div>
     </>
   ) : (
-    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+    <div>
       <div className="m-10">
 
         <h1 className="text-5xl font-bold p-8">
