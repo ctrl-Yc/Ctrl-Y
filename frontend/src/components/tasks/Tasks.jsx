@@ -5,7 +5,6 @@ import { Task } from "./Task";
 import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
-// タスクのステータスを定義
 const STATUS = {
   TODO: 'TODO',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -61,7 +60,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     return index < values.length - 1 ? values[index + 1] : null;
   };
 
-  // 承認ボタンの処理
   const nextTaskStatus = async (task) => {
     const next = getNextStatus(task.status);
     if (!next) return;
@@ -80,29 +78,29 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     }
   };
 
-  if (loading) return <p className="text-center text-gray-500">読み込み中...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
 
-  return tasks.length === 0 ? (
-    <>
-      <p className="text-center text-gray-400">表示できるタスクがありません。</p>
-      <div className="mt-6 flex flex-col items-center space-y-4">
-        <CustomButton
-          type="button"
-          label="お手伝いを作成"
-          onClick={handleCreateClick}
-          className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300"
-        />
-      </div>
-    </>
-  ) : (
-    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-      <div className="m-10">
+  return (
+  <div className="m-10">
+    <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
 
-        <h1 className="text-5xl font-bold p-8">
-          おてつだい一覧
-        </h1>
-
+    {loading ? (
+      <p className="text-center text-gray-500">読み込み中...</p>
+    ) : error ? (
+      <p className="text-center text-red-500">{error}</p>
+    ) : tasks.length === 0 ? (
+      <>
+        <p className="text-center text-gray-400 text-xl">表示できるタスクがありません。</p>
+        <div className="mt-6 flex flex-col items-center space-y-4">
+          <CustomButton
+            type="button"
+            label="お手伝いを作成"
+            onClick={handleCreateClick}
+            className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300"
+          />
+        </div>
+      </>
+    ) : (
+      <>
         <ul className="space-y-3 flex justify-center items-center flex-col">
           {tasks.map(task => (
             <Task
@@ -118,16 +116,15 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
             />
           ))}
         </ul>
-      </div>
-      <div className="my-12 flex justify-center items-center space-x-32">
-        <CustomButton
-          type="button"
-          label="お手伝いを作成"
-          onClick={handleCreateClick}
-          className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300"
-        />
-      </div>
-
-    </div>
-  );
-};
+        <div className="my-12 flex justify-center items-center space-x-32">
+          <CustomButton
+            type="button"
+            label="お手伝いを作成"
+            onClick={handleCreateClick}
+            className="w-45 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300"
+          />
+        </div>
+      </>
+    )}
+  </div>
+)};
