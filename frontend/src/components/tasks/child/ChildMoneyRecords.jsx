@@ -50,7 +50,6 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-  <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
     <div className="m-10">
       <h1 className="text-5xl font-bold p-8">おこづかい記録</h1>
       <div className="p-6">
@@ -79,5 +78,4 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
         className="fixed bottom-9 left-75 w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200 text-black font-bold shadow-lg"
       />
     </div>
-  </div>
-)}
+  )}
