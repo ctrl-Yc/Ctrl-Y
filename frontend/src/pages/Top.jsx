@@ -65,7 +65,7 @@ export const Top = () => {
                 activeMenuItem={activeTab}
                 onMenuItemClick={handleSidebarItemClick}
             />
-            <main className="flex-grow items-center p-15 bg-[#90CAEF] bg-[radial-gradient(circle,_#ffffff8a_1.5px,_transparent_1.5px)] bg-[length:13px_13px] overflow-y-auto h-screen"> 
+            <main className="flex-grow items-center p-15 bg-[#90CAEF] bg-[radial-gradient(circle,_#ffffff8a_1.5px,_transparent_1.5px)] bg-[length:13px_13px] overflow-y-auto h-screen">
                 <div className="bg-white rounded-2xl shadow-lg p-1 h-full border-2 border-[#5C410E]">
                     {renderMainContent()}
                 </div>
