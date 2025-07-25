@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { CustomButton } from '../components/common/CustomButton';
 import Snackbar from '@mui/material/Snackbar';
 import { useState } from 'react';
+import { buttonStyles } from '../components/ui/Color';
 
 export const ChildUrl = () => {
   const location = useLocation();
@@ -27,20 +28,19 @@ export const ChildUrl = () => {
 
   return (
     <main className="flex flex-grow items-center p-15 bg-[#90CAEF] bg-[radial-gradient(circle,_#ffffff8a_1.5px,_transparent_1.5px)] bg-[length:13px_13px] overflow-y-auto h-screen">
-      <div className="bg-white rounded-2xl shadow-lg p-1 h-1/2 border-2 border-[#5C410E] items-center m-auto flex flex-col justify-center gap-4 w-2/3">
+      <div className="bg-white rounded-2xl shadow-lg p-1 h-1/2 border-2 border-[#2980b9] items-center m-auto flex flex-col justify-center gap-4 w-2/3">
       {childId ? (
         <>
-      <p className="text-2xl font-bold">子供用ログインページのURL</p>
+      <p className="text-2xl font-bold text-[#2c3e50]">子供用ログインページのURL</p>
       <div className="flex gap-2 rounded-lg p-2">
-        <a href={childSignupUrl} target="_blank" rel="noopener noreferrer" className="text-lg border-2 border-[#5C410E] p-2 rounded-lg hover:bg-gray-100 text-blue-500">
+        <a href={childSignupUrl} target="_blank" rel="noopener noreferrer" className="text-lg border-2 border-[#5C410E] p-2 rounded-lg hover:bg-gray-100 text-blue-500 cursor-pointer">
         {childSignupUrl}
         </a>
         <CustomButton
           type="button"
           label="コピー"
           onClick={handleCopy}
-          className="w-40 px-4 text-3xl border rounded-lg bg-orange-100 hover:bg-orange-200
-                    text-black font-bold"
+          className={`${buttonStyles} w-40 px-4 text-3xl hover:bg-orange-200 font-bold cursor-pointer`}
         />
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -52,14 +52,13 @@ export const ChildUrl = () => {
       </div>
       </>
       ) : (
-        <p>子供IDがありません</p>
+        <p className="text-gray-400 text-2xl">子供IDがありません</p>
       )}
       <CustomButton
         type="button"
         label="ホームへ行く"
         onClick={handleClick}
-        className="mt-4 h-15 px-4 text-3xl border rounded-lg bg-orange-100 hover:bg-orange-200
-                  text-black font-bold"
+        className={`${buttonStyles} mt-4 h-15 px-4 text-3xl hover:bg-orange-200 font-bold`}
       />
       </div>
     </main>

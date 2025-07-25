@@ -4,6 +4,8 @@ import { Task } from "./Task";
 
 import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
+import { buttonStyles } from "../ui/Color";
+import { TaskCreate } from "./TaskCreate";
 
 const STATUS = {
     TODO: "TODO",
@@ -16,6 +18,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [open, setOpen] = useState(false);
 
     const fetchTasks = async () => {
         setLoading(true);
@@ -46,7 +49,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 
     const handleCreateClick = (e) => {
         e.preventDefault();
-        setActiveTab("tasks/create");
+        setOpen(true);
     };
 
     const getNextStatus = (currentStatus) => {
@@ -81,13 +84,13 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     return (
         <div className="mx-10 mt-5">
             <div className=" flex justify-between items-center">
-                <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
+                <h1 className="text-5xl font-bold p-8 text-[#2c3e50]">おてつだい一覧</h1>
                 <div className="my-12 flex justify-center items-center space-x-32">
                     <CustomButton
                         type="button"
                         label="お手伝いを作成"
                         onClick={handleCreateClick}
-                        className="shadow-lg border-3 border-[#5C410E] rounded-2xl w-55 h-15 bg-orange-300 text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300"
+                        className={`${buttonStyles} shadow-lg border-3 border-[#5C410E] rounded-2xl w-55 h-15  text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300`}
                     />
                 </div>
             </div>
@@ -116,6 +119,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
                     </ul>
                 </>
             )}
+            <TaskCreate open={open} setOpen={setOpen} fetchTasks={fetchTasks}/>
         </div>
     );
 };
