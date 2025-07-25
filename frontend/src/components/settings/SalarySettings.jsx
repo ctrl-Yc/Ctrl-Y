@@ -8,7 +8,7 @@ export const SalarySettings = ({ setActiveTab }) => {
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
   const [error, setError] = useState('');
-  
+
   const paydayOptions = [
     { value: '月末', label: '月末' },
     { value: '15日', label: '15日' },
@@ -62,8 +62,14 @@ export const SalarySettings = ({ setActiveTab }) => {
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("認証トークンが見つかりません。再度ログインしてください。");
+      return;
+    }
+
     try {
-      const response = await axios.post(
+      await axios.post(
         PAYDAY_CUTOFF_SETTING,
         {
           pay_day: labelToBoolean(selectedPayday),
@@ -76,11 +82,11 @@ export const SalarySettings = ({ setActiveTab }) => {
           },
         }
       );
-      console.log(response)
       alert("保存しました");
     } catch (err) {
-      alert("保存に失敗しました");
-      console.error(err);
+      const msg = err.response?.data?.message || "保存に失敗しました。";
+      alert(msg);
+      console.error("給与設定保存エラー:", err);
     }
   };
 
