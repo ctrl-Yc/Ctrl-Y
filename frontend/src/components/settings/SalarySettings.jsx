@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { Select } from "../common/Select";
-import { PAYDAY_CUTOFF_CHANGE, PAYDAY_CUTOFF_GET } from "../../config/api";
+import { PAYDAY_CUTOFF_SETTING } from "../../config/api";
 import axios from "axios";
-
 export const SalarySettings = ({ setActiveTab }) => {
 
   const [selectedPayday, setSelectedPayday] = useState('月末');
@@ -28,7 +27,7 @@ export const SalarySettings = ({ setActiveTab }) => {
     const fetchSettings = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.get(PAYDAY_CUTOFF_GET, {
+        const response = await axios.get(PAYDAY_CUTOFF_SETTING, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -65,7 +64,7 @@ export const SalarySettings = ({ setActiveTab }) => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
-        PAYDAY_CUTOFF_CHANGE,
+        PAYDAY_CUTOFF_SETTING,
         {
           pay_day: labelToBoolean(selectedPayday),
           cutoff_day: labelToBoolean(selectedCutoff),

@@ -38,5 +38,4 @@ export const INIT_SETUP = `${API_BASE_URL}/api/setup`;
 
 export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`; // メールアドレス変更
 export const PARENT_EMAIL_GET = `${API_BASE_URL}/api/setting/`; // メールアドレス取得
-export const PAYDAY_CUTOFF_CHANGE = `${API_BASE_URL}/api/setting/payCutOff`;	  // 締め日給料日変更
-export const PAYDAY_CUTOFF_GET = `${API_BASE_URL}/api/setting/getPayCut`; // 締め日給料日取得
+export const PAYDAY_CUTOFF_SETTING = `${API_BASE_URL}/api/setting/paycut`;	  // 締め日給料日設定
