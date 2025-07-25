@@ -1,5 +1,6 @@
 import { CustomButton } from "../common/CustomButton";
 import { Deadline } from "../common/Deadline.jsx";
+import { buttonStyles } from "../ui/Color";
 
 export const Task = ({ task, onEdit, onApprove }) => {
     const handleEditClick = (e) => {
@@ -54,7 +55,7 @@ export const Task = ({ task, onEdit, onApprove }) => {
                         type="button"
                         label="編集"
                         onClick={handleEditClick}
-                        className="border-1 border-[#5C410E] w-30 h-15 bg-orange-300 text-white text-2xl font-extrabold rounded-2xl transition-colors duration-300 mx-auto shadow-lg hover:bg-orange-200"
+                        className={`${buttonStyles} w-30 h-15 text-2xl font-extrabold rounded-2xl transition-colors duration-300 mx-auto shadow-lg hover:bg-orange-200`}
                     />
                 )}
             </div>
