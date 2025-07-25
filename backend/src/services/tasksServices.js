@@ -88,20 +88,21 @@ exports.deleteTask = async (taskId, parent_id) => {
     });
 };
 
-exports.completeTaskNum = async (parent_id) => {
+exports.completeTaskCount = async (user_id) => {
     return await prisma.task.count({
         where: {
-            parent_id,
-            s_id: 3,
-        },
-    });
+            child_id : user_id,
+            status: 'DONE'
+        }
+    })
 };
 
-exports.totalSalary = async (parent_id) => {
+
+exports.totalSalary = async (user_id) => {
     return await prisma.task.aggregate({
         where: {
-            parent_id,
-            s_id: 3,
+            child_id : user_id,
+            status: 'DONE'
         },
         _sum: {
             reward: true,
@@ -127,5 +128,16 @@ exports.SidEdit = async (parent_id, taskId, labels) => {
 		data: {
 			status: label
 		},
+    })
+}
+
+exports.addChildTask = async (user_id, taskId) => {
+    return await prisma.task.update({
+        where: {
+            task_id: taskId,
+        },
+        data: {
+            child_id: user_id,
+        },
     })
 }

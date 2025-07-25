@@ -19,6 +19,7 @@ model Task {
   s_id       Int            @db.SmallInt
   parent_id  String?        @db.Uuid
   status     TaskStatusCode @default(TODO)
+  child_id   String?        @db.Uuid
   childTasks ChildTask[]
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   taskStatus TaskStatus     @relation(fields: [s_id], references: [s_id], onDelete: NoAction, onUpdate: NoAction)

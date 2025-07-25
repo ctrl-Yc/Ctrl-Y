@@ -11,10 +11,16 @@
     "http"
   ],
   "paths": {
-    "/tasks/totalnumber": {
+    "/tasks/totalnumber/{user_id}": {
       "get": {
         "description": "",
         "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "authorization",
             "in": "header",
@@ -34,10 +40,16 @@
         }
       }
     },
-    "/tasks/totalsalary": {
+    "/tasks/totalsalary/{user_id}": {
       "get": {
         "description": "",
         "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "authorization",
             "in": "header",
@@ -247,6 +259,35 @@
           },
           {
             "name": "label",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/tasks/addChildTasks/{task_id}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "task_id",
             "in": "path",
             "required": true,
             "type": "string"
