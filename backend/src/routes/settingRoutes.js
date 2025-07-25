@@ -7,7 +7,7 @@ router.get('/getChild', auth, settingController.getChildSettings);
 
 router.route('/paycut')
     .get(auth, settingController.payCutHandler)
-    .post(auth, settingController.payCutHandler);
+    .post(auth, settingController.updatePayCutHandler);
 
 router.get('/', auth, settingController.getEmail);
 module.exports = router;

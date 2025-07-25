@@ -50,10 +50,8 @@ exports.getEmail = async (req, res) => {
 };
 
 exports.payCutHandler = async (req, res) => {
-	const parentId = req.user.user_id;
-
-	if (req.method === 'GET') {
     try {
+		const parentId = req.user.user_id;
 		const user = await prisma.user.findUnique({
         where: { user_id: parentId },
         select: {
@@ -74,10 +72,11 @@ exports.payCutHandler = async (req, res) => {
 		console.error('締め日・給料日取得エラー:', error);
 		return res.status(500).json({ message: '取得に失敗しました', error: error.message });
     }
-}
+};
 
-	if (req.method === 'POST') {
+exports.updatePayCutHandler = async (req, res) => {
     try {
+		const parentId = req.user.user_id;
 		const { pay_day, cutoff_day } = req.body;
 
 		const updatedUser = await prisma.user.update({
@@ -96,8 +95,4 @@ exports.payCutHandler = async (req, res) => {
 		console.error('締め日・給料日更新エラー:', error);
 		return res.status(500).json({ message: '更新に失敗しました', error: error.message });
     }
-}
-
-  // GETでもPOSTでもないリクエスト
-	return res.status(405).json({ message: '許可されていないメソッドです' });
 };
