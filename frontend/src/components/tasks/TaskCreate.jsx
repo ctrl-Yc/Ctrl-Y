@@ -43,73 +43,82 @@ export const TaskCreate = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-            <div className="m-10">
-                <h1 className="text-5xl font-bold p-8">おてつだいの作成</h1>
-                <div className="w-3/5 mx-auto mt-8 space-y-16">
-                    <div className="flex mb-8">
-                        <p className="text-4xl mr-4">・名前</p>
-                        <InputField
-                            type="text"
-                            placeholder=""
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            className="w-70 h-11 px-4 text-3xl border bg-white rounded-lg"
-                        />
-                    </div>
-                    <div className="flex justify-start items-center space-x-4 mb-8">
-                        <p className="text-4xl">・金額</p>
-                        <InputField
-                            type="number"
-                            placeholder=""
-                            value={reward}
-                            onChange={e => setReward(e.target.value)}
-                            className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
-                        />
-                        <span className="text-4xl">（円）</span>
-                    </div>
+        <div className="bg-orange-100 w-full h-full rounded-xl overflow-y-auto">
 
-                    <div className="flex justify-start items-center space-x-4 mb-8">
-                        <p className="text-4xl">・期限</p>
-                        <InputField
-                            type="datetime-local"
-                            placeholder=""
-                            value={deadline}
-                            onChange={e => setDeadline(e.target.value)}
-                            className="text-2xl w-67 h-11 px-4 border bg-white rounded-lg"
-                        />
-                    </div>
-
-                    <div className="flex justify-start space-x-4 mb-8">
-                        <p className="text-4xl">・説明</p>
-                        <InputField
-                            type="text"
-                            placeholder=""
-                            value={memo}
-                            onChange={e => setMemo(e.target.value)}
-                            className="text-2xl w-3/5 h-11 px-4 border bg-white rounded-lg"
-                        />
-                    </div>
-
-                </div>
-                <div className="w-3/5 mt-24 flex justify-between mx-auto">
-                    <CustomButton
-                        type="button"
-                        label="戻る"
-                        onClick={handleBackClick}
-                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200
+            <div className="flex items-center">
+                <CustomButton
+                    type="button"
+                    label="＜"
+                    onClick={handleBackClick}
+                    className="md:hidden position absolute w-10 h-10 mt-6 ml-4 text-3xl border rounded-lg 
                                       text-black font-bold"
+                />
+                <h1 className="text-3xl font-bold text-center pt-6 mx-auto md:text-5xl md:pt-10">おてつだいの作成</h1>
+            </div>                
+            <div className="w-15/16 md:w-3/5 mx-auto mt-8 space-y-16">
+                <div className="flex mb-8">
+                    <p className="text-4xl mr-4">・名前</p>
+                    <InputField
+                        type="text"
+                        placeholder=""
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        className="w-70 h-11 px-4 text-3xl border bg-white rounded-lg"
                     />
-                    <CustomButton
-                        type="button"
-                        label="決定"
-                        onClick={handleSubmitClick}
-                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-orange-300 hover:bg-orange-200
-                                      text-black font-bold"
+                </div>
+                <div className="flex justify-start items-center space-x-4 mb-8">
+                    <p className="text-4xl">・金額</p>
+                    <InputField
+                        type="number"
+                        placeholder=""
+                        value={reward}
+                        onChange={e => setReward(e.target.value)}
+                        className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
+                    />
+                    <span className="text-4xl">（円）</span>
+                </div>
+
+                <div className="flex justify-start items-center space-x-4 mb-8">
+                    <p className="text-4xl">・期限</p>
+                    <InputField
+                        type="datetime-local"
+                        placeholder=""
+                        value={deadline}
+                        onChange={e => setDeadline(e.target.value)}
+                        className="text-2xl w-70 h-11 px-4 border bg-white rounded-lg"
+                    />
+                </div>
+
+                <div className="flex justify-start space-x-4 mb-8">
+                    <p className="text-4xl">・説明</p>
+                    <InputField
+                        type="text"
+                        placeholder=""
+                        value={memo}
+                        onChange={e => setMemo(e.target.value)}
+                        className="text-2xl w-70 md:w-3/5 h-11 px-4 border bg-white rounded-lg"
                     />
                 </div>
 
             </div>
+            <div className="w-4/5 md:w-3/5 mt-24 flex justify-end md:justify-between mx-auto">
+                <CustomButton
+                    type="button"
+                    label="戻る"
+                    onClick={handleBackClick}
+                    className="hidden w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200
+                                      text-black font-bold"
+                />
+                <CustomButton
+                    type="button"
+                    label="決定"
+                    onClick={handleSubmitClick}
+                    className="w-30 h-12 px-4 text-3xl border rounded-lg bg-orange-300 hover:bg-orange-200
+                                      text-black font-bold"
+                />
+            </div>
+
+
         </div>
     )
 }

@@ -41,10 +41,17 @@ export const SalarySettings = ({ setActiveTab }) => {
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <div className="flex justify-between items-center">
-        <h2 className="text-5xl font-bold p-16">給与</h2>
+        <CustomButton
+          type="button"
+          label="＜"
+          onClick={handleBackClick}
+          className="md:hidden position absolute w-10 h-10 mt-6 ml-4 text-3xl border rounded-lg 
+                                      text-black font-bold"
+        />
+        <h2 className="text-3xl font-bold text-center mb-10 pt-6 mx-auto md:text-5xl md:pt-10">給与</h2>
       </div>
-      <div className="mx-20 space-y-4">
-        <p className="text-xl">給料日の変更</p>
+      <div className="mx-20 md:mx-150 space-y-4">
+        <p className="text-xl md:text-2xl">給料日の変更</p>
         <Select
           options={paydayOptions}
           value={selectedPayday}
@@ -52,19 +59,19 @@ export const SalarySettings = ({ setActiveTab }) => {
           className="w-26"
         />
 
-        <p className="text-xl">締め日の変更</p>
+        <p className="text-xl md:text-2xl">締め日の変更</p>
         <Select
           options={cutoffOptions}
           value={selectedCutoff}
           onChange={handleCutoffChange}
           className="w-26"
         />
-        <div className="mt-8 space-x-12">
+        <div className="mt-8 space-x-12 flex">
           <CustomButton
             type="button"
             label="戻る"
             onClick={handleBackClick}
-            className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+            className='hidden md:block w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
                       transition-colors duration-300'
           />
           <CustomButton

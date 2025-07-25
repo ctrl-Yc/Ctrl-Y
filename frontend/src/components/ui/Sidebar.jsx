@@ -9,7 +9,9 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
     ];
 
     return (
-        <aside className="sidebar w-64 bg-orange-100 text-white p-4 h-full flex flex-col">
+        <aside className="hidden sidebar 
+        bg-orange-100 text-white 
+        md:w-64md:p-4 md:block md:h-full md:flex md:flex-col">
             <div>
                 <nav>
                     <ul className="space-y-2">

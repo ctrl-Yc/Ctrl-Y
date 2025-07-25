@@ -3,7 +3,7 @@ import { Login } from './pages/Login.jsx';
 import { Keyword } from './pages/Keyword.jsx';
 import  { Top }  from './pages/Top.jsx';
 import { SignupPage } from './pages/SignupPage.jsx';
-import { ChildSignup } from './pages/ChildSignup.jsx';
+import { ChildSignup } from './pages/Childsignup.jsx';
 import { ChildUrl } from './pages/ChildUrl.jsx';
 import { ChildTop } from './pages/ChildTop.jsx';
 import { PasswordResetRequest } from './pages/PasswordResetRequest.jsx';

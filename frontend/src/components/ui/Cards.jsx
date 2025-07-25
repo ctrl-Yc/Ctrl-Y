@@ -2,7 +2,7 @@ import { Card } from "./Card"
 
 export const Cards = ({ items, onItemClick, cardClassName = '' }) => {
     return (
-        <div className="flex flex-wrap justify-center mt-30">
+        <div className="flex flex-grid flex-wrap justify-center mt-10 md:mt-30">
             {items.map((item) => (
                 <Card
                     key={item.id}

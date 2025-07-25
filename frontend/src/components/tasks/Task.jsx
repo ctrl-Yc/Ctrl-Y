@@ -12,14 +12,16 @@ export const Task = ({ task, onEdit, onApprove }) => {
     };
 
     return (
-        <li className="px-6 py-2 bg-gray-50 shadow h-34 w-3/4 flex items-center my-2 border-gray-200 rounded-lg shadow-sm">
-            <div className="space-y-4">
-                <p className="text-3xl font-medium">{task.t_name}</p>
-                <p className="text-xl text-gray-700">{task.memo}</p>
+        <li className="bg-gray-50 shadow flex items-center border-gray-200 rounded-lg shadow-sm 
+        w-full h-30 
+        md:px-6 md:py-2 md:h-34 md:w-3/4 md:my-2">
+            <div className="space-y-4 ml-4">
+                <p className="text-2xl font-extrabold md:text-3xl md:font-medium">{task.t_name}</p>
+                <p className="text-lg text-gray-700 md:text-xl">{task.memo}</p>
             </div>
-            <div className="ml-auto flex items-center space-x-12">
+            <div className="ml-auto flex items-center space-x-8 md:space-x-12">
 
-                <p className="text-3xl text-green-600">¥{task.reward}</p>
+                <p className="text-2xl text-green-600 md:text-3xl">¥{task.reward}</p>
 
                 {task.status === "WAIT_REVIEW" ? (
                     <CustomButton
@@ -33,7 +35,7 @@ export const Task = ({ task, onEdit, onApprove }) => {
                     type = "button"
                     label = "編集"
                     onClick = { handleEditClick }
-                    className = "w-30 h-15 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200transition-colors duration-300 mx-auto"
+                    className = "bg-orange-300 text-black font-extrabold rounded-lg hover:bg-orange-200transition-colors duration-300 mr-4 w-16 h-10 md:w-30 md:h-15 md:text-2xl"
                     />
                 )}
             </div>
