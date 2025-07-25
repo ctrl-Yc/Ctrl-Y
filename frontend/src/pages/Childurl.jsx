@@ -23,15 +23,17 @@ export const ChildUrl = () => {
     Navigate('/')
   }
 
-  if (!childId) {
-    return <p>子供IDがありません</p>;
-  }
+  // if (!childId) {
+  //   return <p>子供IDがありません</p>;
+  // }
 
   const childSignupUrl = `${window.location.origin}/child/login/${childId}`;
 
   return (
     <main className="flex flex-grow items-center p-15 bg-[#90CAEF] bg-[radial-gradient(circle,_#ffffff8a_1.5px,_transparent_1.5px)] bg-[length:13px_13px] overflow-y-auto h-screen">
       <div className="bg-white rounded-2xl shadow-lg p-1 h-1/2 border-2 border-[#5C410E] items-center m-auto flex flex-col justify-center gap-4 w-2/3">
+      {childId ? (
+        <>
       <p className="text-2xl font-bold">子供用ログインページのURL</p>
       <div className="flex gap-2 rounded-lg p-2">
         <a href={childSignupUrl} target="_blank" rel="noopener noreferrer" className="text-lg border-2 border-[#5C410E] p-2 rounded-lg hover:bg-gray-100 text-blue-500">
@@ -52,6 +54,10 @@ export const ChildUrl = () => {
           autoHideDuration={2000}
         />
       </div>
+      </>
+      ) : (
+        <p>子供IDがありません</p>
+      )}
       <CustomButton
         type="button"
         label="ホームへ戻る"
