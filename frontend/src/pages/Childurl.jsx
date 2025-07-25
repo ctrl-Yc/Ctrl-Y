@@ -20,12 +20,8 @@ export const ChildUrl = () => {
   }
 
   const handleClick = () => {
-    Navigate('/')
+    Navigate('/top')
   }
-
-  // if (!childId) {
-  //   return <p>子供IDがありません</p>;
-  // }
 
   const childSignupUrl = `${window.location.origin}/child/login/${childId}`;
 
@@ -60,7 +56,7 @@ export const ChildUrl = () => {
       )}
       <CustomButton
         type="button"
-        label="ホームへ戻る"
+        label="ホームへ行く"
         onClick={handleClick}
         className="mt-4 h-15 px-4 text-3xl border rounded-lg bg-orange-100 hover:bg-orange-200
                   text-black font-bold"
