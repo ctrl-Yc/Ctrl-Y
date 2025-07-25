@@ -79,15 +79,15 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     };
 
     return (
-        <div className="m-10">
-            <div className="flex justify-between items-center">
+        <div className="mx-10 mt-5">
+            <div className=" flex justify-between items-center">
                 <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
                 <div className="my-12 flex justify-center items-center space-x-32">
                     <CustomButton
                         type="button"
                         label="お手伝いを作成"
                         onClick={handleCreateClick}
-                        className="shadow-lg border-3 border-[#5C410E] rounded-lg w-55 h-15 bg-orange-300 text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300"
+                        className="shadow-lg border-3 border-[#5C410E] rounded-2xl w-55 h-15 bg-orange-300 text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300"
                     />
                 </div>
             </div>

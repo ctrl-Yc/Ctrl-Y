@@ -31,7 +31,7 @@ export const Task = ({ task, onEdit, onApprove }) => {
         <li
             className={`px-6 py-2 bg-gray-50 shadow-lg h-34 w-3/4 flex items-center my-2 border-3 ${getStatusColor(
                 task.status
-            )}  rounded-lg`}
+            )}  rounded-2xl`}
         >
             <div className="flex items-center w-1/2">
                 <p className="text-left w-1/2 text-3xl font-medium text-[#5C410E]">{task.t_name}</p>
@@ -54,7 +54,7 @@ export const Task = ({ task, onEdit, onApprove }) => {
                         type="button"
                         label="編集"
                         onClick={handleEditClick}
-                        className="border-1 border-[#5C410E] w-30 h-15 bg-orange-300 text-white text-2xl font-extrabold rounded-lg transition-colors duration-300 mx-auto"
+                        className="border-1 border-[#5C410E] w-30 h-15 bg-orange-300 text-white text-2xl font-extrabold rounded-2xl transition-colors duration-300 mx-auto shadow-lg hover:bg-orange-200"
                     />
                 )}
             </div>
