@@ -3,7 +3,7 @@ import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
-import { CHILDREN_SIGNUP } from "../config/api";
+import { INIT_SETUP } from "../config/api";
 import axios from 'axios';
 
 export const ChildSignup = () => {
@@ -24,7 +24,7 @@ export const ChildSignup = () => {
       return;
     }
     try {
-      const response = await axios.post(CHILDREN_SIGNUP,
+      const response = await axios.post(INIT_SETUP,
       {
         c_name,
         keyword,

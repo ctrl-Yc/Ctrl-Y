@@ -12,8 +12,8 @@ export const ChildTask = ({ task, onNext }) => {
   const isDone = task.status === "DONE";
 
   return (
-    <li className="w-full max-w-2xl p-4 bg-white rounded shadow flex justify-between items-center">
-      <div>
+    <li className="px-6 py-2 bg-gray-50 shadow h-34 w-3/4 flex items-center my-2 border-gray-200 rounded-lg shadow-sm">
+      <div className="space-y-4">
         <p className="text-3xl font-medium">{task.t_name}</p>
         <p className="text-xl text-gray-700">{task.memo}</p>
         {task.status === "DONE" && task.updated_at && (

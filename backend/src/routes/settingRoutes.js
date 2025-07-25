@@ -5,9 +5,9 @@ const auth = require('../middlewares/auth.js');
 
 router.get('/getChild', auth, settingController.getChildSettings);
 
-router.post('/payCutOff', auth, settingController.updatePayCutoff);
-
-router.get('/getPayCut', auth, settingController.getPayCut);
+router.route('/paycut')
+    .get(auth, settingController.payCutHandler)
+    .post(auth, settingController.updatePayCutHandler);
 
 router.get('/', auth, settingController.getEmail);
 module.exports = router;

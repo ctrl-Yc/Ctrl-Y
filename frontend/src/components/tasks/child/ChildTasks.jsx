@@ -75,7 +75,6 @@ export const ChildTasks = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <div className="m-10">
         <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
 
@@ -91,6 +90,5 @@ export const ChildTasks = () => {
           )}
         </ul>
       </div>
-    </div>
-  );
-};
+    );
+  };
