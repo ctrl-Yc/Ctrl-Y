@@ -1,3 +1,4 @@
+import { LogoutItem } from "./Logout";
 import { SidebarItem } from "./SidebarItem"
 
 export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
@@ -23,6 +24,7 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
                                 onClick={() => onMenuItemClick(item.id)} 
                             />
                         ))}
+                        <LogoutItem />
                     </ul>
                 </nav>
             </div>

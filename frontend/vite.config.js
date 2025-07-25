@@ -29,6 +29,25 @@ export default defineConfig({
         //     type: 'image/png'
         //   }
         // ]
+        workbox: {
+          runtimeCaching: [
+            {
+              urlPattern: ({ request }) => request.destination === 'document',
+              handler: 'NetworkFirst'
+            },
+            {
+              urlPattern: ({ request }) => request.destination === 'image',
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'images-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 30 
+                }
+              }
+            }
+          ]
+        }
       }
     })
   ]

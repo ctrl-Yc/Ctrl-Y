@@ -82,8 +82,7 @@ export const MoneyRecords = () => {
         fetchData();
     }, [selectedChild, selectedYear]);
 
-    return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+        return (
             <div className="m-10">
                 <div className="flex justify-between items-center">
                     <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
@@ -133,6 +132,5 @@ export const MoneyRecords = () => {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
