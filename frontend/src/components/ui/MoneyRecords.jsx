@@ -1,5 +1,3 @@
-// components/ui/MoneyRecords.jsx
-
 import { useEffect, useState } from "react"; // useState をインポート
 import { Select } from "../common/Select";
 import axios from "axios";
@@ -11,6 +9,14 @@ export const MoneyRecords = () => {
     const [records, setRecords] = useState([]);
     const [children, setChildren] = useState([]);
     const [selectedChild, setSelectedChild] = useState(null);
+    const [viewMode, setViewMode] = useState('records');
+    const [doneTasks, setDoneTasks] = useState([]);
+
+    // 過去の記録、今月の記録の切り替え
+    const viewModeOptions = [
+        { value: 'records', label: '月ごとの記録' },
+        { value: 'monthTasks', label: '今月の完了タスク' },
+    ];
 
     // 年を格納する配列
     const yearList = [];
