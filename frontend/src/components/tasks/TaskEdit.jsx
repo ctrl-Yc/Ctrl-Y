@@ -3,6 +3,7 @@ import axios from "axios";
 import { taskUrl } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
+import { api } from "../../api";
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
     const [title, setTitle] = useState('');
@@ -13,15 +14,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const response = await axios.get(
-                    `${taskUrl(taskId)}`,
-                    {
-                        headers: {
-                            'Content-type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
+                const response = await api.get(taskUrl(taskId));
 
                 const task = response.data;
 
@@ -47,18 +40,13 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${taskUrl(taskId)}`, {
+            await api.patch(taskUrl(taskId), {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
                 memo: memo,
             },
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+            );
             setActiveTab('tasks');
         } catch (error) {
             console.error("更新エラー:", error);

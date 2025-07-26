@@ -2,9 +2,8 @@ import { useState } from "react";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import { Link, useNavigate } from "react-router-dom";
-import { getToken } from "../config/Token";
 import { INIT_SETUP } from "../config/api";
-import axios from 'axios';
+import { api } from "../api";
 
 export const ChildSignup = () => {
   const [c_name, setName] = useState('');
@@ -17,25 +16,9 @@ export const ChildSignup = () => {
       return;
     }
 
-    const token = getToken();
 
-    if (!token) {
-      alert('親アカウントからやり直してください。');
-      return;
-    }
     try {
-      const response = await axios.post(INIT_SETUP,
-      {
-        c_name,
-        keyword,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      }
-    );
+      const response = await api.post(INIT_SETUP, { c_name, keyword });
     
       console.log('登録成功:', response.data);
       navigate('/ChildUrl',{ state: { childId: response.data.user_id } });

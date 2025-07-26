@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { TASKS_COLLECTION } from "../../../config/api";
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
 import { DateSelector } from "../../ui/DateSelector";
 import { isSameDay } from "date-fns";
+import { api } from "../../../api";
 
 export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -15,14 +15,8 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
   useEffect(() => {
     const fetchDoneTasks = async () => {
       setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(TASKS_COLLECTION(['DONE']), {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      try { 
+        const response = await api.get(TASKS_COLLECTION(['DONE']));
         setDoneTasks(response.data);
       } catch (error) {
         console.error(error)
