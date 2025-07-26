@@ -14,10 +14,19 @@ export const ChildSettings = ({ setActiveTab }) => {
   const [newChildName, setNewChildName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // 子供全取得
   useEffect(() => {
     const fetchChildren = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setErrorMessage("認証トークンが見つかりません");
+        return;
+      }
+      
+      setLoading(true);
       try {
         const response = await axios.get(CHILDREN_LIST, {
           headers: {
@@ -31,6 +40,10 @@ export const ChildSettings = ({ setActiveTab }) => {
         }
       } catch (error) {
         console.error("子供情報取得エラー:", error);
+        setErrorMessage("子供情報の取得に失敗しました");
+        setTimeout(() => setErrorMessage(""), 3000);
+      } finally {
+        setLoading(false);
       }
     };
     fetchChildren();
