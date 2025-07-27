@@ -72,7 +72,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 						type="button"
 						label="お手伝いを作成"
 						onClick={handleCreateClick}
-						className={`${buttonStyles} shadow-lg border-3 border-[#5C410E] rounded-2xl w-55 h-15  text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300`}
+						className={`${buttonStyles} shadow-lg border-2 border-[#5C410E] rounded-2xl w-55 h-15  text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300`}
 					/>
 				</div>
 			</div>
