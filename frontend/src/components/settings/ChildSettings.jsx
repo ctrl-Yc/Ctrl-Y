@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
-import { CHILDREN_BASE, CHILDREN_LIST } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN } from "../../config/api";
 import axios from "axios";
 import { Modal } from "../ui/Modal";
 
@@ -98,7 +98,7 @@ export const ChildSettings = ({ setActiveTab }) => {
   const handleCopyUrl = () => {
   if (!selectedChild) return;
 
-  const url = `http://localhost:5173/child/login/${selectedChild.user_id}`;
+  const url = `${CHILD_LOGIN}${selectedChild.user_id}`;
   navigator.clipboard.writeText(url)
     .then(() => {
       setSuccessMessage("URLをコピーしました ✅");
@@ -162,7 +162,7 @@ export const ChildSettings = ({ setActiveTab }) => {
         <InputField
           type="text"
           placeholder=""
-          value={selectedChild ? `http://localhost:5173/child/login/${selectedChild.user_id}` : ''}
+          value={selectedChild ? `${CHILD_LOGIN}${selectedChild.user_id}` : ''}
           readOnly
           className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
         />
