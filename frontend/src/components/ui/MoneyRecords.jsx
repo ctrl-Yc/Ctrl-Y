@@ -120,25 +120,23 @@ export const MoneyRecords = () => {
 
 	return (
 		<div className="m-10">
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center w-full">
 				<h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
-			</div>
-
-			<div className="flex justify-end mb-8 mr-28">
-				<Select
-					options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
-					value={selectedChild ? selectedChild.user_id : ''}
-					onChange={handleChildChange}
-					className="w-26 mr-10"
-				/>
-			</div>
-			<div className="flex justify-end mb-8 mr-28">
-				<Select
-					options={yearList}
-					value={selectedYear}
-					onChange={handleYearChange}
-					className="w-26 mr-10"
-				/>
+				<div className="flex justify-center py-10 items-center mr-28">
+					<Select
+						options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
+						value={selectedChild ? selectedChild.user_id : ''}
+						placeholder={'ユーザー名'}
+						onChange={handleChildChange}
+						className="w-30 mr-10"
+					/>
+					<Select
+						options={yearList}
+						value={selectedYear}
+						onChange={handleYearChange}
+						className="w-30 mr-10"
+					/>
+				</div>
 			</div>
 			{/* グラフ */}
 			<div className="flex justify-center mt-10">

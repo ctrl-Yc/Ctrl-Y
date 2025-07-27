@@ -50,7 +50,7 @@ export const SalarySettings = ({ setActiveTab }) => {
 	};
 
 	return (
-		<div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+		<div className="bg-white w-full h-full rounded-xl overflow-y-auto">
 			<div className="flex justify-between items-center">
 				<h2 className="text-5xl font-bold p-16">給与</h2>
 			</div>
