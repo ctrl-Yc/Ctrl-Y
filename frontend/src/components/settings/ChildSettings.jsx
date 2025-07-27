@@ -2,27 +2,51 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
-import { CHILDREN_BASE } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN } from "../../config/api";
 import axios from "axios";
 import { Modal } from "../ui/Modal";
 
 export const ChildSettings = ({ setActiveTab }) => {
   const [keyword, setKeyword] = useState('');
-  const [selectedChildId, setSelectedChildId] = useState('');
+  const [selectedChild, setSelectedChild] = useState('');
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  // 子供全取得
   useEffect(() => {
-    // 仮データを用意
-    const mockChildren = [
-      { user_id: '1', c_name: '太郎' },
-      { user_id: '2', c_name: '花子' },
-      { user_id: '3', c_name: '次郎' }
-    ];
-    setChildren(mockChildren);
+    const fetchChildren = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setErrorMessage("認証トークンが見つかりません");
+        return;
+      }
+      
+      setLoading(true);
+      try {
+        const response = await axios.get(CHILDREN_LIST, {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.data.length > 0) {
+          setChildren(response.data);
+          setSelectedChild(response.data[0]);
+        }
+      } catch (error) {
+        console.error("子供情報取得エラー:", error);
+        setErrorMessage("子供情報の取得に失敗しました");
+        setTimeout(() => setErrorMessage(""), 3000);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchChildren();
   }, []);
 
   // 子ども追加ボタン処理
@@ -68,8 +92,24 @@ export const ChildSettings = ({ setActiveTab }) => {
   // 決定ボタン
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    console.log('決定ボタンが押されました');
   };
+
+  // コピーボタン
+  const handleCopyUrl = () => {
+  if (!selectedChild) return;
+
+  const url = `${CHILD_LOGIN}${selectedChild.user_id}`;
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      setSuccessMessage("URLをコピーしました ✅");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    })
+    .catch(() => {
+      setErrorMessage("コピーに失敗しました");
+      setTimeout(() => setErrorMessage(""), 3000);
+    });
+};
+
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       {successMessage && (
@@ -111,17 +151,25 @@ export const ChildSettings = ({ setActiveTab }) => {
             value: child.user_id,
             label: child.c_name
           }))}
-          value={selectedChildId}
-          onChange={e => setSelectedChildId(e.target.value)}
+          value={selectedChild ? selectedChild.user_id : ''}
+          onChange={e => {
+            const selected = children.find(c => c.user_id === e.target.value);
+            setSelectedChild(selected);
+          }}
           placeholder="子供を選択"
           className="w-70"
         />
         <InputField
           type="text"
           placeholder=""
-          value={selectedChildId ? `仮のURLです/${selectedChildId}` : ''}
+          value={selectedChild ? `${CHILD_LOGIN}${selectedChild.user_id}` : ''}
           readOnly
           className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
+        />
+        <CustomButton 
+          type="button"
+          label="コピー"
+          onClick={handleCopyUrl}
         />
         <div className="mt-4 space-x-12">
           <CustomButton
@@ -141,7 +189,7 @@ export const ChildSettings = ({ setActiveTab }) => {
         </div>
 
       </div>
-      {/* ✅ モーダル呼び出し */}
+      {/* モーダル */}
       <Modal title="子供の名前を入力" isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <InputField
           type="text"
