@@ -2,6 +2,18 @@ import { useEffect, useState } from 'react';
 import { Select } from '../common/Select';
 import { CHILDREN_BASE, CHILDREN_LIST } from '../../config/api';
 import { api } from '../../api';
+import {
+	Chart as ChartJS,
+	CategoryScale,
+	LinearScale,
+	PointElement,
+	LineElement,
+	Tooltip,
+	Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 export const MoneyRecords = () => {
 	const currentYear = new Date().getFullYear();
@@ -9,6 +21,52 @@ export const MoneyRecords = () => {
 	const [records, setRecords] = useState([]);
 	const [children, setChildren] = useState([]);
 	const [selectedChild, setSelectedChild] = useState(null);
+
+	// グラフ設定
+	const chartData = {
+		labels: records.map((record) =>
+			new Date(record.inserted_month).toLocaleDateString('ja-JP', {
+				month: 'short',
+			})
+		),
+		datasets: [
+			{
+				label: '報酬額（円）',
+				data: records.map((record) => record.reward),
+				borderColor: 'rgba(75,192,192,1)',
+				backgroundColor: 'rgba(75,192,192,0.2)',
+				tension: 0.3, // 線を滑らかに
+				fill: true,
+			},
+		],
+	};
+
+	const chartOptions = {
+		responsive: true,
+		plugins: {
+			legend: {
+				position: false,
+			},
+			tooltip: {
+				enabled: true,
+			},
+		},
+		scales: {
+			y: {
+				beginAtZero: true,
+				title: {
+					display: true,
+					text: '金額（円）',
+				},
+			},
+			x: {
+				title: {
+					display: true,
+					text: '月',
+				},
+			},
+		},
+	};
 
 	// 年を格納する配列
 	const yearList = [];
@@ -82,6 +140,13 @@ export const MoneyRecords = () => {
 					className="w-26 mr-10"
 				/>
 			</div>
+			{/* グラフ */}
+			<div className="flex justify-center mt-10">
+				<div className="w-3/4 bg-white p-6 rounded-lg shadow">
+					<Line data={chartData} options={chartOptions} />
+				</div>
+			</div>
+
 			<div className="flex justify-center">
 				<div className="w-3/4 h-6 space-y-8">
 					{records.map((record) => (
