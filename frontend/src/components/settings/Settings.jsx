@@ -38,7 +38,7 @@ export const Settings = ({ onSettingItemClick }) => {
 	return (
 		<div className="mx-10 mt-5">
 			<div className="flex justify-between items-center">
-				<h1 className="text-5xl font-bold p-8 text-[#2c3e50]">設定</h1>
+				<h1 className="text-5xl font-bold mt-5 p-8 text-[#2c3e50]">設定</h1>
 			</div>
 
 			<Cards
