@@ -6,6 +6,7 @@ import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN } from '../../config/api';
 import { api } from '../../api';
 import { Modal } from '../ui/Modal';
 import { buttonStyles } from '../ui/Color';
+import Snackbar from '@mui/material/Snackbar';
 
 export const ChildSettings = ({ setActiveTab }) => {
 	const [keyword, setKeyword] = useState('');
@@ -13,9 +14,12 @@ export const ChildSettings = ({ setActiveTab }) => {
 	const [children, setChildren] = useState([]);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [newChildName, setNewChildName] = useState('');
-	const [successMessage, setSuccessMessage] = useState('');
-	const [errorMessage, setErrorMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [snackInfo, setSnackInfo] = useState({ open: false, message: '' });
+
+	const handleClose = () => {
+		setSnackInfo({ open: false, message: '' });
+	};
 
 	// 子供全取得
 	useEffect(() => {
@@ -29,8 +33,10 @@ export const ChildSettings = ({ setActiveTab }) => {
 				}
 			} catch (error) {
 				console.error('子供情報取得エラー:', error);
-				setErrorMessage('子供情報の取得に失敗しました');
-				setTimeout(() => setErrorMessage(''), 3000);
+				setSnackInfo({
+					open: true,
+					message: '子供情報の取得に失敗しました',
+				});
 			} finally {
 				setLoading(false);
 			}
@@ -42,8 +48,10 @@ export const ChildSettings = ({ setActiveTab }) => {
 	const handleAddChild = async (e) => {
 		e.preventDefault();
 		if (!newChildName.trim()) {
-			setErrorMessage('名前を入力してください');
-			setTimeout(() => setErrorMessage(''), 3000);
+			setSnackInfo({
+				open: true,
+				message: '名前を入力してください',
+			});
 			return;
 		}
 
@@ -51,13 +59,15 @@ export const ChildSettings = ({ setActiveTab }) => {
 			await api.post(CHILDREN_BASE, { c_name: newChildName });
 			setNewChildName('');
 			setIsDialogOpen(false);
-			setSuccessMessage('子供を追加しました ✅');
-
-			// 表示後3秒でメッセージを自動的に消す
-			setTimeout(() => setSuccessMessage(''), 3000);
+			setSnackInfo({
+				open: true,
+				message: '子供を追加しました',
+			});
 		} catch (error) {
-			setErrorMessage('子供の追加に失敗しました');
-			setTimeout(() => setErrorMessage(''), 3000);
+			setSnackInfo({
+				open: true,
+				message: '子供の追加に失敗しました',
+			});
 		}
 	};
 
@@ -80,19 +90,28 @@ export const ChildSettings = ({ setActiveTab }) => {
 		navigator.clipboard
 			.writeText(url)
 			.then(() => {
-				setSuccessMessage('URLをコピーしました ✅');
-				setTimeout(() => setSuccessMessage(''), 3000);
+				setSnackInfo({
+					open: true,
+					message: 'URLをコピーしました',
+				});
 			})
 			.catch(() => {
-				setErrorMessage('コピーに失敗しました');
-				setTimeout(() => setErrorMessage(''), 3000);
+				setSnackInfo({
+					open: true,
+					message: 'コピーに失敗しました',
+				});
 			});
 	};
 
 	return (
 		<div className="bg-white w-full h-full rounded-xl overflow-y-auto">
-			{successMessage && <div>{successMessage}</div>}
-			{errorMessage && <div>{errorMessage}</div>}
+			<Snackbar
+				open={snackInfo.open}
+				autoHideDuration={3000}
+				onClose={handleClose}
+				message={snackInfo.message}
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+			/>
 			<div className="flex justify-between items-center">
 				<h2 className="text-5xl font-bold p-16 text-[#2c3e50]">子供</h2>
 			</div>
