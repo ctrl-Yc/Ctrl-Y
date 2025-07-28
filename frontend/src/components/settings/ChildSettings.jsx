@@ -2,27 +2,40 @@ import { useEffect, useState } from 'react';
 import { CustomButton } from '../common/CustomButton';
 import { InputField } from '../common/InputField';
 import { Select } from '../common/Select';
-import { CHILDREN_BASE } from '../../config/api';
-import { Modal } from '../ui/Modal';
+import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN } from '../../config/api';
 import { api } from '../../api';
+import { Modal } from '../ui/Modal';
+import { buttonStyles } from '../ui/Color';
 
 export const ChildSettings = ({ setActiveTab }) => {
 	const [keyword, setKeyword] = useState('');
-	const [selectedChildId, setSelectedChildId] = useState('');
+	const [selectedChild, setSelectedChild] = useState('');
 	const [children, setChildren] = useState([]);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [newChildName, setNewChildName] = useState('');
 	const [successMessage, setSuccessMessage] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 
+	// 子供全取得
 	useEffect(() => {
-		// 仮データを用意
-		const mockChildren = [
-			{ user_id: '1', c_name: '太郎' },
-			{ user_id: '2', c_name: '花子' },
-			{ user_id: '3', c_name: '次郎' },
-		];
-		setChildren(mockChildren);
+		const fetchChildren = async () => {
+			setLoading(true);
+			try {
+				const response = await api.get(CHILDREN_LIST);
+				if (response.data.length > 0) {
+					setChildren(response.data);
+					setSelectedChild(response.data[0]);
+				}
+			} catch (error) {
+				console.error('子供情報取得エラー:', error);
+				setErrorMessage('子供情報の取得に失敗しました');
+				setTimeout(() => setErrorMessage(''), 3000);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchChildren();
 	}, []);
 
 	// 子ども追加ボタン処理
@@ -57,14 +70,31 @@ export const ChildSettings = ({ setActiveTab }) => {
 	// 決定ボタン
 	const handleSubmitClick = (e) => {
 		e.preventDefault();
-		console.log('決定ボタンが押されました');
 	};
+
+	// コピーボタン
+	const handleCopyUrl = () => {
+		if (!selectedChild) return;
+
+		const url = `${CHILD_LOGIN}${selectedChild.user_id}`;
+		navigator.clipboard
+			.writeText(url)
+			.then(() => {
+				setSuccessMessage('URLをコピーしました ✅');
+				setTimeout(() => setSuccessMessage(''), 3000);
+			})
+			.catch(() => {
+				setErrorMessage('コピーに失敗しました');
+				setTimeout(() => setErrorMessage(''), 3000);
+			});
+	};
+
 	return (
 		<div className="bg-white w-full h-full rounded-xl overflow-y-auto">
 			{successMessage && <div>{successMessage}</div>}
 			{errorMessage && <div>{errorMessage}</div>}
 			<div className="flex justify-between items-center">
-				<h2 className="text-5xl font-bold p-16">子供</h2>
+				<h2 className="text-5xl font-bold p-16 text-[#2c3e50]">子供</h2>
 			</div>
 
 			<div className="mx-20 space-y-4">
@@ -84,8 +114,7 @@ export const ChildSettings = ({ setActiveTab }) => {
 						type="button"
 						label="+子供の追加"
 						onClick={() => setIsDialogOpen(true)}
-						className="w-32 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
-                      mb-6 hover:bg-orange-200 transition-colors duration-300"
+						className={`${buttonStyles} w-32 h-10 text-lg font-bold rounded-lg mb-6`}
 					/>
 				</div>
 
@@ -95,36 +124,39 @@ export const ChildSettings = ({ setActiveTab }) => {
 						value: child.user_id,
 						label: child.c_name,
 					}))}
-					value={selectedChildId}
-					onChange={(e) => setSelectedChildId(e.target.value)}
+					value={selectedChild ? selectedChild.user_id : ''}
+					onChange={(e) => {
+						const selected = children.find((c) => c.user_id === e.target.value);
+						setSelectedChild(selected);
+					}}
 					placeholder="子供を選択"
 					className="w-70"
 				/>
 				<InputField
 					type="text"
 					placeholder=""
-					value={selectedChildId ? `仮のURLです/${selectedChildId}` : ''}
+					value={selectedChild ? `${CHILD_LOGIN}${selectedChild.user_id}` : ''}
 					readOnly
 					className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
 				/>
+				<CustomButton type="button" label="コピー" onClick={handleCopyUrl} />
 				<div className="mt-4 space-x-12">
 					<CustomButton
 						type="button"
 						label="戻る"
 						onClick={handleBackClick}
-						className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300"
+						className="w-30 h-12 bg-[#3498db] text-white text-2xl font-extrabold rounded-lg hover:bg-[#2980b9]
+                      transition-colors duration-300 border-2 border-[#2980b9]"
 					/>
 					<CustomButton
 						type="button"
 						label="決定"
 						onClick={handleSubmitClick}
-						className="w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-                      transition-colors duration-300"
+						className={`${buttonStyles} w-30 h-12 text-2xl font-extrabold rounded-lg hover:bg-orange-200`}
 					/>
 				</div>
 			</div>
-			{/* ✅ モーダル呼び出し */}
+			{/* モーダル */}
 			<Modal
 				title="子供の名前を入力"
 				isOpen={isDialogOpen}
