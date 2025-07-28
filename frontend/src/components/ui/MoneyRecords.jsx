@@ -82,6 +82,7 @@ export const MoneyRecords = () => {
 				if (response.data.length > 0) {
 					setChildren(response.data);
 					setSelectedChild(response.data[0]);
+					console.log(response.data[0]);
 				}
 			} catch (error) {
 				console.error('子供情報取得エラー:', error);
@@ -121,12 +122,11 @@ export const MoneyRecords = () => {
 	return (
 		<div className="m-10">
 			<div className="flex justify-between items-center w-full">
-				<h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
+				<h2 className="text-5xl font-bold p-8 text-[#2c3e50]">おこづかい記録</h2>
 				<div className="flex justify-center py-10 items-center mr-28">
 					<Select
 						options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
 						value={selectedChild ? selectedChild.user_id : ''}
-						placeholder={'ユーザー名'}
 						onChange={handleChildChange}
 						className="w-30 mr-10"
 					/>
