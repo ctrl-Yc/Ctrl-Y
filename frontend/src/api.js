@@ -41,15 +41,10 @@ api.interceptors.response.use(
 
 			const path = window.location.pathname;
 
-			const isChildLogin = path.includes('/child/login');
-			const isParentLogin = path.includes('/');
-
-			if (isChildLogin || isParentLogin) {
-				return Promise.reject(error);
-			}
-
 			if (path.startsWith('/child')) {
-				window.location.href = '/child/login';
+				const match = path.match(/[0-9a-fA-F-]{36}$/);
+				const uuid = match ? match[0] : '';
+				window.location.href = `/child/login/${uuid}`;
 				return Promise.reject(error);
 			}
 
