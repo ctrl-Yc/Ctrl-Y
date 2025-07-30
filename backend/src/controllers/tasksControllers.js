@@ -87,7 +87,10 @@ exports.totalTaskNum = async (req, res) => {
     try {
         const { user_id } = req.params;
         const { totalCount, totalSalary } = await tasksServices.totalTask(user_id);
-        res.status(200).json({ totalCount: totalCount, totalSalary: totalSalary._sum.reward || 0 });
+        res.status(200).json({
+            totalCount: totalCount,
+            totalSalary: totalSalary._sum.reward || 0 
+        });
     } catch (error) {
         console.log("終了済みのtaskの合計数・金額取得エラー");
         res.status(500).json({ message: error.message });

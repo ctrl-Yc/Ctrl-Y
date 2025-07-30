@@ -21,7 +21,7 @@ function verifyToken(token) {
 	try {
 		return jwt.verify(token, SECRET);
 	} catch (error) {
-		console.log(error)
+		console.log('JWT エラー',error)
 		throw new Error('トークンが無効です');
 	}
 }

@@ -132,14 +132,3 @@ exports.SidEdit = async (user_id, taskId, labels, role, ) => {
 		data
     });
 }
-
-// exports.addChildTask = async (child_id, taskId) => {
-//     return await prisma.task.update({
-//         where: {
-//             task_id: taskId,
-//         },
-//         data: {
-//             child_id,
-//         },
-//     })
-// }

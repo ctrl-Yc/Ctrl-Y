@@ -5,7 +5,6 @@ import { CustomButton } from '../../common/CustomButton';
 import { DateSelector } from '../../ui/DateSelector';
 import { isSameDay } from 'date-fns';
 import { api } from '../../../api';
-import { getChildToken } from "../../../config/Token";
 export const ChildMoneyRecords = ({ setActiveTab }) => {
 	const [selectedDate, setSelectedDate] = useState(null);
 	const [doneTasks, setDoneTasks] = useState([]);
