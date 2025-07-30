@@ -5,7 +5,7 @@ import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
 import { DateSelector } from "../../ui/DateSelector";
 import { isSameDay } from "date-fns";
-
+import { getChildToken } from "../../../config/Token";
 export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [doneTasks, setDoneTasks] = useState([]);
@@ -16,7 +16,7 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
     const fetchDoneTasks = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
+        const token = getChildToken();
         const response = await axios.get(TASKS_COLLECTION(['DONE']), {
           headers: {
             'Content-Type': 'application/json',
