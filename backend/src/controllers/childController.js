@@ -1,5 +1,6 @@
 const { signToken } = require('../lib/jwt');
 const prisma = require('@db');
+const { v4: uuidv4 } = require('uuid');
 
 exports.createChild = async (req, res) => {
 	try {
@@ -17,8 +18,10 @@ exports.createChild = async (req, res) => {
 
 		const childCreate = await prisma.child.create({
 			data: {
+				user_id: uuidv4(),
 				c_name: c_name,
 				parent_id: decoded.user_id,
+				registered_at: new Date() 
 			},
 		});
 
