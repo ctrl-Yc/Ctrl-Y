@@ -10,7 +10,8 @@
     "module-alias": "^2.2.3",
     "nodemailer": "^7.0.4",
     "postgres": "^3.4.7",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.10",

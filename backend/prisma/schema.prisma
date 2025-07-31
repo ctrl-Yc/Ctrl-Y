@@ -38,6 +38,7 @@ model User {
   pay_day       Boolean
   registered_at DateTime @default(now()) @db.Timestamptz(6)
   updated_at    DateTime @updatedAt @db.Timestamptz(6)
+  subscription Json?
   children      Child[]
   tasks         Task[]
 
