@@ -5,12 +5,12 @@ import { PAYDAY_CUTOFF_SETTING } from "../../config/api";
 import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 export const SalarySettings = ({ setActiveTab }) => {
-
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const paydayOptions = [
     { value: '月末', label: '月末' },
@@ -29,6 +29,11 @@ export const SalarySettings = ({ setActiveTab }) => {
   useEffect(() => {
     const fetchSettings = async () => {
       const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("ログイン情報が失効しました。再度ログインしてください。");
+        navigate("/");
+        return;
+      }
       try {
         const response = await axios.get(PAYDAY_CUTOFF_SETTING, {
           headers: {
@@ -40,8 +45,7 @@ export const SalarySettings = ({ setActiveTab }) => {
         setSelectedCutoff(booleanToLabel(response.data.cutoff_day));
 
       } catch (err) {
-        setError('データの取得に失敗しました');
-        console.error(err);
+        toast.error('データの取得に失敗しました');
       }
     };
     fetchSettings();
@@ -67,7 +71,8 @@ export const SalarySettings = ({ setActiveTab }) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("認証トークンが見つかりません。再度ログインしてください。");
+      toast.error("ログイン情報が失効しました。再度ログインしてください。");
+      navigate("/");
       return;
     }
 
@@ -96,7 +101,6 @@ export const SalarySettings = ({ setActiveTab }) => {
       <ToastContainer />
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">給与</h2>
-        {error && <p className="text-red-500">{error}</p>}
       </div>
       <div className="mx-20 space-y-4">
         <p className="text-xl">給料日の変更</p>
