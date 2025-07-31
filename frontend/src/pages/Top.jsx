@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "../components/ui/Sidebar"
 import { Tasks } from "../components/tasks/Tasks";
 import { Settings } from "../components/settings/Settings";
@@ -9,10 +9,20 @@ import { NoticeSettings } from "../components/settings/NoticeSettings";
 import { AccountSettings } from "../components/settings/AccountSettings";
 import { TaskCreate } from "../components/tasks/TaskCreate";
 import { TaskEdit } from "../components/tasks/TaskEdit";
+import { useNavigate } from "react-router";
+import { getToken } from "../config/Token";
 
 export const Top = () => {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('tasks');
     const [selectedTaskId, setSelectedTaskId] = useState(null);
+
+    useEffect(() => {
+        const token = getToken();
+        if (!token) {
+            navigate("/")
+        }
+    }, [navigate]);
 
 
     const handleSidebarItemClick = (itemId) => {

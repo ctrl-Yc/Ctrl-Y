@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { CustomButton } from '../components/common/CustomButton';
-import { InputField } from '../components/common/InputField';
-import { Link, useNavigate } from 'react-router-dom';
-import { setToken } from '../config/Token';
-import { PARENT_LOGIN } from '../config/api';
-import { api } from '../api';
 import Snackbar from '@mui/material/Snackbar';
 import { buttonStyles } from '../components/ui/Color';
+import { InputField } from "../components/common/InputField"
+import { Link, useNavigate } from "react-router-dom"
+import { setToken } from "../config/Token";
+import axios from "axios";
+import { PARENT_LOGIN } from "../config/api";
 
 export const Login = () => {
 	const [email, setEmail] = useState('');
@@ -17,6 +17,7 @@ export const Login = () => {
 		message: '',
 	});
 
+
 	useEffect(() => {
 		const token = localStorage.getItem('token');
 		if (token) {
@@ -24,27 +25,30 @@ export const Login = () => {
 		}
 	}, [navigate]);
 
-	const handleLogin = async () => {
-		if (!email || !password) {
-			setSnackInfo({
-				open: true,
-				message: 'メールアドレスとパスワードを入力してください',
-			});
-			return;
-		}
-		try {
-			const response = await api.post(PARENT_LOGIN, { email, password });
-			const Token = response.data.token;
-			setToken(Token);
-			navigate('./top', { state: { token: setToken(Token) } });
-		} catch (error) {
-			console.error('ログインエラー:', error);
-			setSnackInfo({
-				open: true,
-				message: 'ログインに失敗しました',
-			});
-		}
-	};
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert('入力エラー', 'メールアドレスとパスワードを入力してください');
+      return;
+    }
+    try {
+      const response = await axios.post(PARENT_LOGIN,
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            'Content-type': 'application/json'
+          },
+        }
+      );
+      const Token = response.data.token;
+      setToken(Token);
+      navigate('./top', { state: { token: setToken(Token) } });
+    } catch (error) {
+      console.error('ログインエラー:', error);
+    }
+  };
 
 	const handleEnter = (e) => {
 		if (e.key === 'Enter') {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { InputField } from "../components/common/InputField"
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET_REQUEST } from "../config/api";
-import { api } from "../api";
+import axios from "axios";
 
 export const PasswordResetRequest = () => {
     const [email, setEmail] = useState('');
@@ -48,7 +48,7 @@ export const PasswordResetRequest = () => {
         }
 
         try {
-            await api.post(PASS_RESET_REQUEST, { email });
+            await axios.post(PASS_RESET_REQUEST, { email });
             setSuccessMessage("パスワードリセットリンクを送信しました。メールをご確認ください。");
             setIsCooldown(true)
         } catch (error) {

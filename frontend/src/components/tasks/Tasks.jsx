@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Task } from './Task';
-import { TASK_STATUS, TASKS_COLLECTION } from '../../config/api';
-import { CustomButton } from '../common/CustomButton';
-import { buttonStyles } from '../ui/Color';
-import { TaskCreate } from './TaskCreate';
-import { api } from '../../api';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Task } from "./Task";
+
+import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
+import { CustomButton } from "../common/CustomButton";
+import { buttonStyles } from "../ui/Color";
+import { TaskCreate } from "./TaskCreate";
 
 const STATUS = {
 	TODO: 'TODO',
@@ -19,12 +20,19 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 	const [error, setError] = useState(null);
 	const [open, setOpen] = useState(false);
 
-	const fetchTasks = async () => {
-		setLoading(true);
-		try {
-			const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
+    const fetchTasks = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
 
-			const response = await api.get(TASKS_COLLECTION(labels));
+            const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
+
+            const response = await axios.get(TASKS_COLLECTION(labels), {
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
 			setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
 		} catch (error) {
@@ -55,13 +63,23 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 		const next = getNextStatus(task.status);
 		if (!next) return;
 
-		try {
-			await api.patch(TASK_STATUS(task.task_id, next));
-			fetchTasks();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+        try {
+            const token = localStorage.getItem("token");
+            await axios.patch(
+                TASK_STATUS(task.task_id, next),
+                {},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            fetchTasks();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 	return (
 		<div className="mx-10 mt-5">
