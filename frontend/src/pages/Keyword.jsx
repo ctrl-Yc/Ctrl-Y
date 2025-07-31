@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import { CHILDREN_LOGIN } from "../config/api";
 import { setChildToken } from "../config/Token"
-import { api } from "../api";
 
 export const Keyword = () => {
   const [keyword, setKeyword] = useState('');
@@ -15,7 +15,16 @@ export const Keyword = () => {
     event.preventDefault();
 
     try {
-    const response = await api.post(CHILDREN_LOGIN(childUUID), { keyword: keyword });
+    const response = await axios.post(CHILDREN_LOGIN(childUUID),
+        {
+        keyword: keyword,
+        },
+        {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        }
+    );
     console.log(childUUID)
     if (response.data.token) {
         const childToken = response.data.token;

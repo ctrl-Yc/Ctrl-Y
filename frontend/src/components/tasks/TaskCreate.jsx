@@ -1,10 +1,10 @@
 import { useState } from "react";
+import axios from "axios";
 import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import Modal from '@mui/material/Modal';
 import { bgStyles, buttonStyles } from "../ui/Color";
-import { api } from "../../api";
 
 export const TaskCreate = ({ open, setOpen, fetchTasks }) => {
     const [name, setName] = useState('');
@@ -17,12 +17,20 @@ export const TaskCreate = ({ open, setOpen, fetchTasks }) => {
         e.preventDefault();
 
         try {
-            const response = await api.post(TASKS_BASE, {
-                t_name: name,
-                memo: memo,
-                reward: Number(reward),
-                deadline,
-            });
+            const response = await axios.post(TASKS_BASE,
+                {
+                    t_name: name,
+                    memo: memo,
+                    reward: Number(reward),
+                    deadline,
+                },
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
+            );
             console.log("登録成功:", response.data);
             setOpen(false);
             fetchTasks();
@@ -76,5 +84,6 @@ export const TaskCreate = ({ open, setOpen, fetchTasks }) => {
                 </div>
             </div>
         </Modal>
+
     )
 }

@@ -1,7 +1,8 @@
-import { useEffect, useState, useCallback } from 'react';
-import { ChildTask } from './ChildTask';
-import { TASK_STATUS, TASKS_COLLECTION } from '../../../config/api';
-import { api } from '../../../api';
+import { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+
+import { ChildTask } from "./ChildTask";
+import { TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
 
 const STATUS = {
 	TODO: 'TODO',
@@ -15,13 +16,19 @@ export const ChildTasks = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	const fetchTasks = useCallback(async () => {
-		setLoading(true);
-		setError(null);
-		try {
-			const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
+  const fetchTasks = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = localStorage.getItem("token");
+      const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
 
-			const response = await api.get(TASKS_COLLECTION(label));
+      const response = await axios.get(TASKS_COLLECTION(label), {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
 			setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
 		} catch (error) {
@@ -38,17 +45,23 @@ export const ChildTasks = () => {
 		return index < values.length - 1 ? values[index + 1] : null;
 	};
 
-	const nextTaskStatus = async (task) => {
-		const next = getNextStatus(task.status);
-		if (!next) return;
-
-		try {
-			await api.patch(TASK_STATUS(task.task_id, next));
-			fetchTasks();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+  const nextTaskStatus = async (task) => {
+    const next = getNextStatus(task.status);
+    if (!next) return;
+    
+    try {
+      const token = localStorage.getItem("token");
+      await axios.patch(TASK_STATUS(task.task_id, next), {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 	useEffect(() => {
 		fetchTasks();
