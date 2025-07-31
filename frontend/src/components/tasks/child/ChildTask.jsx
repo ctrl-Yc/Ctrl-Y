@@ -1,4 +1,7 @@
+import { useEffect, useRef } from "react";
 import { CustomButton } from "../../common/CustomButton";
+import axios from "axios";
+import { TASK_NOTIFY } from "~config/api";
 
 const labelMap = {
   TODO: "はじめる",
@@ -10,6 +13,28 @@ export const ChildTask = ({ task, onNext }) => {
   const nextLabel = labelMap[task.status];
   const isWaitingReview = task.status === "WAIT_REVIEW";
   const isDone = task.status === "DONE";
+
+  const prevStatusRef = useRef(task.status);
+
+   useEffect(() => {
+    if (
+      prevStatusRef.current !== "WAIT_REVIEW" &&
+      task.status === "WAIT_REVIEW"
+    ) {
+      axios.post(TASK_NOTIFY, {
+          taskId: task.id,
+        })
+        .then(() => {
+          console.log("通知送信成功");
+        })
+        .catch((err) => {
+          console.error("通知エラー:", err);
+        });
+    }
+
+    prevStatusRef.current = task.status;
+  }, [task.status, task.id]);
+
 
   return (
     <li className="px-6 py-2 bg-gray-50 shadow h-34 w-3/4 flex items-center my-2 border-gray-200 rounded-lg shadow-sm">

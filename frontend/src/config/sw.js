@@ -4,7 +4,7 @@ const BASE_URL ='';//デプロイ後のURL
 /**
  * Service Workerのインストールイベント
  */
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
     console.log('Service Worker: インストールされました');
     // Service Workerを即座にアクティブにする
     self.skipWaiting();
@@ -12,7 +12,7 @@ self.addEventListener('install', (event) => {
 /**
  * Service Workerのアクティベートイベント
  */
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', () => {
     console.log('Service Worker: アクティベートされました');
 });
 /**
