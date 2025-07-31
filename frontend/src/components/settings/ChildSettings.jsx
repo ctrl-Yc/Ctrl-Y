@@ -14,8 +14,6 @@ export const ChildSettings = ({ setActiveTab }) => {
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   // 子供全取得処理
   const fetchChildren = async () => {
