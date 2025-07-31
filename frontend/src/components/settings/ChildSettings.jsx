@@ -5,6 +5,8 @@ import { Select } from "../common/Select";
 import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN_URL } from "../../config/api";
 import axios from "axios";
 import { Modal } from "../ui/Modal";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ChildSettings = ({ setActiveTab }) => {
   const [keyword, setKeyword] = useState('');
@@ -20,9 +22,10 @@ export const ChildSettings = ({ setActiveTab }) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setErrorMessage("認証トークンが見つかりません");
-      return;
-    }
+        toast.error("ログイン情報が失効しました。再度ログインしてください。");
+        navigate("/");
+        return;
+      }
 
     try {
       const response = await axios.get(CHILDREN_LIST, {
@@ -36,9 +39,7 @@ export const ChildSettings = ({ setActiveTab }) => {
         setSelectedChild(response.data[0]);
       }
     } catch (error) {
-      console.error("子供情報取得エラー:", error);
-      setErrorMessage("子供情報の取得に失敗しました");
-      setTimeout(() => setErrorMessage(""), 3000);
+      toast.error("子供情報の取得に失敗しました");
     }
   };
 
@@ -51,8 +52,7 @@ export const ChildSettings = ({ setActiveTab }) => {
   const handleAddChild = async (e) => {
     e.preventDefault();
     if (!newChildName.trim()) {
-      setErrorMessage('名前を入力してください');
-      setTimeout(() => setErrorMessage(''), 3000);
+      toast.error('名前を入力してください');
       return;
     }
 
@@ -71,16 +71,12 @@ export const ChildSettings = ({ setActiveTab }) => {
       );
       setNewChildName("");
       setIsDialogOpen(false);
-      setSuccessMessage('子供を追加しました');
-
-      // 表示後3秒でメッセージを自動的に消す
-      setTimeout(() => setSuccessMessage(''), 3000);
+      toast.success('子供を追加しました');
 
       // 再取得
       await fetchChildren();
     } catch (error) {
-      setErrorMessage('子供の追加に失敗しました');
-      setTimeout(() => setErrorMessage(''), 3000);
+      toast.error('子供の追加に失敗しました');
     }
   }
 
@@ -102,27 +98,19 @@ export const ChildSettings = ({ setActiveTab }) => {
     const url = `${CHILD_LOGIN_URL}${selectedChild.user_id}`;
     navigator.clipboard.writeText(url)
       .then(() => {
-        setSuccessMessage("URLをコピーしました ✅");
-        setTimeout(() => setSuccessMessage(""), 3000);
+        toast.success("URLをコピーしました ✅");
       })
       .catch(() => {
-        setErrorMessage("コピーに失敗しました");
-        setTimeout(() => setErrorMessage(""), 3000);
+        toast.error("コピーに失敗しました");
       });
   };
 
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-      {successMessage && (
-        <div>{successMessage}</div>
-      )}
-      {errorMessage && (
-        <div>{errorMessage}</div>
-      )}
+       <ToastContainer />
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">子供</h2>
       </div>
-
 
       <div className="mx-20 space-y-4">
         <div>

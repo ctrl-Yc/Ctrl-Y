@@ -3,6 +3,9 @@ import axios from "axios";
 import { taskUrl } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
     const [title, setTitle] = useState('');
@@ -46,6 +49,34 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
 
     const handleSubmitClick = async (e) => {
         e.preventDefault();
+
+        // 必須項目のチェック
+        if (!title.trim()) {
+            toast.error("名前を入力してください。");
+            return;
+        }
+
+        if (!reward.trim()) {
+            toast.error("金額を入力してください。");
+            return;
+        }
+
+        if (!deadline) {
+            toast.error("期日を入力してください。");
+            return;
+        }
+
+        // バリデーションチェック
+        if (Number(reward) < 0) {
+            toast.error("金額には0以上の数値を入力してください。");
+            return;
+        }
+
+        if (deadline && new Date(deadline) < new Date()) {
+            toast.error("期日には未来の日時を指定してください。");
+            return;
+        }
+
         try {
             await axios.patch(`${taskUrl(taskId)}`, {
                 t_name: title,
@@ -53,37 +84,47 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                 deadline: new Date(deadline),
                 memo: memo,
             },
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            setActiveTab('tasks');
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+            toast.success("おてつだいを更新しました！");
+            setTimeout(() => {
+                setActiveTab('tasks');
+            }, 1500);
         } catch (error) {
-            console.error("更新エラー:", error);
+            toast.error("更新に失敗しました。");
         }
     };
 
     const handleDeleteClick = async (e) => {
         e.preventDefault();
         if (!window.confirm("このタスクを削除しますか？")) return;
+
         try {
             await axios.delete(`${taskUrl(taskId)}`,
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            setActiveTab('tasks');
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+            toast.success("削除しました！");
+            setTimeout(() => {
+                setActiveTab('tasks');
+            }, 1500);
         } catch (error) {
-            console.error("削除エラー:", error);
+            toast.error("削除に失敗しました。");
         }
     };
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+            <ToastContainer />
             <div className="m-10">
 
                 <h1 className="text-5xl font-bold p-8">おてつだいの詳細・編集</h1>
@@ -114,6 +155,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                             value={reward}
                             onChange={e => setReward(e.target.value)}
                             className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
+                            min="0"
                         />
                         <span className="text-4xl">（円）</span>
                     </div>
@@ -124,6 +166,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                             value={deadline}
                             onChange={e => setDeadline(e.target.value)}
                             className="text-2xl w-67 h-11 px-4 border bg-white rounded-lg"
+                            min={new Date().toISOString().slice(0, 16)}
                         />
                     </div>
                     <div className="flex justify-start space-x-4 mb-8">
