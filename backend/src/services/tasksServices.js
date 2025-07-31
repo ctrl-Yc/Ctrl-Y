@@ -10,6 +10,7 @@ exports.findAllTasks = async (parent_id, labels) => {
 	const enumList = list.filter((item) => Object.values(TaskStatusCode).includes(item));
 
 	console.log("enumList:", enumList);
+
     return await prisma.task.findMany({
         where: { parent_id, ...(enumList.length && { status: { in: enumList } }) },
     });
@@ -87,15 +88,18 @@ exports.deleteTask = async (taskId, parent_id) => {
     });
 };
 
-exports.totalTask = async (user_id) => {
-    const totalCount = await prisma.task.count({
+exports.completeTaskCount = async (user_id) => {
+    return await prisma.task.count({
         where: {
             child_id : user_id,
             status: 'DONE'
         }
-    });
+    })
+};
 
-    const totalSalary = await prisma.task.aggregate({
+
+exports.totalSalary = async (user_id) => {
+    return await prisma.task.aggregate({
         where: {
             child_id : user_id,
             status: 'DONE'
@@ -104,31 +108,36 @@ exports.totalTask = async (user_id) => {
             reward: true,
         },
     });
-
-    return { totalCount,totalSalary } ;
 };
 
-exports.SidEdit = async (user_id, taskId, labels, role, ) => {
+
+
+exports.SidEdit = async (parent_id, taskId, labels) => {
     const task = await exports.getOneTask(taskId);
+    if (task.parent_id !== parent_id) {
+        const error = new Error("このタスクを削除する権限がありません");
+        error.statusCode = 403;
+    throw error;
+    }
     const label = labels[0];
-    if(role === 'parent'){
-        if (task.parent_id !== user_id ) {
-            const error = new Error("このタスクのstatusを変更する権限がありません");
-            error.statusCode = 403;
-            throw error;
-        }
-    };
-    const data = {
-        status: label
-    };
-    if(label === 'WAIT_REVIEW' && role === 'child') {
-            data.child_id = user_id;
-    };
 
     return await prisma.task.update({
 		where: {
 			task_id: taskId,
 		},
-		data
-    });
+		data: {
+			status: label
+		},
+    })
+}
+
+exports.addChildTask = async (user_id, taskId) => {
+    return await prisma.task.update({
+        where: {
+            task_id: taskId,
+        },
+        data: {
+            child_id: user_id,
+        },
+    })
 }

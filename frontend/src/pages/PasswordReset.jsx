@@ -6,23 +6,23 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const PasswordReset = () => {
-	const [newPassword, setNewPassword] = useState('');
-	const [confirmNewPassword, setConfirmNewPassword] = useState('');
-	const location = useLocation();
-	const navigate = useNavigate();
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const location = useLocation();
+    const navigate = useNavigate();
 
-	// URLからトークンを取ってくる
-	const queryParams = new URLSearchParams(location.search);
-	const token = queryParams.get('token');
+    // URLからトークンを取ってくる
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get("token");
 
-	const handleSubmitClick = async () => {
-		if (!newPassword || !confirmNewPassword) {
-			return;
-		}
+    const handleSubmitClick = async () => {
+        if (!newPassword || !confirmNewPassword) {
+            return;
+        }
 
-		if (newPassword !== confirmNewPassword) {
-			return;
-		}
+        if (newPassword !== confirmNewPassword) {
+            return;
+        }
 
         try {
             await axios.post(PASS_RESET,
@@ -39,7 +39,7 @@ export const PasswordReset = () => {
             console.error("リセットエラー:", error);
         }
     };
-		
+
     return (
         <div>
             <h1>パスワードのリセット</h1>
@@ -63,5 +63,4 @@ export const PasswordReset = () => {
             />
         </div>
     )
-};
-
+}

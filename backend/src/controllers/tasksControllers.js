@@ -3,10 +3,8 @@ const tasksServices = require("../services/tasksServices.js");
 
 exports.getAllTasks = async (req, res) => {
     try {
-        let parent_id = req.user.parent_id;
-        if(!parent_id) {
-            parent_id = req.user.user_id;
-        }
+        const parent_id = req.user.user_id;
+
         const labelParam = req.params.label;
 
         const queryLabels = req.query.labels ? req.query.labels?.split(",") : undefined;
@@ -83,16 +81,24 @@ exports.deleteTasks = async (req, res) => {
     }
 };
 
-exports.totalTaskNum = async (req, res) => {
+exports.CompleteTaskNum = async (req, res) => {
     try {
         const { user_id } = req.params;
-        const { totalCount, totalSalary } = await tasksServices.totalTask(user_id);
-        res.status(200).json({
-            totalCount: totalCount,
-            totalSalary: totalSalary._sum?.reward || 0 
-        });
+        const totalCount = await tasksServices.completeTaskCount(user_id);
+        res.status(200).json({ totalCount: totalCount});
     } catch (error) {
-        console.log("終了済みのtaskの合計数・金額取得エラー");
+        console.log("終了済みtaskの数取得エラー");
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.TotalSalary = async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const totalSalary = await tasksServices.totalSalary(user_id);
+        res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 });
+    } catch (error) {
+        console.log("合計金額取得エラー");
         res.status(500).json({ message: error.message });
     }
 };
@@ -100,16 +106,27 @@ exports.totalTaskNum = async (req, res) => {
 exports.SidEdit = async (req,res) => {
     try{
         const taskId = parseInt(req.params.task_id, 10);
-        const user_id = req.user.user_id;
+        const parent_id = req.user.user_id;
         const labelParam = req.params.label;
-        const role = req.user.role;
         const labels = labelParam
             ? [labelParam.toUpperCase()]
             :[]
-        const sidEdit = await tasksServices.SidEdit(user_id,taskId,labels,role)
+        const sidEdit = await tasksServices.SidEdit(parent_id,taskId,labels)
         res.status(200).json({ sidEdit });
     } catch (error) {
-        console.log("s_id変更エラー",error);
+        console.log("s_id変更エラー");
+        res.status(500).json({ message : error.message});
+    }
+}
+
+exports.addChildTasks = async (req,res) => {
+    try{
+        const user_id = req.user.user_id;
+        const taskId = parseInt(req.params.task_id, 10);
+        const addChildTask = await tasksServices.addChildTask(user_id,taskId);
+        res.status(200).json({addChildTask});
+    } catch (error) {
+        console.log("中間テーブル挿入エラー");
         res.status(500).json({ message : error.message});
     }
 }

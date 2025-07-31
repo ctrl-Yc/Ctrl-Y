@@ -1,4 +1,3 @@
-require('module-alias/register');
 const express = require('express');
 const app = require('./src/index.js');
 
