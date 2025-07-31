@@ -33,5 +33,7 @@ app.use('/email', emailChangeRouter);
 const setupRouter = require('./routes/setupRoutes.js');
 app.use('/api/setup', setupRouter);
 
+const notificationRouter = require('./routes/notificationRouter.js');
+app.use('/notification',notificationRouter);
 
 module.exports = app;
