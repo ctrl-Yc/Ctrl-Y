@@ -6,11 +6,8 @@ const parentOnly = require("../middlewares/parentOnly");
 const TasksController = require("../controllers/tasksControllers.js");
 
 //taskの新規作成
-//終了した合計タスク数
-router.get("/totalnumber/:user_id", auth, TasksController.CompleteTaskNum);
-
-//終了したタスクの合計金額
-router.get("/totalsalary/:user_id", auth, TasksController.TotalSalary);
+//終了した合計タスク/合計金額
+router.get("/total/:user_id", auth, TasksController.totalTaskNum);
 
 //Tasks全件取得(ラベルでステータス管理)
 router.get("/status/:label", auth, TasksController.getAllTasks);
@@ -30,6 +27,4 @@ router.delete("/:task_id", auth, parentOnly, TasksController.deleteTasks);
 // s_idの変更
 router.patch('/:task_id/:label', auth,TasksController.SidEdit);
 
-//taskが完了した後に中間テーブルにtask_idとuser_idを入れる
-router.post("/addChildTasks/:task_id", auth,TasksController.addChildTasks);
 module.exports = router;
