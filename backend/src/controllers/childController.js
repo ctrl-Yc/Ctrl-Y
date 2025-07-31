@@ -86,12 +86,12 @@ exports.getChildPayments = async (req, res) => {
 			where: {
 				user_id: child_id,
 				inserted_month: {
-					gte: new Date(`${year}-01-01`),
-					lte: new Date(`${year}-12-31`),
+					gte: new Date(`${year}-01-01T00:00:00.000Z`),
+					lte: new Date(`${year}-12-31T23:59:59.999Z`),
 				},
 			},
 		});
-		console.log(result);
+
 		res.status(200).json(result);
 	} catch (error) {
 		console.error('子供の給与取得エラー:', error);
@@ -112,6 +112,7 @@ exports.ChildList = async (req, res) => {
 				c_name: true,
 			},
 		});
+
 		res.status(200).json(child);
 	} catch (error) {
 		console.error('子供一覧取得エラー:', error);
