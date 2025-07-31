@@ -109,7 +109,9 @@ export const MoneyRecords = () => {
 			try {
 				const response = await api.get(
 					`${CHILDREN_BASE}/${selectedChild.user_id}/payments`,
-					{ year: selectedYear }
+					{
+						params: { year: selectedYear },
+					}
 				);
 				setRecords(response.data);
 			} catch (error) {
