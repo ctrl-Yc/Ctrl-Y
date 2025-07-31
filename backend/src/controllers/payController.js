@@ -11,7 +11,5 @@ exports.payroll = async (req,res) => {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).json({ message: error.message });
     }
-    
-
 }
 
