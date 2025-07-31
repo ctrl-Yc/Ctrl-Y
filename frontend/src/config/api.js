@@ -1,6 +1,7 @@
 const isLocal = window.location.hostname === 'localhost';
 
 export const API_BASE_URL = isLocal ? 'http://localhost:3000' : '';
+export const FRONT_BASE_URL = isLocal ? 'http://localhost:5173' : '';
 
 //親ユーザー
 export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
@@ -15,6 +16,7 @@ export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
 export const CHILDREN_SIGNUP = CHILDREN_BASE;
 export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`;
 export const CHILDREN_LIST = `${CHILDREN_BASE}/list`;
+export const CHILD_LOGIN_URL = `${FRONT_BASE_URL}/child/login/`;
 
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
