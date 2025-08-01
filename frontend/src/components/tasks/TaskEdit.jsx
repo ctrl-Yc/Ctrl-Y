@@ -30,7 +30,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
 
                 // フォーム初期値をセット
                 setTitle(task.t_name);
-                setReward(task.reward);
+                setReward(String(task.reward));
                 setDeadline(task.deadline ? new Date(task.deadline).toISOString().slice(0, 16) : '');
                 setMemo(task.memo || '');
             } catch (error) {
