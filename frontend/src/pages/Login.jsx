@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomButton } from "../components/common/CustomButton"
 import { InputField } from "../components/common/InputField"
 import { Link, useNavigate } from "react-router-dom"
@@ -10,6 +10,13 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate('/top');
+    }
+  }, [navigate]);
 
   const handleLogin = async () => {
     if (!email || !password) {
