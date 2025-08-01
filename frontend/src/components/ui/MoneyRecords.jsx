@@ -157,7 +157,7 @@ export const MoneyRecords = () => {
                 />
             </div>
             {/* グラフ */}
-            <div className="flex justify-center mt-10">
+            <div className="flex justify-center mb-10 ">
                 <div className="w-3/4 bg-white p-6 rounded-lg shadow">
                     <Line data={chartData} options={chartOptions} />
                 </div>
