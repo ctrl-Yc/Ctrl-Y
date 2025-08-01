@@ -3,11 +3,11 @@ import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
 import { PARENT_EMAIL_CHANGE, PARENT_EMAIL_GET, PARENT_PASS_CHANGE } from "../../config/api";
 import axios from "axios";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
     const [editField, setEditField] = useState(null);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -17,6 +17,12 @@ export const AccountSettings = ({ setActiveTab }) => {
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem("token");
+            if (!token) {
+                toast.error("ログイン情報が失効しました。再度ログインしてください。");
+                navigate("/");
+                return;
+            }
+
             try {
                 const response = await axios.get(PARENT_EMAIL_GET, {
                     headers: {
@@ -26,8 +32,7 @@ export const AccountSettings = ({ setActiveTab }) => {
                 });
                 setEmail(response.data.email);
             } catch (error) {
-                console.error("プロフィール取得エラー:", error);
-                setErrorMessage("プロフィールの取得に失敗しました。再ログインしてください。");
+                toast.error("プロフィールの取得に失敗しました。再ログインしてください。");
             }
         };
         fetchProfile();
@@ -36,12 +41,12 @@ export const AccountSettings = ({ setActiveTab }) => {
     // パスワード変更処理
     const handlePasswordChange = async () => {
         if (!currentPassword || !newPassword || !confirmNewPassword) {
-            setErrorMessage("すべてのパスワード項目を入力してください。");
+            toast.error("すべてのパスワード項目を入力してください。");
             return;
         }
 
         if (newPassword !== confirmNewPassword) {
-            setErrorMessage("新しいパスワードが一致しません。");
+            toast.error("新しいパスワードが一致しません。");
             return;
         }
 
@@ -57,15 +62,12 @@ export const AccountSettings = ({ setActiveTab }) => {
                 },
             });
 
-            setSuccessMessage(response.data.message || "パスワードを変更しました。");
-            setErrorMessage('');
+            toast.success(response.data.message || "パスワードを変更しました。");
             setCurrentPassword('');
             setNewPassword('');
             setConfirmNewPassword('');
         } catch (error) {
-            console.error("パスワード変更エラー:", error);
-            setSuccessMessage('');
-            setErrorMessage(error.response?.data?.error || "パスワード変更に失敗しました。");
+            toast.error(error.response?.data?.error || "パスワード変更に失敗しました。");
         }
     };
 
@@ -80,11 +82,6 @@ export const AccountSettings = ({ setActiveTab }) => {
     // メールアドレス編集ボタン処理
     const handleSaveClick = async () => {
         const token = localStorage.getItem("token");
-        if (!token) {
-            setErrorMessage("ログイン情報がありません。再ログインしてください。");
-            return;
-        }
-
         try {
             const response = await axios.post(PARENT_EMAIL_CHANGE,
                 { newEmail: email },
@@ -95,32 +92,20 @@ export const AccountSettings = ({ setActiveTab }) => {
                     },
                 }
             );
-            setSuccessMessage(response.data.message || "確認メールを送信しました。");
-            setErrorMessage('');
+            toast.success(response.data.message || "確認メールを送信しました。");
             setEditField(null);
         } catch (error) {
-            console.error("変更エラー:", error);
-            setSuccessMessage('');
-            setErrorMessage(error.response?.data?.error || "変更に失敗しました。");
+            toast.error(error.response?.data?.error || "変更に失敗しました。");
         }
     };
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+            <ToastContainer />
             <div className="flex justify-between items-center">
                 <h2 className="text-5xl font-bold p-16">アカウント</h2>
             </div>
             <div className="mx-20 space-y-4">
-                {successMessage && (
-                    <div className="p-4 mb-4 text-green-800 bg-green-100 rounded">
-                        {successMessage}
-                    </div>
-                )}
-                {errorMessage && (
-                    <div className="p-4 mb-4 text-red-800 bg-red-100 rounded">
-                        {errorMessage}
-                    </div>
-                )}
                 <div className="space-y-4">
                     <p className="text-2xl">メールアドレス</p>
                     <InputField
