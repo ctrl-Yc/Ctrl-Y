@@ -21,6 +21,7 @@ export const CHILD_LOGIN_URL = `${FRONT_BASE_URL}/child/login/`;
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
 export const TASK_STATUS = (taskId, nextStatus) => `${TASKS_BASE}/${taskId}/${nextStatus}`;
+export const TASK_NOTIFY = `${API_BASE_URL}/notification/send-notification`;
 
 //一覧取得
 export const TASKS_COLLECTION = (labels) => {
