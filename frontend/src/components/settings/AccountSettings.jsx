@@ -108,6 +108,7 @@ export const AccountSettings = ({ setActiveTab }) => {
             <div className="mx-20 space-y-4">
                 <div className="space-y-4">
                     <p className="text-2xl">メールアドレス</p>
+                    <div className=" items-center space-x-2">
                     <InputField
                         type="email"
                         placeholder=""
@@ -139,17 +140,18 @@ export const AccountSettings = ({ setActiveTab }) => {
                             className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
                         />
                     )}
+                    </div>
                 </div>
-                <div className="space-y-4 flex flex-col">
+                <div className="space-y-4">
                     <p className="text-2xl">パスワードの変更</p>
+                    <div className="flex items-center space-x-2 mb-9">
                     <InputField
                         type="password"
                         placeholder="現在のパスワード"
                         value={currentPassword}
                         onChange={e => setCurrentPassword(e.target.value)}
-                        className="mb-8 w-100 h-12 px-4 border rounded-lg bg-white"
+                        className="w-100 h-12 px-4 border rounded-lg bg-white"
                     />
-
                     {editField === 'password' ? (
                         <CustomButton
                             type="button"
@@ -171,23 +173,24 @@ export const AccountSettings = ({ setActiveTab }) => {
                             onClick={() => setEditField('password')}
                             className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
                         />
-                    )}
-
+                        
+                )}
+                    </div>
                     {editField === 'password' && (
-                        <>
+                        <div className="flex flex-col space-y-4">
                             <InputField
                                 type="password"
                                 placeholder="新しいパスワード"
                                 value={newPassword}
                                 onChange={e => setNewPassword(e.target.value)}
-                                className="mb-8 w-100 h-12 px-4 border rounded-lg bg-white"
+                                className="mb-8 w-[400px] h-12 px-4 border rounded-lg bg-white"
                             />
                             <InputField
                                 type="password"
                                 placeholder="新しいパスワード(確認)"
                                 value={confirmNewPassword}
                                 onChange={e => setConfirmNewPassword(e.target.value)}
-                                className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
+                                className="mb-12 w-[400px] h-12 px-4 border rounded-lg bg-white"
                             />
                             <div className="space-x-4">
                                 <CustomButton
@@ -197,7 +200,7 @@ export const AccountSettings = ({ setActiveTab }) => {
                                     className="w-24 h-10 bg-orange-400 text-white text-lg font-bold rounded hover:bg-orange-300 transition"
                                 />
                             </div>
-                        </>
+                        </div>
                     )}
 
 

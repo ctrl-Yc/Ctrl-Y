@@ -146,6 +146,7 @@ export const ChildSettings = ({ setActiveTab }) => {
           placeholder="子供を選択"
           className="w-70"
         />
+        <div className="flex items-center space-x-4 my-6">
         <InputField
           type="text"
           placeholder=""
@@ -157,7 +158,10 @@ export const ChildSettings = ({ setActiveTab }) => {
           type="button"
           label="コピー"
           onClick={handleCopyUrl}
+          className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+                      hover:bg-orange-200 transition-colors duration-300"
         />
+        </div>
         <div className="mt-4 space-x-12">
           <CustomButton
             type="button"
