@@ -3,8 +3,11 @@ const tasksServices = require("../services/tasksServices.js");
 
 exports.getAllTasks = async (req, res) => {
     try {
-        const parent_id = req.user.user_id;
-
+        let parent_id = req.user.parent_id;
+        if(!parent_id) {
+            parent_id = req.user.user_id;
+        }
+        console.log(parent_id)
         const labelParam = req.params.label;
 
         const queryLabels = req.query.labels ? req.query.labels?.split(",") : undefined;
