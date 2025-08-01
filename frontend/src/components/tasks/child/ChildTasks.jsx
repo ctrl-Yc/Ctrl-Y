@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-
+import { getChildToken } from "../../../config/Token";
 import { ChildTask } from "./ChildTask";
 import { TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
 
@@ -20,7 +20,7 @@ export const ChildTasks = () => {
     setLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem("token");
+      const token = getChildToken();
       const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
 
       const response = await axios.get(TASKS_COLLECTION(label), {
@@ -54,7 +54,7 @@ export const ChildTasks = () => {
     if (!next) return;
     
     try {
-      const token = localStorage.getItem("token");
+      const token = getChildToken();
       await axios.patch(TASK_STATUS(task.task_id, next), {}, {
         headers: {
           'Content-Type': 'application/json',
