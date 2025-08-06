@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
 import { PARENT_EMAIL_CHANGE, PARENT_EMAIL_GET, PARENT_PASS_CHANGE } from "../../config/api";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 
 export const AccountSettings = ({ setActiveTab }) => {
     const [email, setEmail] = useState('');
@@ -16,14 +16,8 @@ export const AccountSettings = ({ setActiveTab }) => {
     // 現在のメアド取得
     useEffect(() => {
         const fetchProfile = async () => {
-            const token = localStorage.getItem("token");
             try {
-                const response = await axios.get(PARENT_EMAIL_GET, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    }
-                });
+                const response = await apiClient.get(PARENT_EMAIL_GET);
                 setEmail(response.data.email);
             } catch (error) {
                 console.error("プロフィール取得エラー:", error);
@@ -46,15 +40,9 @@ export const AccountSettings = ({ setActiveTab }) => {
         }
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.post(PARENT_PASS_CHANGE, {
+            const response = await apiClient.post(PARENT_PASS_CHANGE, {
                 currentPassword,
                 newPassword
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             setSuccessMessage(response.data.message || "パスワードを変更しました。");
@@ -71,30 +59,10 @@ export const AccountSettings = ({ setActiveTab }) => {
 
 
 
-    // 戻るボタン処理
-    const handleBackClick = (e) => {
-        e.preventDefault();
-        setActiveTab('settings');
-    }
-
     // メールアドレス編集ボタン処理
     const handleSaveClick = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            setErrorMessage("ログイン情報がありません。再ログインしてください。");
-            return;
-        }
-
         try {
-            const response = await axios.post(PARENT_EMAIL_CHANGE,
-                { newEmail: email },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await apiClient.post(PARENT_EMAIL_CHANGE, { newEmail: email });
             setSuccessMessage(response.data.message || "確認メールを送信しました。");
             setErrorMessage('');
             setEditField(null);
@@ -104,6 +72,12 @@ export const AccountSettings = ({ setActiveTab }) => {
             setErrorMessage(error.response?.data?.error || "変更に失敗しました。");
         }
     };
+
+    // 戻るボタン処理
+    const handleBackClick = (e) => {
+        e.preventDefault();
+        setActiveTab('settings');
+    }
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
@@ -125,7 +99,6 @@ export const AccountSettings = ({ setActiveTab }) => {
                     <p className="text-2xl">メールアドレス</p>
                     <InputField
                         type="email"
-                        placeholder=""
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         disabled={editField !== 'email'}
