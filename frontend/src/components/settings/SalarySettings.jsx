@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { Select } from "../common/Select";
 import { PAYDAY_CUTOFF_SETTING } from "../../config/api";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const SalarySettings = ({ setActiveTab }) => {
-
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
   const [error, setError] = useState('');
@@ -28,20 +27,13 @@ export const SalarySettings = ({ setActiveTab }) => {
   // 初期データ取得
   useEffect(() => {
     const fetchSettings = async () => {
-      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get(PAYDAY_CUTOFF_SETTING, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await apiClient.get(PAYDAY_CUTOFF_SETTING);
         setSelectedPayday(booleanToLabel(response.data.pay_day));
         setSelectedCutoff(booleanToLabel(response.data.cutoff_day));
-
-      } catch (err) {
+      } catch {
         setError('データの取得に失敗しました');
-        console.error(err);
+        console.error('データ取得エラー');
       }
     };
     fetchSettings();
@@ -64,30 +56,15 @@ export const SalarySettings = ({ setActiveTab }) => {
   // 決定ボタン
   const handleSubmitClick = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("認証トークンが見つかりません。再度ログインしてください。");
-      return;
-    }
 
     try {
-      await axios.post(
-        PAYDAY_CUTOFF_SETTING,
-        {
-          pay_day: labelToBoolean(selectedPayday),
-          cutoff_day: labelToBoolean(selectedCutoff),
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.post(PAYDAY_CUTOFF_SETTING, {
+        pay_day: labelToBoolean(selectedPayday),
+        cutoff_day: labelToBoolean(selectedCutoff),
+      });
       toast.success("保存しました");
-    } catch (err) {
-      toast.error(msg || "保存に失敗しました。");
+    } catch {
+      toast.error("保存に失敗しました。");
     }
   };
 
@@ -119,18 +96,16 @@ export const SalarySettings = ({ setActiveTab }) => {
             type="button"
             label="戻る"
             onClick={handleBackClick}
-            className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300'
+            className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200 transition-colors duration-300'
           />
           <CustomButton
             type="button"
             label="決定"
             onClick={handleSubmitClick}
-            className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-                      transition-colors duration-300'
+            className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300'
           />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
