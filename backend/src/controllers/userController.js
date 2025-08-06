@@ -26,7 +26,6 @@ exports.createUser = async (req, res) => {
 		// ユーザーの登録
 		const user = await prisma.user.create({
 			data: {
-				user_id: uuidv4(),
 				email,
 				password: hashedPassword,
 				keyword: '',
