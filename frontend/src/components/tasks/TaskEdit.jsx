@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { taskUrl } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
+import { apiClient } from "../../lib/apiClient";
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
     const [title, setTitle] = useState('');
@@ -13,15 +13,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const response = await axios.get(
-                    `${taskUrl(taskId)}`,
-                    {
-                        headers: {
-                            'Content-type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
+                const response = await apiClient.get(`${taskUrl(taskId)}`);
 
                 const task = response.data;
 
@@ -47,17 +39,11 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${taskUrl(taskId)}`, {
+            await apiClient.patch(`${taskUrl(taskId)}`, {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
                 memo: memo,
-            },
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
             });
             setActiveTab('tasks');
         } catch (error) {
@@ -69,13 +55,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         e.preventDefault();
         if (!window.confirm("このタスクを削除しますか？")) return;
         try {
-            await axios.delete(`${taskUrl(taskId)}`,
-            {
-                headers: {
-                    'Content-type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
+            await apiClient.delete(`${taskUrl(taskId)}`);
             setActiveTab('tasks');
         } catch (error) {
             console.error("削除エラー:", error);

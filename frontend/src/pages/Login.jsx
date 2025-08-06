@@ -3,7 +3,7 @@ import { CustomButton } from "../components/common/CustomButton"
 import { InputField } from "../components/common/InputField"
 import { Link, useNavigate } from "react-router-dom"
 import { setToken } from "../config/Token";
-import axios from "axios";
+import { apiClient } from "../lib/apiClient";
 import { PARENT_LOGIN } from "../config/api";
 
 export const Login = () => {
@@ -17,15 +17,10 @@ export const Login = () => {
       return;
     }
     try {
-      const response = await axios.post(PARENT_LOGIN,
+      const response = await apiClient.post(PARENT_LOGIN,
         {
           email,
           password,
-        },
-        {
-          headers: {
-            'Content-type': 'application/json'
-          },
         }
       );
       const Token = response.data.token;

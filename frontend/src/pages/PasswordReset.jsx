@@ -2,7 +2,7 @@ import { useState } from "react";
 import { InputField } from "../components/common/InputField"
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET } from "../config/api";
-import axios from "axios";
+import { apiClient } from "../lib/apiClient";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const PasswordReset = () => {
@@ -25,12 +25,11 @@ export const PasswordReset = () => {
         }
 
         try {
-            await axios.post(PASS_RESET,
+            await apiClient.post(PASS_RESET,
                 { newPassword },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
                     }
                 }
             );

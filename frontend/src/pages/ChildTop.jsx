@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { ChildSidebar } from "../components/ui/child/ChildSidebar";
-import { ChildTasks } from "../components/tasks/child/ChildTasks";
-import { ChildMoneyRecords } from "../components/tasks/child/ChildMoneyRecords";
+import React, { useState, Suspense, lazy } from "react";
+
+const ChildSidebar = lazy(() => import("../components/ui/child/ChildSidebar"));
+const ChildTasks = lazy(() => import("../components/tasks/child/ChildTasks"));
+const ChildMoneyRecords = lazy(() => import("../components/tasks/child/ChildMoneyRecords"));
 
 export const ChildTop = () => {
     const [activeTab, setActiveTab] = useState('ChildTasks');
@@ -12,25 +13,26 @@ export const ChildTop = () => {
     };
 
     const renderMainContent = () => {
-        switch (activeTab) {
-            case 'ChildTasks':
-                return <ChildTasks key={activeTab} setActiveTab={setActiveTab} />;
-            case 'ChildMoneyRecords':
-                return <ChildMoneyRecords key={activeTab} setActiveTab={setActiveTab} />;
-            default:
-                return <div>コンテンツがありません。</div>;
-        }
+        const tabComponents = {
+            'ChildTasks': <ChildTasks key={activeTab} setActiveTab={setActiveTab} />,
+            'ChildMoneyRecords': <ChildMoneyRecords key={activeTab} setActiveTab={setActiveTab} />,
+        };
+
+        return tabComponents[activeTab] || <div>コンテンツがありません。</div>;
     };
 
     return (
-        <div className="flex h-screen overflow-hidden">
-            <ChildSidebar
-                activeMenuItem={activeTab}
-                onMenuItemClick={handleSidebarItemClick}
-            />
-            <main className="flex-grow items-center p-6 bg-orange-200 overflow-y-auto h-screen"> 
-                {renderMainContent()}
-            </main>
-        </div>
-    )
-}
+        //ローディングの時デザイン必要
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="flex h-screen overflow-hidden">
+                <ChildSidebar
+                    activeMenuItem={activeTab}
+                    onMenuItemClick={handleSidebarItemClick}
+                />
+                <main className="flex-grow items-center p-6 bg-orange-200 overflow-y-auto h-screen"> 
+                    {renderMainContent()}
+                </main>
+            </div>
+        </Suspense>
+    );
+};
