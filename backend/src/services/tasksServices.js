@@ -141,3 +141,16 @@ exports.addChildTask = async (user_id, taskId) => {
         },
     })
 }
+
+exports.getParentId = async (child_id) => {
+    const parent_id = await prisma.child.findUnique({
+        where: {
+            user_id: child_id,
+        },
+        select: {
+            parent_id: true,
+        },
+    });
+    return parent_id.parent_id;
+
+}

@@ -4,7 +4,6 @@ const { signToken,createPasswordResetToken } = require('../lib/jwt');
 const { sendResetPasswordMail,sendPasswordChangeNoticeMail } = require('../lib/mail');
 const bcrypt = require('bcrypt');
 const prisma = require('@db');
-const { v4: uuidv4 } = require('uuid');
 
 // ユーザー登録
 exports.createUser = async (req, res) => {
