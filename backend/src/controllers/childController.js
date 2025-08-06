@@ -1,6 +1,5 @@
 const { signToken } = require('../lib/jwt');
 const prisma = require('@db');
-const { v4: uuidv4 } = require('uuid');
 
 exports.createChild = async (req, res) => {
 	try {

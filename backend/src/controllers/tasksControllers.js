@@ -3,7 +3,8 @@ const tasksServices = require("../services/tasksServices.js");
 
 exports.getAllTasks = async (req, res) => {
     try {
-        const parent_id = req.user.user_id;
+        const parent_id = req.user.role === 'parent' ?
+        req.user.user_id : await tasksServices.getParentId(req.user.user_id);
 
         const labelParam = req.params.label;
 
@@ -106,7 +107,8 @@ exports.TotalSalary = async (req, res) => {
 exports.SidEdit = async (req,res) => {
     try{
         const taskId = parseInt(req.params.task_id, 10);
-        const parent_id = req.user.user_id;
+        const parent_id = req.user.role === 'parent' ?
+        req.user.user_id : await tasksServices.getParentId(req.user.user_id);
         const labelParam = req.params.label;
         const labels = labelParam
             ? [labelParam.toUpperCase()]
