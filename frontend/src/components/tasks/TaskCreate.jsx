@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
+import { apiClient } from "../../lib/apiClient";
 
 export const TaskCreate = ({ setActiveTab }) => {
     const [name, setName] = useState('');
@@ -21,18 +21,12 @@ export const TaskCreate = ({ setActiveTab }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(TASKS_BASE,
+            const response = await apiClient.post(TASKS_BASE,
                 {
                     t_name: name,
                     memo: memo,
                     reward: Number(reward),
                     deadline,
-                },
-                {
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
                 }
             );
             console.log("登録成功:", response.data);
