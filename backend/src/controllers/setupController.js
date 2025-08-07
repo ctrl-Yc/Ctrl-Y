@@ -27,6 +27,7 @@ exports.initialSetup = async (req, res) => {
 			data: {
 				c_name: c_name,
 				parent_id: parent_id,
+    			registered_at: new Date()
 			},
 		});
 

@@ -5,11 +5,12 @@ import { PAYDAY_CUTOFF_SETTING } from "../../config/api";
 import { apiClient } from "../../lib/apiClient";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 export const SalarySettings = ({ setActiveTab }) => {
   const [selectedPayday, setSelectedPayday] = useState('月末');
   const [selectedCutoff, setSelectedCutoff] = useState('月末');
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const paydayOptions = [
     { value: '月末', label: '月末' },
@@ -27,13 +28,20 @@ export const SalarySettings = ({ setActiveTab }) => {
   // 初期データ取得
   useEffect(() => {
     const fetchSettings = async () => {
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("ログイン情報が失効しました。再度ログインしてください。");
+        navigate("/");
+        return;
+      }
       try {
         const response = await apiClient.get(PAYDAY_CUTOFF_SETTING);
         setSelectedPayday(booleanToLabel(response.data.pay_day));
         setSelectedCutoff(booleanToLabel(response.data.cutoff_day));
+
       } catch {
-        setError('データの取得に失敗しました');
-        console.error('データ取得エラー');
+        toast.error('データの取得に失敗しました');
       }
     };
     fetchSettings();
@@ -56,6 +64,13 @@ export const SalarySettings = ({ setActiveTab }) => {
   // 決定ボタン
   const handleSubmitClick = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      toast.error("ログイン情報が失効しました。再度ログインしてください。");
+      navigate("/");
+      return;
+    }
 
     try {
       await apiClient.post(PAYDAY_CUTOFF_SETTING, {
@@ -73,7 +88,6 @@ export const SalarySettings = ({ setActiveTab }) => {
       <ToastContainer />
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">給与</h2>
-        {error && <p className="text-red-500">{error}</p>}
       </div>
       <div className="mx-20 space-y-4">
         <p className="text-xl">給料日の変更</p>

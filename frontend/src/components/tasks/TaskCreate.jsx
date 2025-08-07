@@ -3,6 +3,8 @@ import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { apiClient } from "../../lib/apiClient";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const TaskCreate = ({ setActiveTab }) => {
     const [name, setName] = useState('');
@@ -20,8 +22,35 @@ export const TaskCreate = ({ setActiveTab }) => {
     const handleSubmitClick = async (e) => {
         e.preventDefault();
 
+        // 必須項目のチェック
+        if (!name.trim()) {
+            toast.error("名前を入力してください。");
+            return;
+        }
+
+        if (!reward.trim()) {
+            toast.error("金額を入力してください。");
+            return;
+        }
+
+        if (!deadline) {
+            toast.error("期日を入力してください。");
+            return;
+        }
+
+        // バリデーションチェック
+        if (Number(reward) < 0) {
+            toast.error("金額には0以上の数値を入力してください。");
+            return;
+        }
+
+        if (deadline && new Date(deadline) < new Date()) {
+            toast.error("期日には未来の日時を指定してください。");
+            return;
+        }
+
         try {
-            const response = await apiClient.post(TASKS_BASE,
+            await apiClient.post(TASKS_BASE,
                 {
                     t_name: name,
                     memo: memo,
@@ -29,15 +58,18 @@ export const TaskCreate = ({ setActiveTab }) => {
                     deadline,
                 }
             );
-            console.log("登録成功:", response.data);
-            setActiveTab('tasks');
-        } catch (error) {
-            console.error('登録エラー:', error);
+            toast.success("おてつだいを登録しました！");
+            setTimeout(() => {
+                setActiveTab('tasks');
+            }, 1500);
+        } catch {
+            toast.error("登録に失敗しました。");
         }
     };
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+            <ToastContainer />
             <div className="m-10">
                 <h1 className="text-5xl font-bold p-8">おてつだいの作成</h1>
                 <div className="w-3/5 mx-auto mt-8 space-y-16">
@@ -59,6 +91,7 @@ export const TaskCreate = ({ setActiveTab }) => {
                             value={reward}
                             onChange={e => setReward(e.target.value)}
                             className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
+                            min="0"
                         />
                         <span className="text-4xl">（円）</span>
                     </div>
@@ -71,6 +104,7 @@ export const TaskCreate = ({ setActiveTab }) => {
                             value={deadline}
                             onChange={e => setDeadline(e.target.value)}
                             className="text-2xl w-67 h-11 px-4 border bg-white rounded-lg"
+                            min={new Date().toISOString().slice(0, 16)}
                         />
                     </div>
 

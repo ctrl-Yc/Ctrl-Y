@@ -1,4 +1,4 @@
-export const InputField = ({ type, placeholder = '', value, onChange, className = '', disabled }) => {
+export const InputField = ({ type, placeholder = '', value, onChange, className = '', disabled, min = undefined }) => {
   return (
     <input 
       type={type} 
@@ -6,6 +6,7 @@ export const InputField = ({ type, placeholder = '', value, onChange, className 
       value={value} onChange={onChange} 
       className={className}
       disabled={disabled}
+      min={min}
     />
   );
 };

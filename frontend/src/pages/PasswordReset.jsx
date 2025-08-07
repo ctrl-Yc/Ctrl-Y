@@ -40,26 +40,32 @@ export const PasswordReset = () => {
     };
 
     return (
-        <div>
-            <h1>パスワードのリセット</h1>
-            <p>新しいパスワードを設定してください</p>
-            <InputField
-                type="password"
-                placeholder="新しいパスワード"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-            />
-            <InputField
-                type="password"
-                placeholder="新しいパスワード(確認)"
-                value={confirmNewPassword}
-                onChange={e => setConfirmNewPassword(e.target.value)}
-            />
-            <CustomButton
-                type="button"
-                label="決定"
-                onClick={handleSubmitClick}
-            />
+        <div className="bg-orange-100 h-screen">
+            <h1 className="text-6xl font-bold text-center w-full py-25">パスワードのリセット</h1>
+            <div className="flex flex-col items-center justify-center space-y-4">
+                <p className="text-2xl font-bold text-center">新しいパスワードを設定してください</p>
+                <InputField
+                    type="password"
+                    placeholder="新しいパスワード"
+                    value={newPassword}
+                    onChange={e => setNewPassword(e.target.value)}
+                    className="w-[500px] h-12 px-4 border rounded-lg bg-gray-100 text-base"
+                />
+                <InputField
+                    type="password"
+                    placeholder="新しいパスワード(確認)"
+                    value={confirmNewPassword}
+                    onChange={e => setConfirmNewPassword(e.target.value)}
+                    className="w-[500px] h-12 px-4 border rounded-lg bg-gray-100 text-base"
+                />
+                <CustomButton
+                    type="button"
+                    label="決定"
+                    onClick={handleSubmitClick}
+                    className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
+                                transition-colors duration-300 mt-4"
+                />
+            </div>
         </div>
     )
 }

@@ -59,7 +59,7 @@ export const SignupPage = () => {
               label="もどる"
               onClick={() => navigate(-1)}
               className="w-50 h-15 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-             transition-colors duration-300 mt-4"
+            transition-colors duration-300 mt-4"
             />
             
             <CustomButton

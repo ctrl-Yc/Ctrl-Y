@@ -20,6 +20,7 @@ export const ChildTasks = () => {
     setLoading(true);
     setError(null);
     try {
+      const token = localStorage.getItem("childtoken");
       const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
 
       const response = await apiClient.get(TASKS_COLLECTION(label));
@@ -48,7 +49,13 @@ export const ChildTasks = () => {
     if (!next) return;
     
     try {
-      await apiClient.patch(TASK_STATUS(task.task_id, next));
+      const token = localStorage.getItem("childtoken");
+      await axios.patch(TASK_STATUS(task.task_id, next), {}, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
       fetchTasks();
     } catch (error) {
       console.error(error);

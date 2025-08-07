@@ -30,6 +30,7 @@ exports.createUser = async (req, res) => {
 				keyword: '',
 				cutoff_day: false,
 				pay_day: false,
+				registered_at: new Date() 
 			},
 		});
 		if (!user) {
