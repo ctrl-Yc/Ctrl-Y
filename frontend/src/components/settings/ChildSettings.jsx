@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
@@ -14,6 +15,7 @@ export const ChildSettings = ({ setActiveTab }) => {
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
+  const navigate = useNavigate();
 
   // 子供全取得処理
   const fetchChildren = async () => {

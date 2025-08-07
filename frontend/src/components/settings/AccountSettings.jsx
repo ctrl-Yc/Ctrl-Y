@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
 import { PARENT_EMAIL_CHANGE, PARENT_EMAIL_GET, PARENT_PASS_CHANGE } from "../../config/api";
@@ -12,6 +13,7 @@ export const AccountSettings = ({ setActiveTab }) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const navigate = useNavigate();
 
     // 現在のメアド取得
     useEffect(() => {
@@ -19,7 +21,7 @@ export const AccountSettings = ({ setActiveTab }) => {
             const token = localStorage.getItem("token");
             if (!token) {
                 toast.error("ログイン情報が失効しました。再度ログインしてください。");
-                ("/");
+                navigate("/");
                 return;
             }
 

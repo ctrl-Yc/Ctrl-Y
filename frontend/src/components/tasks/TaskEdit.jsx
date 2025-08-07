@@ -77,7 +77,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                 memo: memo,
             });
             setActiveTab('tasks');
-        } catch (error) {
+        } catch {
             toast.error("更新に失敗しました。");
         }
     };
