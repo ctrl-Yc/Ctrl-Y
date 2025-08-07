@@ -1,134 +1,142 @@
-//タスクコントローラー
 const tasksServices = require("../services/tasksServices.js");
+
+const handleError = (res, error, operation) => {
+    console.log(`${operation}エラー:`, error.message);
+
+    if (error.statusCode) {
+        return res.status(error.statusCode).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: error.message });
+};
+
+const sendSuccessResponse = (res, data, statusCode = 200) => {
+    res.status(statusCode).json(data);
+};
+
+const getParentId = async (user) => {
+    return user.role === 'parent' ? user.user_id : await tasksServices.getParentId(user.user_id);
+};
+
+const parseLabels = (labelParam, queryLabels) => {
+    if (labelParam) {
+        return [labelParam.toUpperCase()];
+    }
+
+    if (queryLabels) {
+        return queryLabels.split(",").map(label => label.toUpperCase());
+    }
+
+    return undefined;
+};
+
+const parseTaskId = (taskIdParam) => {
+    return parseInt(taskIdParam, 10);
+};
+
 
 exports.getAllTasks = async (req, res) => {
     try {
-        const parent_id = req.user.role === 'parent' ?
-        req.user.user_id : await tasksServices.getParentId(req.user.user_id);
+        const parent_id = await getParentId(req.user);
+        const labels = parseLabels(req.params.label, req.query.labels);
+        const allTasks = await tasksServices.findAllTasks(parent_id, labels);
 
-        const labelParam = req.params.label;
-
-        const queryLabels = req.query.labels ? req.query.labels?.split(",") : undefined;
-
-        const labels = labelParam
-            ? [labelParam.toUpperCase()]
-            : queryLabels?.map((label) => label.toUpperCase());
-
-        const AllTasks = await tasksServices.findAllTasks(parent_id, labels);
-
-        res.status(200).json(AllTasks);
+        sendSuccessResponse(res, allTasks);
     } catch (error) {
-        console.log("tasksの取得エラー", error.message);
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "タスクの取得");
     }
 };
 
-exports.getOneTasks = async (req, res) => {
+exports.getOneTask = async (req, res) => {
     try {
-        const taskId = parseInt(req.params.task_id, 10);
+        const taskId = parseTaskId(req.params.task_id);
         const task = await tasksServices.getOneTask(taskId);
 
         if (!task) {
             return res.status(404).json({ message: "指定されたタスクが存在しません" });
         }
 
-        res.status(200).json(task);
+        sendSuccessResponse(res, task);
     } catch (error) {
-        console.error("taskの1件取得エラー");
-        if (error.statusCode) {
-            return res.status(error.statusCode).json({ message: error.message });
-        }
-
-        res.status(500).json({ message: "taskの1件取得エラー", error: error.message });
+        handleError(res, error, "タスクの1件取得");
     }
 };
 
-exports.postNewTasks = async (req, res) => {
+exports.postNewTask = async (req, res) => {
     try {
-        const parent_id = req.user.user_id;
+        const parent_id = await getParentId(req.user);
         const role = req.user.role;
-        const NewTasks = await tasksServices.createNewTasks(req.body, parent_id,role);
-        res.status(200).json(NewTasks);
+        const newTask = await tasksServices.createNewTask(req.body, parent_id,role);
+        sendSuccessResponse(res, newTask);
     } catch (error) {
-        console.log("新しいのtasksの追加エラー", error.message);
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "新しいのタスク追加エラー");
     }
 };
 
-exports.patchEdiTasks = async (req, res) => {
+exports.patchEditTask = async (req, res) => {
     try {
-        const taskId = parseInt(req.params.task_id, 10);
-        const parent_id = req.user.user_id;
+        const taskId = parseTaskId(req.params.task_id);
+        const parent_id = await getParentId(req.user);
         const role = req.user.role;
-        const EditTask = await tasksServices.editTask(taskId, req.body, parent_id,role);
-        res.status(200).json(EditTask);
+        const editTask = await tasksServices.editTask(taskId, req.body, parent_id,role);
+        sendSuccessResponse(res, editTask);
 
     } catch (error) {
-        console.log("tasksの編集エラー");
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "タスクの編集");
     }
 };
 
-exports.deleteTasks = async (req, res) => {
+exports.deleteTask = async (req, res) => {
     try {
-        const parent_id = req.user.user_id;
+        const parent_id = await getParentId(req.user);
         const role = req.user.role;
-        const taskId = parseInt(req.params.task_id, 10);
+        const taskId = parseTaskId(req.params.task_id);
         await tasksServices.deleteTask(taskId, parent_id,role);
-        res.status(204).send();
+        sendSuccessResponse(res, null, 204);
     } catch (error) {
-        console.log("tasksの削除エラー");
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "タスクの削除");
     }
 };
 
-exports.CompleteTaskNum = async (req, res) => {
+exports.completeTaskCount = async (req, res) => {
     try {
-        const { user_id } = req.params;
+        const user_id = await getParentId(req.user);
         const totalCount = await tasksServices.completeTaskCount(user_id);
-        res.status(200).json({ totalCount: totalCount});
+        sendSuccessResponse(res, { totalCount: totalCount});
     } catch (error) {
-        console.log("終了済みtaskの数取得エラー");
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "終了済みタスクの数取得");
     }
 };
 
-exports.TotalSalary = async (req, res) => {
+exports.totalSalary = async (req, res) => {
     try {
-        const { user_id } = req.params;
+        const user_id = await getParentId(req.user);
         const totalSalary = await tasksServices.totalSalary(user_id);
-        res.status(200).json({ totalSalary: totalSalary._sum.reward || 0 });
+        sendSuccessResponse(res, { totalSalary: totalSalary._sum.reward || 0 });
     } catch (error) {
-        console.log("合計金額取得エラー");
-        res.status(500).json({ message: error.message });
+        handleError(res, error, "合計金額取得エラー");
     }
 };
 
-exports.SidEdit = async (req,res) => {
+exports.sidEdit = async (req,res) => {
     try{
-        const taskId = parseInt(req.params.task_id, 10);
-        const parent_id = req.user.role === 'parent' ?
-        req.user.user_id : await tasksServices.getParentId(req.user.user_id);
-        const labelParam = req.params.label;
-        const labels = labelParam
-            ? [labelParam.toUpperCase()]
-            :[]
-        const sidEdit = await tasksServices.SidEdit(parent_id,taskId,labels)
-        res.status(200).json({ sidEdit });
+        const taskId = parseTaskId(req.params.task_id);
+        const parent_id = await getParentId(req.user);
+        const labels = parseLabels(req.params.label, null);
+        const sidEdit = await tasksServices.sidEdit(parent_id,taskId,labels);
+        sendSuccessResponse(res, sidEdit);
     } catch (error) {
-        console.log("s_id変更エラー");
-        res.status(500).json({ message : error.message});
+        handleError(res, error, "s_id変更エラー");
     }
 }
 
-exports.addChildTasks = async (req,res) => {
+exports.addChildTask = async (req,res) => {
     try{
-        const user_id = req.user.user_id;
-        const taskId = parseInt(req.params.task_id, 10);
+        const user_id = await getParentId(req.user);
+        const taskId = parseTaskId(req.params.task_id);
         const addChildTask = await tasksServices.addChildTask(user_id,taskId);
-        res.status(200).json({addChildTask});
+        sendSuccessResponse(res, { addChildTask });
     } catch (error) {
-        console.log("中間テーブル挿入エラー");
-        res.status(500).json({ message : error.message});
+        handleError(res, error, "中間テーブル挿入エラー");
     }
 }

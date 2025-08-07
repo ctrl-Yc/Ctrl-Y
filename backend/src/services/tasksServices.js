@@ -33,7 +33,7 @@ exports.getOneTask = async (taskId) => {
 };
 
 //タスクのさくせい
-exports.createNewTasks = async (taskData, parent_id,) => {
+exports.createNewTask = async (taskData, parent_id,) => {
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.create({
         data: {
@@ -112,7 +112,7 @@ exports.totalSalary = async (user_id) => {
 
 
 
-exports.SidEdit = async (parent_id, taskId, labels) => {
+exports.sidEdit = async (parent_id, taskId, labels) => {
     const task = await exports.getOneTask(taskId);
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを削除する権限がありません");
