@@ -19,7 +19,7 @@ exports.createChild = async (req, res) => {
 			data: {
 				c_name: c_name,
 				parent_id: decoded.user_id,
-				registered_at: new Date() 
+				registered_at: new Date()
 			},
 		});
 

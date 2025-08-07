@@ -1,10 +1,6 @@
-//タスクサービス
-
-//prismaインスタンス
 const { TaskStatusCode } = require("@prisma/client");
 const prisma = require("@db");
 
-//Tasks全件取得
 exports.findAllTasks = async (parent_id, labels) => {
     const list = labels === undefined ? [] : Array.isArray(labels) ? labels : [labels];
 	const enumList = list.filter((item) => Object.values(TaskStatusCode).includes(item));
@@ -43,6 +39,7 @@ exports.createNewTask = async (taskData, parent_id,) => {
             deadline: new Date(deadline),
             status: TaskStatusCode.TODO,
             s_id: 0,
+            child_id: null,
             parent_id,
         },
     });
@@ -115,7 +112,7 @@ exports.totalSalary = async (user_id) => {
 exports.sidEdit = async (parent_id, taskId, labels) => {
     const task = await exports.getOneTask(taskId);
     if (task.parent_id !== parent_id) {
-        const error = new Error("このタスクを削除する権限がありません");
+        const error = new Error("このタスクを変更する権限がありません");
         error.statusCode = 403;
     throw error;
     }
@@ -131,13 +128,13 @@ exports.sidEdit = async (parent_id, taskId, labels) => {
     })
 }
 
-exports.addChildTask = async (user_id, taskId) => {
+exports.addChildTask = async (child_id, taskId) => {
     return await prisma.task.update({
         where: {
             task_id: taskId,
         },
         data: {
-            child_id: user_id,
+            child_id,
         },
     })
 }

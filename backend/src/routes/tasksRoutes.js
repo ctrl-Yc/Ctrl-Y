@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const parentOnly = require("../middlewares/parentOnly");
-const TasksController = require("../controllers/tasksControllers.js");
+const TasksController = require("../controllers/tasks/index");
 
 //taskの新規作成
 //終了した合計タスク数
@@ -31,5 +31,5 @@ router.delete("/:task_id", auth, parentOnly, TasksController.deleteTask);
 router.patch('/:task_id/:label', auth,TasksController.sidEdit);
 
 //taskが完了した後に中間テーブルにtask_idとuser_idを入れる
-router.post("/addChildTasks/:task_id", auth,TasksController.addChildTask);
+router.post("/addChildTasks/:task_id", auth,TasksController.sidEdit);
 module.exports = router;

@@ -20,7 +20,7 @@ model Task {
   parent_id  String?        @default(dbgenerated("auth.uid()")) @db.Uuid
   status     TaskStatusCode @default(TODO)
   updated_at DateTime       @updatedAt @db.Timestamptz(6)
-  child_id   String?        @default(dbgenerated("auth.uid()")) @db.Uuid
+  child_id   String?        @db.Uuid @default(uuid())
   childTasks ChildTask[]
   child_acc  Child?         @relation(fields: [child_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
