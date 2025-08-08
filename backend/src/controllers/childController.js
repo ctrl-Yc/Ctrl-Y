@@ -1,32 +1,32 @@
 const { signToken } = require('../lib/jwt');
 const prisma = require('@db');
+const { handleError, sendSuccessResponse} = require("../utils/responseHandler.js")
 
 exports.createChild = async (req, res) => {
 	try {
 		const { c_name } = req.body;
 
 		if (!c_name) {
-			return res.status(400).json({ message: '子供の名前が必要です' });
+			return handleError(res, 400, '子供の名前が必要です');
 		}
 
-		const decoded = req.user;
+		const parent_id = req.user.user_id;
 
-		if (!decoded || !decoded.user_id) {
-			return res.status(401).json({ message: '認証エラー: 親のIDが取得できません' });
+		if (!parent_id) {
+			return handleError(res, 401, '認証エラー: 親のIDが取得できません');
 		}
 
 		const childCreate = await prisma.child.create({
 			data: {
-				c_name: c_name,
-				parent_id: decoded.user_id,
+				c_name,
+				parent_id,
 				registered_at: new Date()
 			},
 		});
 
-		res.status(201).json({ child_id: childCreate.user_id });
+		sendSuccessResponse(res, { message: '子供の登録に成功しました', child_id: childCreate.user_id });
 	} catch (error) {
-		console.error('子供の登録エラー:', error);
-		res.status(500).json({ message: '子供の登録エラー' });
+		handleError(res, error, '子供の登録');
 	}
 };
 
@@ -48,7 +48,7 @@ exports.loginChild = async (req, res) => {
 		});
 
 		if (!childData) {
-			return res.status(401).json({ message: 'あいことばが間違っています' });
+			return handleError(res, 401, 'あいことばが間違っています');
 		}
 
 		const token = signToken(childData.user_id, {
@@ -56,14 +56,13 @@ exports.loginChild = async (req, res) => {
 			parent_id: childData.parent.user_id,
 		});
 
-		res.status(200).json({
+		sendSuccessResponse(res, { message: '子供のログインに成功しました',
 			token,
 			child_id: childData.user_id,
 			parent_id: childData.parent.user_id,
 		});
 	} catch (error) {
-		console.error('子供のログインエラー:', error);
-		res.status(500).json({ message: '子供のログインエラー', error: error.message });
+		handleError(res, error, '子供のログイン');
 	}
 };
 
@@ -80,7 +79,7 @@ exports.getChildPayments = async (req, res) => {
 		});
 
 		if (!parent_id || parent_id.parent_id !== decoded.user_id) {
-			return res.status(403).json({ message: 'この子供の給与を取得する権限がありません' });
+			return handleError(res, 403, 'この子供の給与を取得する権限がありません');
 		}
 
 		const result = await prisma.pay.findMany({
@@ -93,20 +92,19 @@ exports.getChildPayments = async (req, res) => {
 			},
 		});
 
-		res.status(200).json(result);
+		sendSuccessResponse(res, { message: '子供の給与取得に成功しました', result });
 	} catch (error) {
-		console.error('子供の給与取得エラー:', error);
-		res.status(500).json({ message: '子供の給与取得エラー', error: error.message });
+		handleError(res, error, '子供の給与取得');
 	}
 };
 
 exports.ChildList = async (req, res) => {
 	try {
-		const decoded = req.user;
+		const parent_id = req.user.user_id;
 
 		const child = await prisma.child.findMany({
 			where: {
-				parent_id: decoded.user_id,
+				parent_id,
 			},
 			select: {
 				user_id: true,
@@ -114,9 +112,10 @@ exports.ChildList = async (req, res) => {
 			},
 		});
 
-		res.status(200).json(child);
+		console.log("child:", child);
+
+		sendSuccessResponse(res, { message: '子供一覧取得に成功しました', child });
 	} catch (error) {
-		console.error('子供一覧取得エラー:', error);
-		res.status(500).json({ message: '子供一覧取得エラー', error: error.message });
+		handleError(res, error, '子供一覧取得');
 	}
 };

@@ -42,7 +42,7 @@ exports.createUser = async (req, res) => {
 		const token = signToken(user.user_id, { role: 'parent' });
 
 		// トークンをレスポンス
-		return sendSuccessResponse(res, 200, 'ユーザー登録に成功しました', { token });
+		return sendSuccessResponse(res, { message: 'ユーザー登録に成功しました', token });
 	} catch (error) {
 		console.error('ユーザー登録エラー:', error);
 		return handleError(res, 500, 'ユーザー登録エラー', error);
@@ -70,7 +70,7 @@ exports.loginUser = async (req, res) => {
 
 		// JWTの発行
 		const token = signToken(user.user_id, { role: 'parent' });
-		return sendSuccessResponse(res, 200, 'ログインに成功しました', { token });
+		return sendSuccessResponse(res, { message: 'ログインに成功しました', token });
 	} catch (error) {
 		console.error('ログインエラー:', error);
 		return handleError(res, 500, 'ログインエラー', error);
@@ -93,7 +93,7 @@ exports.rePassword = async (req, res) => {
 		const token = createPasswordResetToken(user.user_id);
 		await sendResetPasswordMail(email, token);
 
-		return sendSuccessResponse(res, 200, 'パスワード再設定用のメールを送信しました');
+		return sendSuccessResponse(res, { message: 'パスワード再設定用のメールを送信しました' });
 	} catch (error) {
 		console.error('パスワード再設定エラー:', error);
 		return handleError(res, 500, 'パスワード再設定エラー', error);
@@ -117,7 +117,7 @@ exports.resetPassword = async (req, res) => {
 			data: { password: hashedPassword },
 		});
 
-		return sendSuccessResponse(res, 200, 'パスワードが正常に更新されました');
+		return sendSuccessResponse(res, { message: 'パスワードが正常に更新されました' });
 	} catch (error) {
 		console.error('パスワードリセット失敗:', error);
 		return handleError(res, 400, 'パスワードの更新に失敗しました', error);
@@ -163,7 +163,7 @@ exports.changePassword = async (req, res) => {
 
 	await sendPasswordChangeNoticeMail(user.email);
 
-    return sendSuccessResponse(res, 200, 'パスワードを変更しました');
+    return sendSuccessResponse(res, { message: 'パスワードを変更しました' });
 	} catch (error) {
     console.error('パスワード変更エラー:', error);
     return handleError(res, 500, 'パスワード変更中にエラーが発生しました', error);
@@ -185,7 +185,7 @@ exports.changeChildPass = async (req, res) => {
 			data: { keyword: newKeyword },
 		});
 
-		return sendSuccessResponse(res, 200, 'あいことばを更新しました');
+		return sendSuccessResponse(res, { message: 'あいことばを更新しました' });
 	} catch (error) {
 		console.error('あいことば更新エラー:', error);
 		return handleError(res, 500, 'あいことば更新エラー', error);

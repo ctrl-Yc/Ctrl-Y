@@ -5,8 +5,6 @@ exports.findAllTasks = async (parent_id, labels) => {
     const list = labels === undefined ? [] : Array.isArray(labels) ? labels : [labels];
 	const enumList = list.filter((item) => Object.values(TaskStatusCode).includes(item));
 
-	console.log("enumList:", enumList);
-
     return await prisma.task.findMany({
         where: { parent_id, ...(enumList.length && { status: { in: enumList } }) },
     });
@@ -29,7 +27,7 @@ exports.getOneTask = async (taskId) => {
 };
 
 //タスクのさくせい
-exports.createNewTask = async (taskData, parent_id,) => {
+exports.createNewTask = async (taskData, parent_id) => {
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.create({
         data: {
@@ -46,7 +44,7 @@ exports.createNewTask = async (taskData, parent_id,) => {
 };
 
 //taskの編集
-exports.editTask = async (taskId, taskData, parent_id,role) => {
+exports.editTask = async (taskId, taskData, parent_id) => {
     const task = await exports.getOneTask(taskId);
 
     if (task.parent_id !== parent_id) {

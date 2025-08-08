@@ -6,8 +6,7 @@ exports.patchEditTask = async (req, res) => {
     try {
         const taskId = parseTaskId(req.params.task_id);
         const parent_id = await getParentId(req.user);
-        const role = req.user.role;
-        const editTask = await tasksServices.editTask(taskId, req.body, parent_id,role);
+        const editTask = await tasksServices.editTask(taskId, req.body, parent_id);
         sendSuccessResponse(res, editTask);
 
     } catch (error) {
