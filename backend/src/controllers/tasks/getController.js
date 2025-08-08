@@ -1,4 +1,4 @@
-const tasksServices = require("../../services/tasksServices.js");
+const tasksServices = require("../../services/tasks");
 const { handleError, sendSuccessResponse} = require("../../utils/responseHandler.js")
 const { getParentId, parseLabels, parseTaskId } = require("../../utils/parseUtils.js");
 

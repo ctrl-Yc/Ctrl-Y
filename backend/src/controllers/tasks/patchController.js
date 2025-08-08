@@ -1,4 +1,4 @@
-const tasksServices = require("../../services/tasksServices.js");
+const tasksServices = require("../../services/tasks");
 const { handleError, sendSuccessResponse} = require("../../utils/responseHandler.js")
 const { getParentId, parseTaskId, parseLabels } = require("../../utils/parseUtils.js");
 
@@ -40,4 +40,15 @@ exports.addChildTask = async (req,res) => {
     } catch (error) {
         handleError(res, error, "中間テーブル挿入エラー");
     }
+}
+
+exports.addChildTask = async (child_id, taskId) => {
+    return await prisma.task.update({
+        where: {
+            task_id: taskId,
+        },
+        data: {
+            child_id,
+        },
+    })
 }

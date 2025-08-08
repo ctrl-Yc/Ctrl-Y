@@ -1,4 +1,4 @@
-const tasksServices = require("../services/tasksServices.js");
+const tasksServices = require("../services/tasks");
 
 const getParentId = async (user) => {
     return user.role === 'parent' ? user.user_id : await tasksServices.getParentId(user.user_id);

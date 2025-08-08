@@ -29,9 +29,9 @@ export const ChildSettings = ({ setActiveTab }) => {
 
     try {
       const response = await apiClient.get(CHILDREN_LIST);
-      if (response.data.length > 0) {
-        setChildren(response.data);
-        setSelectedChild(response.data[0]);
+      if (response.data.child.length > 0) {
+        setChildren(response.data.child);
+        setSelectedChild(response.data.child[0]);
       }
     } catch {
       toast.error("子供情報の取得に失敗しました");
