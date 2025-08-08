@@ -1,7 +1,14 @@
-const tasksServices = require("../services/tasks");
+const prisma = require("@db");
 
 const getParentId = async (user) => {
-    return user.role === 'parent' ? user.user_id : await tasksServices.getParentId(user.user_id);
+    return user.role === 'parent' ? user.user_id : await prisma.child.findUnique({
+        where: {
+            user_id: user.user_id,
+        },
+        select: {
+            parent_id: true,
+        },
+    });
 };
 
 const parseLabels = (labelParam, queryLabels) => {

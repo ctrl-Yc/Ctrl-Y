@@ -1,19 +1,20 @@
 const { signToken } = require('../lib/jwt');
 const prisma = require('@db');
 const { handleError, sendSuccessResponse} = require("../utils/responseHandler.js")
+const AppError = require("../utils/AppError.js");
 
 exports.createChild = async (req, res) => {
 	try {
 		const { c_name } = req.body;
 
 		if (!c_name) {
-			return handleError(res, 400, '子供の名前が必要です');
+			throw new AppError('子供の名前が必要です', 400);
 		}
 
 		const parent_id = req.user.user_id;
 
 		if (!parent_id) {
-			return handleError(res, 401, '認証エラー: 親のIDが取得できません');
+			throw new AppError('認証エラー: 親のIDが取得できません', 401);
 		}
 
 		const childCreate = await prisma.child.create({
@@ -48,7 +49,7 @@ exports.loginChild = async (req, res) => {
 		});
 
 		if (!childData) {
-			return handleError(res, 401, 'あいことばが間違っています');
+			throw new AppError('あいことばが間違っています', 401);
 		}
 
 		const token = signToken(childData.user_id, {
@@ -79,7 +80,7 @@ exports.getChildPayments = async (req, res) => {
 		});
 
 		if (!parent_id || parent_id.parent_id !== decoded.user_id) {
-			return handleError(res, 403, 'この子供の給与を取得する権限がありません');
+			throw new AppError('この子供の給与を取得する権限がありません', 403);
 		}
 
 		const result = await prisma.pay.findMany({
@@ -111,8 +112,6 @@ exports.ChildList = async (req, res) => {
 				c_name: true,
 			},
 		});
-
-		console.log("child:", child);
 
 		sendSuccessResponse(res, { message: '子供一覧取得に成功しました', child });
 	} catch (error) {

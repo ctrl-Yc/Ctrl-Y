@@ -1,6 +1,7 @@
 const tasksServices = require("../../services/tasks");
 const { handleError, sendSuccessResponse} = require("../../utils/responseHandler.js")
 const { getParentId, parseTaskId, parseLabels } = require("../../utils/parseUtils.js");
+const { prisma } = require("@db");
 
 exports.patchEditTask = async (req, res) => {
     try {

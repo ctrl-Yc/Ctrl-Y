@@ -1,12 +1,9 @@
 const handleError = (res, error, operation) => {
-    console.log(`${operation}エラー:`, error.message);
+    const status = Number(error.statusCode) || 500;
+    const message = error.message || "エラーが発生しました";
+    console.log(`${operation}エラー:`, message, error?.stack);
 
-    if (error.statusCode) {
-        return res.status(error.statusCode).json({ message: error.message });
-    }
-    console.log("error:", error);
-
-    res.status(500).json({ message: error.message });
+    res.status(status).json({ message });
 };
 
 const sendSuccessResponse = (res, data, statusCode = 200) => {
@@ -16,4 +13,4 @@ const sendSuccessResponse = (res, data, statusCode = 200) => {
 module.exports = {
     handleError,
     sendSuccessResponse,
-}
+};

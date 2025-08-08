@@ -3,6 +3,7 @@ const userService = require('../services/userServices');
 const { signToken,createPasswordResetToken } = require('../lib/jwt');
 const { sendResetPasswordMail,sendPasswordChangeNoticeMail } = require('../lib/mail');
 const { handleError, sendSuccessResponse} = require("../utils/responseHandler")
+const AppError = require("../utils/AppError.js");
 const bcrypt = require('bcrypt');
 const prisma = require('@db');
 
@@ -11,7 +12,7 @@ exports.createUser = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
-			return handleError(res, 400, 'EmailとPasswordは必須です');
+			throw new AppError('EmailとPasswordは必須です', 400);
 		}
 
 		// パスワードのハッシュ化
@@ -20,7 +21,7 @@ exports.createUser = async (req, res) => {
 		// ユーザーの存在確認
 		const isEmailExist = await userService.findUserByEmail(email);
 		if (isEmailExist) {
-			return handleError(res, 400, 'このEmailはすでに登録されています');
+			throw new AppError('このEmailはすでに登録されています', 400);
 		}
 
 		// ユーザーの登録
@@ -35,7 +36,7 @@ exports.createUser = async (req, res) => {
 			},
 		});
 		if (!user) {
-			return handleError(res, 500, 'ユーザー登録に失敗しました');
+			throw new AppError('ユーザー登録に失敗しました', 500);
 		}
 
 		// JWTの発行
@@ -44,8 +45,7 @@ exports.createUser = async (req, res) => {
 		// トークンをレスポンス
 		return sendSuccessResponse(res, { message: 'ユーザー登録に成功しました', token });
 	} catch (error) {
-		console.error('ユーザー登録エラー:', error);
-		return handleError(res, 500, 'ユーザー登録エラー', error);
+		handleError(res, error, 'ユーザー登録');
 	}
 };
 
@@ -54,26 +54,25 @@ exports.loginUser = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		if (!email || !password) {
-			return handleError(res, 400, 'EmailとPasswordは必須です');
+			throw new AppError('EmailとPasswordは必須です', 400);
 		}
 
 		//DBからユーザーを検索
 		const user = await userService.findUserByEmail(email);
 		if (!user) {
-			return handleError(res, 400, '設定されたEmailは存在しません');
+			throw new AppError('設定されたEmailは存在しません', 400);
 		}
 		// パスワードの照合
 		const passCheck = await userService.comparePassword(password, user.password);
 		if (!passCheck) {
-			return handleError(res, 400, 'パスワードが間違っています');
+			throw new AppError('パスワードが間違っています', 400);
 		}
 
 		// JWTの発行
 		const token = signToken(user.user_id, { role: 'parent' });
 		return sendSuccessResponse(res, { message: 'ログインに成功しました', token });
 	} catch (error) {
-		console.error('ログインエラー:', error);
-		return handleError(res, 500, 'ログインエラー', error);
+		handleError(res, error, 'ログイン');
 	}
 };
 
@@ -87,7 +86,7 @@ exports.rePassword = async (req, res) => {
 		});
 
 		if (!user) {
-			return handleError(res, 404, 'ユーザーが見つかりません');
+			throw new AppError('ユーザーが見つかりません', 404);
 		}
 
 		const token = createPasswordResetToken(user.user_id);
@@ -95,8 +94,7 @@ exports.rePassword = async (req, res) => {
 
 		return sendSuccessResponse(res, { message: 'パスワード再設定用のメールを送信しました' });
 	} catch (error) {
-		console.error('パスワード再設定エラー:', error);
-		return handleError(res, 500, 'パスワード再設定エラー', error);
+		handleError(res, error, 'パスワード再設定');
 	}
 };
 
@@ -119,8 +117,7 @@ exports.resetPassword = async (req, res) => {
 
 		return sendSuccessResponse(res, { message: 'パスワードが正常に更新されました' });
 	} catch (error) {
-		console.error('パスワードリセット失敗:', error);
-		return handleError(res, 400, 'パスワードの更新に失敗しました', error);
+		handleError(res, error, 'パスワードリセット');
 	}
 };
 
@@ -133,7 +130,7 @@ exports.changePassword = async (req, res) => {
 
 
     if (!currentPassword || !newPassword) {
-		return handleError(res, 400, '現在のパスワードと新しいパスワードを入力してください');
+		throw new AppError('現在のパスワードと新しいパスワードを入力してください', 400);
     }
 
     // if (newPassword.length < 8) {
@@ -141,18 +138,18 @@ exports.changePassword = async (req, res) => {
     // }
 
 	if (currentPassword === newPassword) {
-		return handleError(res, 400, '新しいパスワードは現在のパスワードと同じです');
+		throw new AppError('新しいパスワードは現在のパスワードと同じです', 400);
 	}
 
 
     const user = await prisma.user.findUnique({ where: { user_id: userId } });
     if (!user) {
-		return handleError(res, 404, 'ユーザーが見つかりません');
+		throw new AppError('ユーザーが見つかりません', 404);
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-		return handleError(res, 401, '現在のパスワードが間違っています');
+		throw new AppError('現在のパスワードが間違っています', 401);
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -165,8 +162,7 @@ exports.changePassword = async (req, res) => {
 
     return sendSuccessResponse(res, { message: 'パスワードを変更しました' });
 	} catch (error) {
-    console.error('パスワード変更エラー:', error);
-    return handleError(res, 500, 'パスワード変更中にエラーが発生しました', error);
+		handleError(res, error, 'パスワード変更');
 	}
 };
 
@@ -177,7 +173,7 @@ exports.changeChildPass = async (req, res) => {
 		const { newKeyword } = req.body;
 
 		if (!newKeyword) {
-			return handleError(res, 400, '新しいあいことばが必要です');
+			throw new AppError('新しいあいことばが必要です', 400);
 		}
 
 		await prisma.user.update({
@@ -187,7 +183,6 @@ exports.changeChildPass = async (req, res) => {
 
 		return sendSuccessResponse(res, { message: 'あいことばを更新しました' });
 	} catch (error) {
-		console.error('あいことば更新エラー:', error);
-		return handleError(res, 500, 'あいことば更新エラー', error);
+		handleError(res, error, 'あいことば更新');
 	}
 };
