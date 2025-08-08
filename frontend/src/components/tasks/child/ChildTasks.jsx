@@ -20,13 +20,8 @@ export const ChildTasks = () => {
     setLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem("childtoken");
       const label = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
-      const response = await apiClient.get(TASKS_COLLECTION(label), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient.get(TASKS_COLLECTION(label)); 
 
       setTasks(
         response.data.sort(
@@ -51,13 +46,7 @@ export const ChildTasks = () => {
     const next = getNextStatus(task.status);
     if (!next) return;
     try {
-      const token = localStorage.getItem("childtoken");
-      await apiClient.patch(TASK_STATUS(task.task_id, next), {}, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await apiClient.patch(TASK_STATUS(task.task_id, next));
       fetchTasks();
     } catch (error) {
       console.error(error);
