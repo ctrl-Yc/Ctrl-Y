@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { InputField } from "../components/common/InputField"
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET_REQUEST } from "../config/api";
-import axios from "axios";
+import { apiClient } from "../lib/apiClient";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,10 +45,10 @@ export const PasswordResetRequest = () => {
         }
 
         try {
-            await axios.post(PASS_RESET_REQUEST, { email });
+            await apiClient.post(PASS_RESET_REQUEST, { email });
             toast.success("パスワードリセットリンクを送信しました。メールをご確認ください。");
             setIsCooldown(true)
-        } catch (error) {
+        } catch {
             toast.error("送信に失敗しました。メールアドレスをご確認ください。");
         }
     };
