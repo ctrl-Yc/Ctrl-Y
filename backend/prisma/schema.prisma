@@ -20,7 +20,7 @@ model Task {
   parent_id  String?        @default(dbgenerated("auth.uid()")) @db.Uuid
   status     TaskStatusCode @default(TODO)
   updated_at DateTime       @updatedAt @db.Timestamptz(6)
-  child_id   String?        @default(dbgenerated("auth.uid()")) @db.Uuid
+  child_id   String?        @db.Uuid @default(uuid())
   childTasks ChildTask[]
   child_acc  Child?         @relation(fields: [child_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
@@ -31,7 +31,7 @@ model Task {
 }
 
 model User {
-  user_id       String   @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String   @id @default(uuid()) @db.Uuid
   email         String   @unique
   password      String
   keyword       String
@@ -47,8 +47,8 @@ model User {
 }
 
 model Child {
-  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
-  parent_id     String      @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String      @id @default(uuid()) @db.Uuid
+  parent_id     String      @default(uuid()) @db.Uuid
   c_name        String
   icon_path     String?
   registered_at DateTime    @db.Timestamptz(6)
@@ -65,7 +65,7 @@ model Child {
 
 model ChildTask {
   task_id Int
-  user_id String @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id String @default(uuid()) @db.Uuid
   task    Task   @relation(fields: [task_id], references: [task_id], onDelete: NoAction, onUpdate: NoAction)
   child   Child  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -75,7 +75,7 @@ model ChildTask {
 }
 
 model Pay {
-  user_id        String   @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id        String   @default(uuid()) @db.Uuid
   inserted_month DateTime @db.Date
   number         Int      @db.SmallInt
   reward         Int      @db.SmallInt

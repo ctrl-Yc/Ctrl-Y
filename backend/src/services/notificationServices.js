@@ -14,7 +14,7 @@ exports.saveSubscription = async (parent_id, subscription) => {
     });
 } 
 
-exports.SendNotification = async (parent_id, payload) => {
+exports.sendNotification = async (parent_id, payload) => {
     const parent = await prisma.user.findUnique({
         where: { parent_id }
     });
