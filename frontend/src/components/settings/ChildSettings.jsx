@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
 import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN_URL } from "../../config/api";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { Modal } from "../ui/Modal";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +15,7 @@ export const ChildSettings = ({ setActiveTab }) => {
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
+  const navigate = useNavigate();
 
   // 子供全取得処理
   const fetchChildren = async () => {
@@ -26,25 +28,20 @@ export const ChildSettings = ({ setActiveTab }) => {
       }
 
     try {
-      const response = await axios.get(CHILDREN_LIST, {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await apiClient.get(CHILDREN_LIST);
       if (response.data.length > 0) {
         setChildren(response.data);
         setSelectedChild(response.data[0]);
       }
-    } catch (error) {
+    } catch {
       toast.error("子供情報の取得に失敗しました");
     }
   };
 
   // 初回ロード時取得
-  useEffect (() => {
+  useEffect(() => {
     fetchChildren();
-  },[]);
+  }, []);
 
   // 子ども追加ボタン処理
   const handleAddChild = async (e) => {
@@ -54,29 +51,18 @@ export const ChildSettings = ({ setActiveTab }) => {
       return;
     }
 
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.post(
-        CHILDREN_BASE,
-        { c_name: newChildName },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.post(CHILDREN_BASE, { c_name: newChildName });
       setNewChildName("");
       setIsDialogOpen(false);
       toast.success('子供を追加しました');
 
       // 再取得
       await fetchChildren();
-    } catch (error) {
+    } catch {
       toast.error('子供の追加に失敗しました');
     }
-  }
+  };
 
   // 戻るボタン
   const handleBackClick = (e) => {
@@ -146,6 +132,7 @@ export const ChildSettings = ({ setActiveTab }) => {
           placeholder="子供を選択"
           className="w-70"
         />
+        <div className="flex items-center space-x-4 my-6">
         <InputField
           type="text"
           placeholder=""
@@ -157,7 +144,10 @@ export const ChildSettings = ({ setActiveTab }) => {
           type="button"
           label="コピー"
           onClick={handleCopyUrl}
+          className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+                      hover:bg-orange-200 transition-colors duration-300"
         />
+        </div>
         <div className="mt-4 space-x-12">
           <CustomButton
             type="button"
