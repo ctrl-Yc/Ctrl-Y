@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Select } from "../common/Select";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { CHILDREN_BASE, CHILDREN_LIST } from "../../config/api";
 import {
     Chart as ChartJS,
@@ -80,12 +80,7 @@ export const MoneyRecords = () => {
     useEffect(() => {
         const fetchChildren = async () => {
             try {
-                const response = await axios.get(CHILDREN_LIST, {
-                    headers: {
-                        "Content-type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                });
+                const response = await apiClient.get(CHILDREN_LIST);
                 if (response.data.length > 0) {
                     setChildren(response.data);
                     setSelectedChild(response.data[0]);
@@ -112,17 +107,12 @@ export const MoneyRecords = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!selectedChild?.user_id) return;
-            const token = localStorage.getItem("token");
             try {
-                const response = await axios.get(
+                const response = await apiClient.get(
                     `${CHILDREN_BASE}/${selectedChild.user_id}/payments`,
                     {
                         params: {
                             year: selectedYear,
-                        },
-                        headers: {
-                            "Content-type": "application/json",
-                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );

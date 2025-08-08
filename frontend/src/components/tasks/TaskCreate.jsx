@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
+import { apiClient } from "../../lib/apiClient";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -50,25 +50,19 @@ export const TaskCreate = ({ setActiveTab }) => {
         }
 
         try {
-            await axios.post(TASKS_BASE,
+            await apiClient.post(TASKS_BASE,
                 {
                     t_name: name,
                     memo: memo,
                     reward: Number(reward),
                     deadline,
-                },
-                {
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
                 }
             );
             toast.success("おてつだいを登録しました！");
             setTimeout(() => {
                 setActiveTab('tasks');
             }, 1500);
-        } catch (error) {
+        } catch {
             toast.error("登録に失敗しました。");
         }
     };

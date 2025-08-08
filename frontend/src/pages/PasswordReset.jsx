@@ -2,18 +2,13 @@ import { useState } from "react";
 import { InputField } from "../components/common/InputField"
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET } from "../config/api";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { apiClient } from "../lib/apiClient";
+import { useNavigate } from "react-router-dom";
 
 export const PasswordReset = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const location = useLocation();
     const navigate = useNavigate();
-
-    // URLからトークンを取ってくる
-    const queryParams = new URLSearchParams(location.search);
-    const token = queryParams.get("token");
 
     const handleSubmitClick = async () => {
         if (!newPassword || !confirmNewPassword) {
@@ -25,15 +20,7 @@ export const PasswordReset = () => {
         }
 
         try {
-            await axios.post(PASS_RESET,
-                { newPassword },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
+            await apiClient.post(PASS_RESET, { newPassword });
             navigate("/");
         } catch (error) {
             console.error("リセットエラー:", error);
