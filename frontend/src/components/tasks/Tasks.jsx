@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
 
 import { TASK_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
@@ -37,19 +37,12 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [showSendButton, setShowSendButton] = useState(false);
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
 
-  const fetchTasks = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
+    const fetchTasks = async () => {
+        setLoading(true);
+        try {
+            const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
 
-      const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
-
-      const response = await axios.get(TASKS_COLLECTION(labels), {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+            const response = await apiClient.get(TASKS_COLLECTION(labels));
 
       setTasks(
         response.data.sort(
@@ -153,23 +146,16 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     const next = getNextStatus(task.status);
     if (!next) return;
 
-    try {
-      const token = localStorage.getItem("token");
-      await axios.patch(
-        TASK_STATUS(task.task_id, next),
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+        try {
+            await apiClient.patch(
+                TASK_STATUS(task.task_id, next),
+                {}
+            );
+            fetchTasks();
+        } catch (error) {
+            console.error(error);
         }
-      );
-      fetchTasks();
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
   return (
     <div className="m-10">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import {useNavigate } from "react-router-dom";
-import axios from 'axios'; 
+import { apiClient } from "../lib/apiClient";
 import { PARENT_SIGNUP } from "../config/api";
 import { setToken } from "../config/Token";
 
@@ -18,21 +18,14 @@ export const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post(PARENT_SIGNUP, {
+      const response = await apiClient.post(PARENT_SIGNUP, {
         email,
         password,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    console.log(response)
-    const Token = response.data.token;
-    setToken(Token);
+      });
+      const Token = response.data.token;
+      setToken(Token);
       console.log('登録成功:', response.data);
-      navigate('/childName')
+      navigate('/childName');
     } catch (error) {
       console.error('エラー:', error);
     }

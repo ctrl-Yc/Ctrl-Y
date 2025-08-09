@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require('uuid');
 const prisma = require('@db');
 
 exports.initialSetup = async (req, res) => {
@@ -23,15 +22,12 @@ exports.initialSetup = async (req, res) => {
 			data: { keyword: keyword },
 		});
 
-		const newChildId = uuidv4();
-
 		// 子供を作成
 		const childCreate = await prisma.child.create({
 			data: {
-				user_id: newChildId,
 				c_name: c_name,
 				parent_id: parent_id,
-    			registered_at: new Date()				
+    			registered_at: new Date()
 			},
 		});
 

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { TASKS_COLLECTION } from "../../../config/api";
 import { ChildTask } from "./ChildTask";
 import { CustomButton } from "../../common/CustomButton";
 import { DateSelector } from "../../ui/DateSelector";
 import { isSameDay } from "date-fns";
+import { apiClient } from "../../../lib/apiClient";
 
 export const ChildMoneyRecords = ({ setActiveTab }) => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -16,35 +16,29 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
     const fetchDoneTasks = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(TASKS_COLLECTION(['DONE']), {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await apiClient.get(TASKS_COLLECTION(['DONE']));
         setDoneTasks(response.data);
       } catch (error) {
-        console.error(error)
+        console.error(error);
         setError('データの取得に失敗しました');
       } finally {
         setLoading(false);
       }
     };
 
-  fetchDoneTasks();
+    fetchDoneTasks();
   }, []);
 
   const handleBackClick = (e) => {
-     e.preventDefault();
+    e.preventDefault();
     setActiveTab('ChildTasks');
   };
 
   const filteredTasks = selectedDate
-  ? doneTasks.filter(task =>
-      isSameDay(new Date(task.updated_at), selectedDate)
-    )
-  : doneTasks;
+    ? doneTasks.filter(task =>
+        isSameDay(new Date(task.updated_at), selectedDate)
+      )
+    : doneTasks;
 
   if (loading) return <p className="text-center text-gray-500">読み込み中...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -78,4 +72,5 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
         className="fixed bottom-9 left-75 w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200 text-black font-bold shadow-lg"
       />
     </div>
-  )}
+  );
+};

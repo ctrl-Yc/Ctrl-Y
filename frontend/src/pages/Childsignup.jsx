@@ -4,7 +4,7 @@ import { InputField } from "../components/common/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
 import { INIT_SETUP } from "../config/api";
-import axios from 'axios';
+import { apiClient } from "../lib/apiClient";
 
 export const ChildSignup = () => {
   const [c_name, setName] = useState('');
@@ -24,19 +24,12 @@ export const ChildSignup = () => {
       return;
     }
     try {
-      const response = await axios.post(INIT_SETUP,
+      const response = await apiClient.post(INIT_SETUP,
       {
         c_name,
         keyword,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      }
-    );
-    
+      });
+      
       console.log('登録成功:', response.data);
       navigate('/ChildUrl',{ state: { childId: response.data.user_id } });
     } catch (error) {
