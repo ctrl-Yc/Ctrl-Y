@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { CustomButton } from "../../common/CustomButton";
 import axios from "axios";
-import { TASK_NOTIFY } from "~config/api";
+import { TASK_NOTIFY } from "../../../config/api";
+
 
 const labelMap = {
   TODO: "はじめる",
@@ -14,9 +15,14 @@ export const ChildTask = ({ task, onNext }) => {
   const isWaitingReview = task.status === "WAIT_REVIEW";
   const isDone = task.status === "DONE";
 
-  const prevStatusRef = useRef(task.status);
+  const prevStatusRef = useRef();
 
    useEffect(() => {
+    if (prevStatusRef.current === undefined) {
+    prevStatusRef.current = task.status;
+    return;
+    }
+
     if (
       prevStatusRef.current !== "WAIT_REVIEW" &&
       task.status === "WAIT_REVIEW"

@@ -28,6 +28,7 @@ export const SignupPage = () => {
         },
       }
     );
+    console.log(response)
     const Token = response.data.token;
     setToken(Token);
       console.log('登録成功:', response.data);
