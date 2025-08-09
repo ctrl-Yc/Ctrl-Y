@@ -99,9 +99,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       console.log("プッシュ通知の購読に成功しました:", subscription);
 
       // 購読情報をサーバーに送信
-      const response = await axios.post(TASK_NOTIFY, subscription, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await apiClient.post(TASK_NOTIFY, subscription);
 
       if (response.status === 200) {
         console.log("サーバーへの購読情報送信に成功しました。");
@@ -119,14 +117,18 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 
   const handleSendNotification = async () => {
     try {
-      const response = await axios.post(TASK_NOTIFY);
+      const response = await apiClient.post(TASK_NOTIFY, {
+        title: '新しいタスク',
+        body: 'タスクが追加されました',
+        icon: '/pwa-192x192.png',
+      });
       if (response.status === 200) {
-        console.log("通知送信リクエスト成功");
+        console.log('通知送信リクエスト成功');
       } else {
-        console.error("通知送信リクエスト失敗");
+        console.error('通知送信リクエスト失敗');
       }
     } catch (error) {
-      console.error("通知送信リクエストでエラー:", error);
+      console.error('通知送信リクエストでエラー:', error);
     }
   };
 
