@@ -1,7 +1,7 @@
 //index.js
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('./swagger');
+const swaggerDocs = require('../swagger');
 const app = express();
 
 //lib cors
@@ -10,6 +10,9 @@ app.use(corsMiddleware);
 
 const prisma = require('./lib/prisma');
 app.use(express.json());
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //タスクのルートインポート
 const tasksRoutes = require('./routes/tasksRoutes');
