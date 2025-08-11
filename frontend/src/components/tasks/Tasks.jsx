@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
 
-import { TASK_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
+import { PARENT_SUBSCRIBE, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
 const STATUS = {
@@ -99,7 +99,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       console.log("プッシュ通知の購読に成功しました:", subscription);
 
       // 購読情報をサーバーに送信
-      const response = await apiClient.post(TASK_NOTIFY, subscription);
+      const response = await apiClient.post(PARENT_SUBSCRIBE, subscription);
 
       if (response.status === 200) {
         console.log("サーバーへの購読情報送信に成功しました。");
@@ -117,7 +117,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 
   const handleSendNotification = async () => {
     try {
-      const response = await apiClient.post(TASK_NOTIFY, {
+      const response = await apiClient.post(PARENT_SUBSCRIBE, {
         title: '新しいタスク',
         body: 'タスクが追加されました',
         icon: '/pwa-192x192.png',

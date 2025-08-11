@@ -1,8 +1,5 @@
 import { useEffect, useRef } from "react";
 import { CustomButton } from "../../common/CustomButton";
-import axios from "axios";
-import { TASK_NOTIFY } from "../../../config/api";
-
 
 const labelMap = {
   TODO: "はじめる",
@@ -21,21 +18,6 @@ export const ChildTask = ({ task, onNext }) => {
     if (prevStatusRef.current === undefined) {
     prevStatusRef.current = task.status;
     return;
-    }
-
-    if (
-      prevStatusRef.current !== "WAIT_REVIEW" &&
-      task.status === "WAIT_REVIEW"
-    ) {
-      axios.post(TASK_NOTIFY, {
-          taskId: task.id,
-        })
-        .then(() => {
-          console.log("通知送信成功");
-        })
-        .catch((err) => {
-          console.error("通知エラー:", err);
-        });
     }
 
     prevStatusRef.current = task.status;
