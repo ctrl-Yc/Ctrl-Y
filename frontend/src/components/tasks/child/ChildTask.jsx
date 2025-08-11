@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { CustomButton } from "../../common/CustomButton";
 
 const labelMap = {
@@ -10,6 +11,18 @@ export const ChildTask = ({ task, onNext }) => {
   const nextLabel = labelMap[task.status];
   const isWaitingReview = task.status === "WAIT_REVIEW";
   const isDone = task.status === "DONE";
+
+  const prevStatusRef = useRef();
+
+   useEffect(() => {
+    if (prevStatusRef.current === undefined) {
+    prevStatusRef.current = task.status;
+    return;
+    }
+
+    prevStatusRef.current = task.status;
+  }, [task.status, task.id]);
+
 
   return (
     <li className="px-6 py-2 bg-gray-50 shadow h-34 w-3/4 flex items-center my-2 border-gray-200 rounded-lg shadow-sm">
