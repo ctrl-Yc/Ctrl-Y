@@ -18,38 +18,15 @@ exports.patchEditTask = async (req, res) => {
 exports.sidEdit = async (req,res) => {
     try{
         const taskId = parseTaskId(req.params.task_id);
-
+        let child_id ;
         if(req.user.role === 'child') {
-            const child_id = req.user.user_id;
-            await tasksServices.addChildTask(child_id,taskId);
+            child_id = req.user.user_id;
         }
         const parent_id = await getParentId(req.user);
         const labels = parseLabels(req.params.label, null);
-        const sidEdit = await tasksServices.sidEdit(parent_id,taskId,labels);
+        const sidEdit = await tasksServices.sidEdit(parent_id,taskId,labels,child_id);
         sendSuccessResponse(res, sidEdit);
     } catch (error) {
         handleError(res, error, "s_id変更エラー");
     }
-}
-
-exports.addChildTask = async (req,res) => {
-    try{
-        const child_id = req.user.user_id;
-        const taskId = parseTaskId(req.params.task_id);
-        const addChildTask = await tasksServices.addChildTask(child_id,taskId);
-        sendSuccessResponse(res, { addChildTask });
-    } catch (error) {
-        handleError(res, error, "中間テーブル挿入エラー");
-    }
-}
-
-exports.addChildTask = async (child_id, taskId) => {
-    return await prisma.task.update({
-        where: {
-            task_id: taskId,
-        },
-        data: {
-            child_id,
-        },
-    })
-}
+};
