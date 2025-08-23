@@ -33,56 +33,7 @@ app.use('/email', emailChangeRouter);
 const setupRouter = require('./routes/setupRoutes.js');
 app.use('/api/setup', setupRouter);
 
-//ユーザーのパスワード再設定
-//mail送信の処理は未実装
-// app.post('/api/users/rePassword', async (req, res) => {
-// 	try {
-// 		const { email } = req.body;
-// 		// DBから検索
-// 		const select_user = await prisma.user.findUnique({
-// 			where: { email },
-// 		});
-// 		res.status(200).json({ message: 'パスワード再設定用のメールを送信しました' });
-// 	} catch (error) {
-// 		console.error('パスワード再設定エラー:', error);
-// 		res.status(500).json({ message: 'パスワード再設定エラー', error: error.message });
-// 	}
-// });
+const notificationRouter = require('./routes/notificationRouter.js');
+app.use('/notification',notificationRouter);
 
-// 子供のuser_idとc_nameを返します。(変更用) //子供の名前変更用
-// app.get('/api/child/setting', async (req, res) => {
-// 	try {
-// 		const children = await prisma.child.findMany({
-// 			select: {
-// 				c_name: true,
-// 				user_id: true,
-// 			},
-// 		});
-
-// 		res.status(200).json(children);
-// 	} catch (error) {
-// 		res.status(500).json({
-// 			message: '子供一覧の取得エラー',
-// 			error: error.message,
-// 		});
-// 	}
-// });
-
-//締め日登録
-// app.post('/api/users/cutoffDay', async (req, res) => {
-//     try {
-//         const { cutoff_day } = req.body;
-
-//         const updateUser = await prisma.user.update({
-//             where: { id: req.user.id }, // req.user.idは認証ミドルウェアで設定されていると仮定
-//             data: { cutoff_day }
-//         });
-//         res.status(200).json({ message: "締め日を更新しました", user: updateUser });
-//     } catch (error) {
-//         console.error("締め日登録エラー:", error);
-//         res.status(500).json({ message: "締め日登録エラー", error: error.message });
-//     }
-// })
-
-//一番下
 module.exports = app;

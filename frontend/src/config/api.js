@@ -1,6 +1,7 @@
 const isLocal = window.location.hostname === 'localhost';
 
 export const API_BASE_URL = isLocal ? 'http://localhost:3000' : '';
+export const FRONT_BASE_URL = isLocal ? 'http://localhost:5173' : '';
 
 //親ユーザー
 export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
@@ -15,6 +16,7 @@ export const CHILDREN_BASE = `${API_BASE_URL}/api/children`;
 export const CHILDREN_SIGNUP = CHILDREN_BASE;
 export const CHILDREN_LOGIN = (child_id) => `${CHILDREN_BASE}/${child_id}/login`;
 export const CHILDREN_LIST = `${CHILDREN_BASE}/list`;
+export const CHILD_LOGIN_URL = `${FRONT_BASE_URL}/child/login/`;
 
 //タスク系
 export const TASKS_BASE = `${API_BASE_URL}/api/tasks`;
@@ -38,3 +40,4 @@ export const INIT_SETUP = `${API_BASE_URL}/api/setup`;
 
 export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`; // メールアドレス変更
 export const PARENT_EMAIL_GET = `${API_BASE_URL}/api/setting/`; // メールアドレス取得
+export const PAYDAY_CUTOFF_SETTING = `${API_BASE_URL}/api/setting/paycut`;	  // 締め日給料日設定

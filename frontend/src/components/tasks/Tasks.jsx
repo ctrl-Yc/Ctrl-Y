@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
 
 import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
@@ -20,16 +20,9 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     const fetchTasks = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem("token");
-
             const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
 
-            const response = await axios.get(TASKS_COLLECTION(labels), {
-                headers: {
-                    "Content-type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await apiClient.get(TASKS_COLLECTION(labels));
 
             setTasks(response.data.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)));
         } catch (error) {
@@ -61,16 +54,9 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         if (!next) return;
 
         try {
-            const token = localStorage.getItem("token");
-            await axios.patch(
+            await apiClient.patch(
                 TASK_STATUS(task.task_id, next),
-                {},
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                {}
             );
             fetchTasks();
         } catch (error) {

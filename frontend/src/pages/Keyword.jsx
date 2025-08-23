@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { CustomButton } from "../components/common/CustomButton";
 import { InputField } from "../components/common/InputField";
 import { CHILDREN_LOGIN } from "../config/api";
-import { setChildToken } from "../config/Token"
+import { setChildToken } from "../config/Token";
+import { apiClient } from "../lib/apiClient";
 
 export const Keyword = () => {
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const { childUUID } = useParams();
   const navigate = useNavigate();
 
@@ -15,40 +15,34 @@ export const Keyword = () => {
     event.preventDefault();
 
     try {
-    const response = await axios.post(CHILDREN_LOGIN(childUUID),
-        {
+      const response = await apiClient.post(CHILDREN_LOGIN(childUUID), {
         keyword: keyword,
-        },
-        {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        }
-    );
-    console.log(childUUID)
-    if (response.data.token) {
+      });
+      console.log(childUUID);
+      if (response.data.token) {
         const childToken = response.data.token;
         setChildToken(childToken);
         navigate(`/child/top/${response.data.child_id}`);
-    } else {
+      } else {
         console.log("あいことば違う");
-    }
+      }
     } catch (error) {
-    console.error("通信エラー:", error);
+      console.error("通信エラー:", error);
     }
-  }
-
+  };
 
   return (
     <div className="bg-orange-100 h-screen">
-      <h1 className="text-3xl font-bold text-center pt-12 pb-8">あいことばを入力してね</h1>
+      <h1 className="text-3xl font-bold text-center pt-12 pb-8">
+        あいことばを入力してね
+      </h1>
 
       <div className="flex flex-col items-center justify-center space-y-4">
         <InputField
           type="text"
           placeholder="あいことばを入力"
           value={keyword}
-          onChange={e => setKeyword(e.target.value)}
+          onChange={(e) => setKeyword(e.target.value)}
           className="mb-12 w-64 h-12 px-4 border rounded-lg bg-gray-100"
         />
 

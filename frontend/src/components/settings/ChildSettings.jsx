@@ -1,63 +1,68 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
-import { CHILDREN_BASE } from "../../config/api";
-import axios from "axios";
+import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN_URL } from "../../config/api";
+import { apiClient } from "../../lib/apiClient";
 import { Modal } from "../ui/Modal";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ChildSettings = ({ setActiveTab }) => {
   const [keyword, setKeyword] = useState('');
-  const [selectedChildId, setSelectedChildId] = useState('');
+  const [selectedChild, setSelectedChild] = useState('');
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
+  // 子供全取得処理
+  const fetchChildren = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        toast.error("ログイン情報が失効しました。再度ログインしてください。");
+        navigate("/");
+        return;
+      }
+
+    try {
+      const response = await apiClient.get(CHILDREN_LIST);
+      if (response.data.child.length > 0) {
+        setChildren(response.data.child);
+        setSelectedChild(response.data.child[0]);
+      }
+    } catch {
+      toast.error("子供情報の取得に失敗しました");
+    }
+  };
+
+  // 初回ロード時取得
   useEffect(() => {
-    // 仮データを用意
-    const mockChildren = [
-      { user_id: '1', c_name: '太郎' },
-      { user_id: '2', c_name: '花子' },
-      { user_id: '3', c_name: '次郎' }
-    ];
-    setChildren(mockChildren);
+    fetchChildren();
   }, []);
 
   // 子ども追加ボタン処理
   const handleAddChild = async (e) => {
     e.preventDefault();
     if (!newChildName.trim()) {
-      setErrorMessage('名前を入力してください');
-      setTimeout(() => setErrorMessage(''), 3000);
+      toast.error('名前を入力してください');
       return;
     }
 
-    const token = localStorage.getItem("token");
-
     try {
-      await axios.post(
-        CHILDREN_BASE,
-        { c_name: newChildName },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await apiClient.post(CHILDREN_BASE, { c_name: newChildName });
       setNewChildName("");
       setIsDialogOpen(false);
-      setSuccessMessage('子供を追加しました ✅');
+      toast.success('子供を追加しました');
 
-      // 表示後3秒でメッセージを自動的に消す
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (error) {
-      setErrorMessage('子供の追加に失敗しました');
-      setTimeout(() => setErrorMessage(''), 3000);
+      // 再取得
+      await fetchChildren();
+    } catch {
+      toast.error('子供の追加に失敗しました');
     }
-  }
+  };
 
   // 戻るボタン
   const handleBackClick = (e) => {
@@ -68,20 +73,28 @@ export const ChildSettings = ({ setActiveTab }) => {
   // 決定ボタン
   const handleSubmitClick = (e) => {
     e.preventDefault();
-    console.log('決定ボタンが押されました');
   };
+
+  // コピーボタン
+  const handleCopyUrl = () => {
+    if (!selectedChild) return;
+
+    const url = `${CHILD_LOGIN_URL}${selectedChild.user_id}`;
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        toast.success("URLをコピーしました ✅");
+      })
+      .catch(() => {
+        toast.error("コピーに失敗しました");
+      });
+  };
+
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-      {successMessage && (
-        <div>{successMessage}</div>
-      )}
-      {errorMessage && (
-        <div>{errorMessage}</div>
-      )}
+       <ToastContainer />
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">子供</h2>
       </div>
-
 
       <div className="mx-20 space-y-4">
         <div>
@@ -111,18 +124,30 @@ export const ChildSettings = ({ setActiveTab }) => {
             value: child.user_id,
             label: child.c_name
           }))}
-          value={selectedChildId}
-          onChange={e => setSelectedChildId(e.target.value)}
+          value={selectedChild ? selectedChild.user_id : ''}
+          onChange={e => {
+            const selected = children.find(c => c.user_id === e.target.value);
+            setSelectedChild(selected);
+          }}
           placeholder="子供を選択"
           className="w-70"
         />
+        <div className="flex items-center space-x-4 my-6">
         <InputField
           type="text"
           placeholder=""
-          value={selectedChildId ? `仮のURLです/${selectedChildId}` : ''}
+          value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ''}
           readOnly
           className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
         />
+        <CustomButton
+          type="button"
+          label="コピー"
+          onClick={handleCopyUrl}
+          className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+                      hover:bg-orange-200 transition-colors duration-300"
+        />
+        </div>
         <div className="mt-4 space-x-12">
           <CustomButton
             type="button"
@@ -141,7 +166,7 @@ export const ChildSettings = ({ setActiveTab }) => {
         </div>
 
       </div>
-      {/* ✅ モーダル呼び出し */}
+      {/* モーダル */}
       <Modal title="子供の名前を入力" isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
         <InputField
           type="text"

@@ -7,22 +7,24 @@ datasource db {
   provider  = "postgresql"
   url       = env("DB_URL")
   directUrl = env("SB_CONNECT")
-  schemas   = ["ctrl-Y", "public"]
+  schemas   = ["ctrl-Y"]
 }
 
 model Task {
-  task_id    Int            @id @default(autoincrement())
+  task_id    Int         @id @default(autoincrement())
   t_name     String
   memo       String?
   reward     Int            @db.SmallInt
   deadline   DateTime       @db.Timestamptz(6)
   s_id       Int            @db.SmallInt
-  parent_id  String?        @db.Uuid
+  parent_id  String?        @default(dbgenerated("auth.uid()")) @db.Uuid
   status     TaskStatusCode @default(TODO)
+  updated_at DateTime       @updatedAt @db.Timestamptz(6)
+  child_id   String?        @db.Uuid @default(uuid())
   childTasks ChildTask[]
+  child_acc  Child?         @relation(fields: [child_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   parent     User?          @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   taskStatus TaskStatus     @relation(fields: [s_id], references: [s_id], onDelete: NoAction, onUpdate: NoAction)
-  updated_at DateTime       @updatedAt @db.Timestamptz(6)
 
   @@map("tasks")
   @@schema("ctrl-Y")
@@ -35,7 +37,7 @@ model User {
   keyword       String
   cutoff_day    Boolean
   pay_day       Boolean
-  registered_at DateTime @default(now()) @db.Timestamptz(6)
+  registered_at DateTime @db.Timestamptz(6)
   updated_at    DateTime @updatedAt @db.Timestamptz(6)
   children      Child[]
   tasks         Task[]
@@ -46,14 +48,16 @@ model User {
 
 model Child {
   user_id       String      @id @default(uuid()) @db.Uuid
-  parent_id     String      @db.Uuid
+  parent_id     String      @default(uuid()) @db.Uuid
   c_name        String
   icon_path     String?
-  registered_at DateTime    @default(now()) @db.Timestamptz(6)
+  registered_at DateTime    @db.Timestamptz(6)
   updated_at    DateTime    @updatedAt @db.Timestamptz(6)
+  subscription  Json?
   parent        User        @relation(fields: [parent_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
   childTasks    ChildTask[]
   payroll       Pay[]
+  tasks         Task[]
 
   @@map("child_acc")
   @@schema("ctrl-Y")
@@ -61,7 +65,7 @@ model Child {
 
 model ChildTask {
   task_id Int
-  user_id String @db.Uuid
+  user_id String @default(uuid()) @db.Uuid
   task    Task   @relation(fields: [task_id], references: [task_id], onDelete: NoAction, onUpdate: NoAction)
   child   Child  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -89,17 +93,6 @@ model TaskStatus {
 
   @@map("task_status")
   @@schema("ctrl-Y")
-}
-
-model tasks {
-  task_id  Int      @id @default(autoincrement())
-  t_name   String
-  memo     String?
-  reward   Int      @db.SmallInt
-  deadline DateTime @db.Timestamptz(6)
-  s_id     Int      @db.SmallInt
-
-  @@schema("public")
 }
 
 enum TaskStatusCode {
