@@ -1,8 +1,8 @@
-const get = require('./getController');
-const post = require('./postController');
-const patch = require('./patchController');
-const del = require('./delController');
-const stats = require('./statsController');
+const get = require('./getService');
+const post = require('./postService');
+const patch = require('./patchService');
+const del = require('./delService');
+const stats = require('./statsService');
 
 module.exports = {
     ...get,

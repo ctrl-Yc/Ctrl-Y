@@ -1,5 +1,5 @@
 const prisma = require("@db");
-const { getOneTask } = require("./getController");
+const { getOneTask } = require("./getService");
 
 //taskの削除
 exports.deleteTask = async (taskId, parent_id) => {

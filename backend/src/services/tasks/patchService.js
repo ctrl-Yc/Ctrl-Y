@@ -1,8 +1,9 @@
 const prisma = require("@db");
+const { getOneTask } = require("./getService");
 
 //taskの編集
 exports.editTask = async (taskId, taskData, parent_id) => {
-    const task = await exports.getOneTask(taskId);
+    const task = await getOneTask(taskId);
 
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを編集する権限がありません");
@@ -24,8 +25,8 @@ exports.editTask = async (taskId, taskData, parent_id) => {
     });
 };
 
-exports.sidEdit = async (parent_id, taskId, labels) => {
-    const task = await exports.getOneTask(taskId);
+exports.sidEdit = async (parent_id, taskId, labels,child_id) => {
+    const task = await getOneTask(taskId);
     if (task.parent_id !== parent_id) {
         const error = new Error("このタスクを変更する権限がありません");
         error.statusCode = 403;
@@ -33,12 +34,18 @@ exports.sidEdit = async (parent_id, taskId, labels) => {
     }
     const label = labels[0];
 
+    const updateData = {
+        status: label,
+    };
+
+    if(child_id) {
+        updateData.child_id = child_id;
+    }
+
     return await prisma.task.update({
 		where: {
 			task_id: taskId,
 		},
-		data: {
-			status: label
-		},
-    })
+		data: updateData,
+    });
 }
