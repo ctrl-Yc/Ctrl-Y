@@ -22,7 +22,6 @@ export const MoneyRecords = () => {
     const [children, setChildren] = useState([]);
     const [selectedChild, setSelectedChild] = useState(null);
 
-
     // グラフ設定
     const chartData = {
         labels: records.map((record) =>
@@ -69,7 +68,6 @@ export const MoneyRecords = () => {
         },
     };
 
-
     // 年を格納する配列
     const yearList = [];
     for (let y = 2023; y <= currentYear; y++) {
@@ -81,10 +79,10 @@ export const MoneyRecords = () => {
         const fetchChildren = async () => {
             try {
                 const response = await apiClient.get(CHILDREN_LIST);
-                if (response.data.length > 0) {
-                    setChildren(response.data);
-                    setSelectedChild(response.data[0]);
+                for (const child of response.data.children) {
+                    setChildren((prevChildren) => [...prevChildren, child]);
                 }
+                setSelectedChild(response.data.children[0]);
             } catch (error) {
                 console.error("子供情報取得エラー:", error);
             }
@@ -116,7 +114,7 @@ export const MoneyRecords = () => {
                         },
                     }
                 );
-                setRecords(response.data);
+                setRecords(response.data.result);
             } catch (error) {
                 console.error("データ取得エラー:", error);
             }
@@ -152,7 +150,7 @@ export const MoneyRecords = () => {
                     <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
-            
+
             <div className="flex justify-center">
                 <div className="w-3/4 h-6 space-y-8">
                     {records.map((record) => (
@@ -162,10 +160,10 @@ export const MoneyRecords = () => {
                         >
                             <div className="text-gray-900 font-semibold text-2xl">
                                 {record.inserted_month &&
-                                    new Date(record.inserted_month).toLocaleDateString(
-                                        "ja-JP",
-                                        { year: "numeric", month: "long" }
-                                    )}
+                                    new Date(record.inserted_month).toLocaleDateString("ja-JP", {
+                                        year: "numeric",
+                                        month: "long",
+                                    })}
                             </div>
                             <div className="flex items-center space-x-10">
                                 <span className="text-xl font-bold text-green-600">
