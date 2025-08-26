@@ -85,7 +85,6 @@ export const MoneyRecords = () => {
         },
     };
 
-
     // 年を格納する配列
     const yearList = [];
     for (let y = 2023; y <= currentYear; y++) {
@@ -102,6 +101,7 @@ export const MoneyRecords = () => {
                     setChildren(response.data.child);
                     setSelectedChild(response.data.child[0]);
                 }
+                setSelectedChild(response.data.children[0]);
             } catch (error) {
                 console.error("子供情報取得エラー:", error);
             }
@@ -190,6 +190,7 @@ export const MoneyRecords = () => {
                 </div>
             </div>
 
+
             <div className="flex justify-center">
                 <div className="w-3/4 h-6 space-y-8">
                     {records.map((record) => (
@@ -199,10 +200,10 @@ export const MoneyRecords = () => {
                         >
                             <div className="text-gray-900 font-semibold text-2xl">
                                 {record.inserted_month &&
-                                    new Date(record.inserted_month).toLocaleDateString(
-                                        "ja-JP",
-                                        { year: "numeric", month: "long" }
-                                    )}
+                                    new Date(record.inserted_month).toLocaleDateString("ja-JP", {
+                                        year: "numeric",
+                                        month: "long",
+                                    })}
                             </div>
                             <div className="flex items-center space-x-10">
                                 <span className="text-xl font-bold text-green-600">
