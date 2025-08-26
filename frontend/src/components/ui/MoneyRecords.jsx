@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Select } from "../common/Select";
 import { apiClient } from "../../lib/apiClient";
-import { CHILDREN_BASE, CHILDREN_LIST, TASKS_COLLECTION } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST } from "../../config/api";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -10,18 +10,10 @@ import {
     LineElement,
     Tooltip,
     Legend,
-    Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-const STATUS = {
-    TODO: "TODO",
-    IN_PROGRESS: "IN_PROGRESS",
-    WAIT_REVIEW: "WAIT_REVIEW",
-    DONE: "DONE",
-};
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 export const MoneyRecords = () => {
     const currentYear = new Date().getFullYear();
@@ -29,15 +21,6 @@ export const MoneyRecords = () => {
     const [records, setRecords] = useState([]);
     const [children, setChildren] = useState([]);
     const [selectedChild, setSelectedChild] = useState(null);
-    const [viewMode, setViewMode] = useState('records');
-    const [doneTasks, setDoneTasks] = useState([]);
-
-    // 過去の記録、今月の記録の切り替え
-    const viewModeOptions = [
-        { value: 'records', label: '過去のの記録' },
-        { value: 'monthTasks', label: '今月の完了タスク' },
-    ];
-
 
     // グラフ設定
     const chartData = {
@@ -96,10 +79,8 @@ export const MoneyRecords = () => {
         const fetchChildren = async () => {
             try {
                 const response = await apiClient.get(CHILDREN_LIST);
-                console.log(response.data)
-                if (response.data.child.length > 0) {
-                    setChildren(response.data.child);
-                    setSelectedChild(response.data.child[0]);
+                for (const child of response.data.children) {
+                    setChildren((prevChildren) => [...prevChildren, child]);
                 }
                 setSelectedChild(response.data.children[0]);
             } catch (error) {
@@ -124,34 +105,22 @@ export const MoneyRecords = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!selectedChild?.user_id) return;
-
-
-            if (viewMode === "records") {
-                // 過去の記録
+            try {
                 const response = await apiClient.get(
                     `${CHILDREN_BASE}/${selectedChild.user_id}/payments`,
-                    { params: { year: selectedYear } }
+                    {
+                        params: {
+                            year: selectedYear,
+                        },
+                    }
                 );
                 setRecords(response.data.result);
-            } else {
-                // 今月の記録
-                const response = await apiClient.get(TASKS_COLLECTION(["DONE"]), {
-                    params: {
-                        child_id: selectedChild.user_id
-                    },
-                });
-                setDoneTasks(response.data)
-                console.log(response)
-                console.log(doneTasks)
-            }
-            try {
-
             } catch (error) {
                 console.error("データ取得エラー:", error);
             }
         };
         fetchData();
-    }, [selectedChild, selectedYear, viewMode]);
+    }, [selectedChild, selectedYear]);
 
     return (
         <div className="m-10">
@@ -159,14 +128,6 @@ export const MoneyRecords = () => {
                 <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
             </div>
 
-            <div className="flex justify-end mb-8 mr-28">
-                <Select
-                    options={viewModeOptions}
-                    value={viewMode}
-                    onChange={(e) => setViewMode(e.target.value)}
-                    className="w-40 mr-10"
-                />
-            </div>
             <div className="flex justify-end mb-8 mr-28">
                 <Select
                     options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
@@ -189,7 +150,6 @@ export const MoneyRecords = () => {
                     <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
-
 
             <div className="flex justify-center">
                 <div className="w-3/4 h-6 space-y-8">
