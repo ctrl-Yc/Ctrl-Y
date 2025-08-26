@@ -14,6 +14,13 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
+const STATUS = {
+    TODO: "TODO",
+    IN_PROGRESS: "IN_PROGRESS",
+    WAIT_REVIEW: "WAIT_REVIEW",
+    DONE: "DONE",
+};
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
 export const MoneyRecords = () => {
@@ -128,12 +135,13 @@ export const MoneyRecords = () => {
                 setRecords(response.data.result);
             } else {
                 // 今月の記録
-                const response = await apiClient.get(`${TASKS_COLLECTION(['DONE'])}`, {
+                const response = await apiClient.get(TASKS_COLLECTION(["DONE"]), {
                     params: {
                         child_id: selectedChild.user_id
                     },
                 });
-                setDoneTasks(response.data.result)
+                setDoneTasks(response.data)
+                console.log(response)
                 console.log(doneTasks)
             }
             try {
