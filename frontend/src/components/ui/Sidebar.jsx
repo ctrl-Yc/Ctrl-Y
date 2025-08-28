@@ -9,8 +9,8 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
     ];
 
     return (
-        <aside className="sidebar w-64 bg-orange-100 text-white p-4 h-full flex flex-col">
-
+        <aside className="sidebar w-64 bg-white text-white p-4 mx-40 h-1/2 flex flex-col position-absolute">
+ 
             <nav>
                 <ul className="space-y-2">
                     {menuItems.map((item) => (

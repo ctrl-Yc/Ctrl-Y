@@ -2,16 +2,16 @@ import React, { useEffect, useState, Suspense, lazy } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
 
-const Sidebar = lazy(() =>import("../components/ui/Sidebar").then((m) => ({ default: m.Sidebar })));
+const Sidebar = lazy(() => import("../components/ui/Sidebar").then((m) => ({ default: m.Sidebar })));
 const Tasks = lazy(() => import("../components/tasks/Tasks").then((m) => ({ default: m.Tasks })));
-const Settings = lazy(() =>import("../components/settings/Settings").then((m) => ({ default: m.Settings })));
-const MoneyRecords = lazy(() =>import("../components/ui/MoneyRecords").then((m) => ({ default: m.MoneyRecords })));
-const SalarySettings = lazy(() =>import("../components/settings/SalarySettings").then((m) => ({ default: m.SalarySettings })));
-const ChildSettings = lazy(() =>import("../components/settings/ChildSettings").then((m) => ({ default: m.ChildSettings })));
-const NoticeSettings = lazy(() =>import("../components/settings/NoticeSettings").then((m) => ({ default: m.NoticeSettings })));
-const AccountSettings = lazy(() =>import("../components/settings/AccountSettings").then((m) => ({ default: m.AccountSettings })));
-const TaskCreate = lazy(() =>import("../components/tasks/TaskCreate").then((m) => ({ default: m.TaskCreate })));
-const TaskEdit = lazy(() =>import("../components/tasks/TaskEdit").then((m) => ({ default: m.TaskEdit })));
+const Settings = lazy(() => import("../components/settings/Settings").then((m) => ({ default: m.Settings })));
+const MoneyRecords = lazy(() => import("../components/ui/MoneyRecords").then((m) => ({ default: m.MoneyRecords })));
+const SalarySettings = lazy(() => import("../components/settings/SalarySettings").then((m) => ({ default: m.SalarySettings })));
+const ChildSettings = lazy(() => import("../components/settings/ChildSettings").then((m) => ({ default: m.ChildSettings })));
+const NoticeSettings = lazy(() => import("../components/settings/NoticeSettings").then((m) => ({ default: m.NoticeSettings })));
+const AccountSettings = lazy(() => import("../components/settings/AccountSettings").then((m) => ({ default: m.AccountSettings })));
+const TaskCreate = lazy(() => import("../components/tasks/TaskCreate").then((m) => ({ default: m.TaskCreate })));
+const TaskEdit = lazy(() => import("../components/tasks/TaskEdit").then((m) => ({ default: m.TaskEdit })));
 
 export const Top = () => {
     const navigate = useNavigate();
@@ -59,12 +59,15 @@ export const Top = () => {
     return (
         //ローディングの時デザイン必要
         <Suspense fallback={<div>Loading...</div>}>
-            <div className="flex h-screen overflow-hidden">
-                <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
-                <main className="flex-grow items-center p-6 bg-[#FFE1AD] overflow-y-auto h-screen">
-                    {renderMainContent()}
-                </main>
+            <div className="bg-[#FFF877]">
+                <div className="flex h-screen overflow-hidden bg-[url('/images/background-cork.png')] bg-no-repeat bg-cover bg-center w-full position-absolute">
+                    <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
+                    <main className="w-2/3 p-6 pt-10  bg-[url('/images/background-main.png')]  bg-no-repeat bg-cover bg-center overflow-y-auto h-9/10">
+                        {renderMainContent()}
+                    </main>
+                </div>
             </div>
+
         </Suspense>
     );
 };
