@@ -15,31 +15,20 @@ export const ChildSettings = ({ setActiveTab }) => {
   const [children, setChildren] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newChildName, setNewChildName] = useState('');
-  const navigate = useNavigate();
 
-  // 子供全取得処理
-  const fetchChildren = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        toast.error("ログイン情報が失効しました。再度ログインしてください。");
-        navigate("/");
-        return;
-      }
-
-    try {
-      const response = await apiClient.get(CHILDREN_LIST);
-      if (response.data.child.length > 0) {
-        setChildren(response.data.child);
-        setSelectedChild(response.data.child[0]);
-      }
-    } catch {
-      toast.error("子供情報の取得に失敗しました");
-    }
-  };
-
-  // 初回ロード時取得
+  // 子供全取得
   useEffect(() => {
+    const fetchChildren = async () => {
+      try {
+        const response = await apiClient.get(CHILDREN_LIST);
+        for (const child of response.data.children) {
+          setChildren((prevChildren) => [...prevChildren, child]);
+        }
+        setSelectedChild(response.data.children[0]);
+      } catch (error) {
+        console.error("子供情報取得エラー:", error);
+      }
+    };
     fetchChildren();
   }, []);
 
@@ -91,7 +80,7 @@ export const ChildSettings = ({ setActiveTab }) => {
 
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-       <ToastContainer />
+      <ToastContainer />
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">子供</h2>
       </div>
@@ -133,20 +122,20 @@ export const ChildSettings = ({ setActiveTab }) => {
           className="w-70"
         />
         <div className="flex items-center space-x-4 my-6">
-        <InputField
-          type="text"
-          placeholder=""
-          value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ''}
-          readOnly
-          className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
-        />
-        <CustomButton
-          type="button"
-          label="コピー"
-          onClick={handleCopyUrl}
-          className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+          <InputField
+            type="text"
+            placeholder=""
+            value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ''}
+            readOnly
+            className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
+          />
+          <CustomButton
+            type="button"
+            label="コピー"
+            onClick={handleCopyUrl}
+            className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
                       hover:bg-orange-200 transition-colors duration-300"
-        />
+          />
         </div>
         <div className="mt-4 space-x-12">
           <CustomButton
