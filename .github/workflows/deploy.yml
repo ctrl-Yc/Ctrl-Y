@@ -1,0 +1,36 @@
+name: Vitest and Deploy to Vercel
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    test-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 22
+
+            - name: Install dependencies
+              run: |
+                  cd todo-app
+                  npm ci
+
+            - name: Run Vitest
+              run: npx vitest run
+
+            - name: Deploy to Vercel
+              if: success()
+              run: |
+                  npx vercel --prod --token=$VERCEL_TOKEN
+              env:
+                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
