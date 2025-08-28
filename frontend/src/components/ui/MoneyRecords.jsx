@@ -16,15 +16,6 @@ import { Line } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
-// JSTで yyy-mm-dd を作る
-const toJstKey = (iso) => {
-    const d = new Date(iso);
-    const y = d.toLocaleString("ja-JP", { year: "numeric", timeZone: "Asia/Tokyo" });
-    const m = d.toLocaleString("ja-JP", { month: "2-digit", timeZone: "Asia/Tokyo" });
-    const day = d.toLocaleString("ja-JP", { day: "2-digit", timeZone: "Asia/Tokyo" });
-    return `${y}-${m}-${day}`;
-};
-
 // 今月の最終日
 const getLastDayOfThisMonth = () => {
     const now = new Date();
