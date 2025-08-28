@@ -39,12 +39,28 @@ jobs:
                   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
               run: |
-                  URL=$(npx vercel deploy \
+                  RAW=$(npx vercel deploy \
                     --build \
                     --token "$VERCEL_TOKEN" \
                     --project "$VERCEL_PROJECT_ID" \
-                    --scope "$VERCEL_ORG_ID" | tail -n1)
+                    --scope "$VERCEL_ORG_ID")
+                  echo "$RAW"
+                  # 安定抽出：出力中の *.vercel.app を拾う
+                  URL=$(echo "$RAW" | grep -Eo 'https?://[a-zA-Z0-9.-]+\.vercel\.app' | tail -n1)
+                  if [ -z "$URL" ]; then
+                    echo "Failed to extract preview URL"; exit 1
+                  fi
                   echo "url=$URL" >> $GITHUB_OUTPUT
+                  echo "$URL" > preview_url.txt
+                  # Checks タブのサマリーにも表示
+                  echo "### Preview URL" >> $GITHUB_STEP_SUMMARY
+                  echo "$URL" >> $GITHUB_STEP_SUMMARY
+
+            - name: Upload preview URL artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: preview-url
+                  path: frontend/preview_url.txt
 
             - name: Comment preview URL on PR
               if: github.event_name == 'pull_request'
@@ -56,34 +72,5 @@ jobs:
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        body: `🚀 Preview deployed: **${url}**`
+                        body: `Preview deployed: ${url}`
                       });
-
-    vercel-production:
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: "npm"
-                  cache-dependency-path: frontend/package-lock.json
-
-            - name: Install
-              working-directory: frontend
-              run: npm ci
-
-            - name: Deploy Production to Vercel
-              working-directory: frontend
-              env:
-                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-              run: |
-                  npx vercel deploy \
-                    --prod \
-                    --build \
-                    --token "$VERCEL_TOKEN" \
-                    --project "$VERCEL_PROJECT_ID" \
-                    --scope "$VERCEL_ORG_ID"
