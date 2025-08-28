@@ -7,7 +7,8 @@ exports.sendNotification = async (req,res,next) => {
     const payload = JSON.stringify({
         title: 'ご褒美ポケット',
         body: 'こどもがお手伝いを終わらせました！',
-        icon: `${BASE_URL}/images/192icon.png`
+        icon: `${BASE_URL}/images/192icon.png`,
+        url: 'http://localhost:5173/'
     });
     try {
         const sent =  await notificationServices.sendNotification(parent_id,payload);
