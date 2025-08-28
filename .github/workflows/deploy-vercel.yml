@@ -31,14 +31,18 @@ jobs:
               working-directory: frontend
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }} # ← フロント用プロジェクトID
               run: |
-                  npx vercel pull --yes --token $VERCEL_TOKEN
-                  URL=$(npx vercel deploy --build --token $VERCEL_TOKEN | tail -n1)
+                  URL=$(npx vercel deploy \
+                    --build \
+                    --token "$VERCEL_TOKEN" \
+                    --project "$VERCEL_PROJECT_ID" \
+                    --scope "$VERCEL_ORG_ID" | tail -n1)
                   echo "url=$URL" >> $GITHUB_OUTPUT
 
             - name: Comment preview URL on PR
+              if: github.event_name == 'pull_request'
               uses: actions/github-script@v7
               with:
                   script: |
@@ -69,8 +73,12 @@ jobs:
               working-directory: frontend
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
                   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
               run: |
-                  npx vercel pull --yes --token $VERCEL_TOKEN
-                  npx vercel deploy --prod --build --token $VERCEL_TOKEN
+                  npx vercel deploy \
+                    --prod \
+                    --build \
+                    --token "$VERCEL_TOKEN" \
+                    --project "$VERCEL_PROJECT_ID" \
+                    --scope "$VERCEL_ORG_ID"
