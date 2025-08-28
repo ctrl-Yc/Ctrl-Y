@@ -1,14 +1,7 @@
 const prisma = require("@db");
 
 const getParentId = async (user) => {
-    return user.role === 'parent' ? user.user_id : await prisma.child.findUnique({
-        where: {
-            user_id: user.user_id,
-        },
-        select: {
-            parent_id: true,
-        },
-    });
+    return user.role === 'parent' ? user.user_id : user.parent_id ;
 };
 
 const parseLabels = (labelParam, queryLabels) => {
