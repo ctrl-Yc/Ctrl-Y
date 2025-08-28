@@ -96,3 +96,20 @@ exports.updatePayCutHandler = async (req, res) => {
 		return res.status(500).json({ message: '更新に失敗しました', error: error.message });
     }
 };
+
+exports.changeKeyword = async (req, res) => {
+	try {
+		const parentId = req.user.user_id;
+		const { newKeyword } = req.body;
+
+		await prisma.user.update({
+			where: { user_id: parentId },
+			data: { keyword: newKeyword },
+		});
+
+		return res.status(200).json({ message: '合言葉が正常に変更されました。' });
+	} catch (error) {
+		console.error('合言葉変更エラー:', error);
+		return res.status(500).json({ message: '合言葉の変更に失敗しました', error: error.message });
+	}
+}
