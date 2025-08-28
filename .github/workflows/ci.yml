@@ -1,14 +1,18 @@
 name: CI
 on:
+    pull_request:
+        paths:
+            - "frontend/**"
+            - ".github/**"
     push:
         branches: ["**"]
-    pull_request:
+        paths:
+            - "frontend/**"
+            - ".github/**"
 
 jobs:
     ci:
         runs-on: ubuntu-latest
-        permissions:
-            contents: read
         steps:
             - uses: actions/checkout@v4
 
@@ -16,18 +20,24 @@ jobs:
               with:
                   node-version: 20
                   cache: "npm"
+                  cache-dependency-path: frontend/package-lock.json
 
             - name: Install
+              working-directory: frontend
               run: npm ci
 
             - name: Lint
+              working-directory: frontend
               run: npm run lint --if-present
 
-            - name: Type check
+            - name: Typecheck
+              working-directory: frontend
               run: npm run typecheck --if-present
 
             - name: Test
+              working-directory: frontend
               run: npm test --if-present -- --ci
 
             - name: Build
+              working-directory: frontend
               run: npm run build
