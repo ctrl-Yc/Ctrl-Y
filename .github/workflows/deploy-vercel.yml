@@ -40,19 +40,17 @@ jobs:
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
               run: |
                   RAW=$(npx vercel deploy \
-                    --build \
+                    --yes \
                     --token "$VERCEL_TOKEN" \
                     --project "$VERCEL_PROJECT_ID" \
                     --scope "$VERCEL_ORG_ID")
                   echo "$RAW"
-                  # 安定抽出：出力中の *.vercel.app を拾う
                   URL=$(echo "$RAW" | grep -Eo 'https?://[a-zA-Z0-9.-]+\.vercel\.app' | tail -n1)
                   if [ -z "$URL" ]; then
                     echo "Failed to extract preview URL"; exit 1
                   fi
                   echo "url=$URL" >> $GITHUB_OUTPUT
                   echo "$URL" > preview_url.txt
-                  # Checks タブのサマリーにも表示
                   echo "### Preview URL" >> $GITHUB_STEP_SUMMARY
                   echo "$URL" >> $GITHUB_STEP_SUMMARY
 
