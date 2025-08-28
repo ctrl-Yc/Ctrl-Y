@@ -1,6 +1,6 @@
 import { useState, Suspense, lazy } from "react";
 
-const ChildSidebar = lazy(() => import("../components/ui/child/ChildSidebar").then((m) => ({ default: m.ChildSidebar })))   ;
+const ChildSidebar = lazy(() => import("../components/ui/child/ChildSidebar").then((m) => ({ default: m.ChildSidebar })));
 const ChildTasks = lazy(() => import("../components/tasks/child/ChildTasks").then((m) => ({ default: m.ChildTasks })));
 const ChildMoneyRecords = lazy(() => import("../components/tasks/child/ChildMoneyRecords").then((m) => ({ default: m.ChildMoneyRecords })));
 

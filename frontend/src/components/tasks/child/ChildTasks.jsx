@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ChildTask } from "./ChildTask";
 import { PARENT_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
 import { apiClient } from "../../../lib/apiClient";
+import { getChildToken } from '../../../config/Token';
 
 const STATUS = {
   TODO: 'TODO',
@@ -14,6 +15,8 @@ export const ChildTasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
@@ -49,7 +52,12 @@ export const ChildTasks = () => {
 
       if (next === STATUS.WAIT_REVIEW) {
         try {
-          await apiClient.post(PARENT_NOTIFY, { taskId: task.task_id });
+          await apiClient.post(PARENT_NOTIFY, {
+            parent_id: getChildToken(),
+            title: '新しいタスク',
+            body: 'タスクが追加されました',
+            icon: '/pwa-192x192.png',
+          });
           console.log('親に通知を送信しました');
         } catch (notifyError) {
           console.error('親への通知送信に失敗しました:', notifyError);

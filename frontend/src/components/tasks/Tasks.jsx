@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
-
-import { PARENT_SUBSCRIBE, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
+import { PARENT_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
 const STATUS = {
@@ -34,7 +33,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [error, setError] = useState(null);
 
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const [showSendButton, setShowSendButton] = useState(false);
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
 
     const fetchTasks = async () => {
@@ -71,7 +69,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         console.log("Service Worker登録成功");
         if (Notification.permission === "granted") {
           setIsPermissionGranted(true);
-          setShowSendButton(true); 
         }
       })
       .catch((err) => {
@@ -96,14 +93,11 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
       });
 
-      console.log("プッシュ通知の購読に成功しました:", subscription);
 
       // 購読情報をサーバーに送信
-      const response = await apiClient.post(PARENT_SUBSCRIBE, subscription);
-
+      const response = await apiClient.post(PARENT_NOTIFY, subscription);
       if (response.status === 200) {
         console.log("サーバーへの購読情報送信に成功しました。");
-        setShowSendButton(true);
         setIsPermissionGranted(true);
       } else {
         console.error("サーバーへの購読情報送信に失敗しました。");
@@ -112,23 +106,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
       console.error("処理中にエラーが発生しました:", error);
     } finally {
       setIsRequestingPermission(false);
-    }
-  };
-
-  const handleSendNotification = async () => {
-    try {
-      const response = await apiClient.post(PARENT_SUBSCRIBE, {
-        title: '新しいタスク',
-        body: 'タスクが追加されました',
-        icon: '/pwa-192x192.png',
-      });
-      if (response.status === 200) {
-        console.log('通知送信リクエスト成功');
-      } else {
-        console.error('通知送信リクエスト失敗');
-      }
-    } catch (error) {
-      console.error('通知送信リクエストでエラー:', error);
     }
   };
 
@@ -173,7 +150,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
         </div>
       </div>
 
-      {/* 通知許可ボタン */}
       {!isPermissionGranted && (
         <div className="mb-4 flex justify-center">
           <CustomButton
@@ -181,17 +157,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
             onClick={handleRequestPermission}
             disabled={isRequestingPermission}
             className="bg-green-500 hover:bg-green-400 text-white px-6 py-3 rounded"
-          />
-        </div>
-      )}
-
-      {/* 通知送信ボタン */}
-      {showSendButton && (
-        <div className="mb-6 flex justify-center">
-          <CustomButton
-            label="サーバーから通知を送信"
-            onClick={handleSendNotification}
-            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded"
           />
         </div>
       )}
