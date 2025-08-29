@@ -1,15 +1,12 @@
 const tasksServices = require("../../services/tasks");
-const { handleError, sendSuccessResponse } = require("../../utils/responseHandler.js");
+const { handleError, sendSuccessResponse} = require("../../utils/responseHandler.js")
 const { getParentId, parseLabels, parseTaskId } = require("../../utils/parseUtils.js");
 
 exports.getAllTasks = async (req, res) => {
     try {
         const parent_id = await getParentId(req.user);
         const labels = parseLabels(req.params.label, req.query.labels);
-
-        const { child_id } = req.query;
-
-        const allTasks = await tasksServices.findAllTasks(parent_id, labels, child_id);
+        const allTasks = await tasksServices.findAllTasks(parent_id, labels);
 
         sendSuccessResponse(res, allTasks);
     } catch (error) {
