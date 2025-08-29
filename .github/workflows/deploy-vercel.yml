@@ -38,38 +38,30 @@ jobs:
             - name: Install deps
               run: npm ci
 
-            - name: Link Vercel project (non-interactive)
-              env:
-                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+            - name: Write Vercel project.json
+              working-directory: frontend
               run: |
-                  if [ ! -f ".vercel/project.json" ]; then
-                    npx vercel link --yes \
-                      --project "$VERCEL_PROJECT_ID" \
-                      --scope "$VERCEL_ORG_ID" \
-                      --token "$VERCEL_TOKEN" --debug
-                  fi
-                  cat .vercel/project.json || true
+                  mkdir -p .vercel
+                  cat > .vercel/project.json << 'EOF'
+                  {
+                    "projectId": "${{ secrets.VERCEL_PROJECT_ID }}",
+                    "orgId": "${{ secrets.VERCEL_ORG_ID }}"
+                  }
+                  EOF
+                  cat .vercel/project.json
 
             - name: Build (local)
-              run: |
-                  npm run build
+              working-directory: frontend
+              run: npm run build
 
             - name: Deploy Preview (prebuilt)
               id: vercel
+              working-directory: frontend
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
-                  URL=$(npx vercel deploy --prebuilt --yes \
-                    --token "$VERCEL_TOKEN" \
-                    --scope "$VERCEL_ORG_ID" --debug)
+                  URL=$(npx vercel deploy --prebuilt --yes --token "$VERCEL_TOKEN")
                   echo "url=$URL" >> $GITHUB_OUTPUT
-                  echo "### Preview URL" >> $GITHUB_STEP_SUMMARY
-                  echo "$URL" >> $GITHUB_STEP_SUMMARY
-                  echo "$URL" > preview_url.txt
 
             - name: Upload preview URL artifact
               uses: actions/upload-artifact@v4
