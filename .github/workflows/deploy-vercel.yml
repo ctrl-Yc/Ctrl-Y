@@ -54,6 +54,12 @@ jobs:
               working-directory: frontend
               run: npm run build
 
+            - name: Build locally for Preview (Output v3)
+              working-directory: frontend
+              env:
+                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+              run: npx vercel build --yes --token "$VERCEL_TOKEN"
+
             - name: Deploy Preview (prebuilt)
               id: vercel
               working-directory: frontend
@@ -62,6 +68,8 @@ jobs:
               run: |
                   URL=$(npx vercel deploy --prebuilt --yes --token "$VERCEL_TOKEN")
                   echo "url=$URL" >> $GITHUB_OUTPUT
+                  echo "### Preview URL" >> $GITHUB_STEP_SUMMARY
+                  echo "$URL" >> $GITHUB_STEP_SUMMARY
 
             - name: Upload preview URL artifact
               uses: actions/upload-artifact@v4
