@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { InputField } from "../common/InputField"
 import { CustomButton } from "../common/CustomButton";
 import { PARENT_EMAIL_CHANGE, PARENT_EMAIL_GET, PARENT_PASS_CHANGE } from "../../config/api";
-import axios from "axios";
+import { apiClient } from "../../lib/apiClient";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,6 +13,7 @@ export const AccountSettings = ({ setActiveTab }) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const navigate = useNavigate();
 
     // 現在のメアド取得
     useEffect(() => {
@@ -24,14 +26,9 @@ export const AccountSettings = ({ setActiveTab }) => {
             }
 
             try {
-                const response = await axios.get(PARENT_EMAIL_GET, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    }
-                });
+                const response = await apiClient.get(PARENT_EMAIL_GET);
                 setEmail(response.data.email);
-            } catch (error) {
+            } catch {
                 toast.error("プロフィールの取得に失敗しました。再ログインしてください。");
             }
         };
@@ -51,15 +48,9 @@ export const AccountSettings = ({ setActiveTab }) => {
         }
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await axios.post(PARENT_PASS_CHANGE, {
+            const response = await apiClient.post(PARENT_PASS_CHANGE, {
                 currentPassword,
                 newPassword
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
             });
 
             toast.success(response.data.message || "パスワードを変更しました。");
@@ -73,31 +64,22 @@ export const AccountSettings = ({ setActiveTab }) => {
 
 
 
-    // 戻るボタン処理
-    const handleBackClick = (e) => {
-        e.preventDefault();
-        setActiveTab('settings');
-    }
-
     // メールアドレス編集ボタン処理
     const handleSaveClick = async () => {
-        const token = localStorage.getItem("token");
         try {
-            const response = await axios.post(PARENT_EMAIL_CHANGE,
-                { newEmail: email },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await apiClient.post(PARENT_EMAIL_CHANGE, { newEmail: email });
             toast.success(response.data.message || "確認メールを送信しました。");
             setEditField(null);
         } catch (error) {
             toast.error(error.response?.data?.error || "変更に失敗しました。");
         }
     };
+
+    // 戻るボタン処理
+    const handleBackClick = (e) => {
+        e.preventDefault();
+        setActiveTab('settings');
+    }
 
     return (
         <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
@@ -111,7 +93,6 @@ export const AccountSettings = ({ setActiveTab }) => {
                     <div className=" items-center space-x-2">
                     <InputField
                         type="email"
-                        placeholder=""
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         disabled={editField !== 'email'}
@@ -161,8 +142,6 @@ export const AccountSettings = ({ setActiveTab }) => {
                                 setCurrentPassword('');
                                 setNewPassword('');
                                 setConfirmNewPassword('');
-                                setErrorMessage('');
-                                setSuccessMessage('');
                             }}
                             className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
                         />

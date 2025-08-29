@@ -29,6 +29,6 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
             <LogoutItem />
         </aside>
     )
-}
+};
 
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { taskUrl } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { apiClient } from "../../lib/apiClient";
 
 export const TaskEdit = ({ taskId, setActiveTab }) => {
     const [title, setTitle] = useState('');
@@ -16,15 +16,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     useEffect(() => {
         const fetchTaskDetail = async () => {
             try {
-                const token = localStorage.getItem("token");
-                const response = await axios.get(
-                    `${taskUrl(taskId)}`,
-                    {
-                        headers: {
-                            'Content-type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
+                const response = await apiClient.get(`${taskUrl(taskId)}`);
 
                 const task = response.data;
 
@@ -49,7 +41,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
 
     const handleSubmitClick = async (e) => {
         e.preventDefault();
-
+        
         // 必須項目のチェック
         if (!title.trim()) {
             toast.error("名前を入力してください。");
@@ -78,24 +70,14 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         }
 
         try {
-            await axios.patch(`${taskUrl(taskId)}`, {
+            await apiClient.patch(`${taskUrl(taskId)}`, {
                 t_name: title,
                 reward: Number(reward),
                 deadline: new Date(deadline),
                 memo: memo,
-            },
-                {
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-
-            toast.success("おてつだいを更新しました！");
-            setTimeout(() => {
-                setActiveTab('tasks');
-            }, 1500);
-        } catch (error) {
+            });
+            setActiveTab('tasks');
+        } catch {
             toast.error("更新に失敗しました。");
         }
     };
@@ -105,19 +87,13 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
         if (!window.confirm("このタスクを削除しますか？")) return;
 
         try {
-            await axios.delete(`${taskUrl(taskId)}`,
-                {
-                    headers: {
-                        'Content-type': 'application/json',
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-
+            await apiClient.delete(`${taskUrl(taskId)}`);
+            setActiveTab('tasks');
             toast.success("削除しました！");
             setTimeout(() => {
                 setActiveTab('tasks');
             }, 1500);
-        } catch (error) {
+        } catch {
             toast.error("削除に失敗しました。");
         }
     };
