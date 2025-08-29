@@ -34,12 +34,11 @@ jobs:
             - name: Install
               run: npm ci
 
-            # 既に .vercel/project.json があるならこの step は不要
             - name: Link Vercel project (non-interactive)
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }} # 例: "ctrl-y-frontend"
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
                   if [ ! -f ".vercel/project.json" ] && [ -n "$VERCEL_PROJECT_NAME" ]; then
                     npx vercel link --yes --project "$VERCEL_PROJECT_NAME" --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
@@ -50,6 +49,7 @@ jobs:
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
                   URL=$(npx vercel --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID")
                   echo "url=$URL" >> $GITHUB_OUTPUT
@@ -100,7 +100,7 @@ jobs:
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
                   if [ ! -f ".vercel/project.json" ] && [ -n "$VERCEL_PROJECT_NAME" ]; then
                     npx vercel link --yes --project "$VERCEL_PROJECT_NAME" --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
@@ -110,5 +110,6 @@ jobs:
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
                   npx vercel --prod --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
