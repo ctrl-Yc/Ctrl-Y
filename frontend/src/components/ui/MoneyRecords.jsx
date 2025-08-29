@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Select } from "../common/Select";
 import { apiClient } from "../../lib/apiClient";
-import { CHILDREN_BASE, CHILDREN_LIST, TASKS_COLLECTION } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST } from "../../config/api";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -10,17 +10,10 @@ import {
     LineElement,
     Tooltip,
     Legend,
-    Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
-
-// 今月の最終日
-const getLastDayOfThisMonth = () => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-};
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 export const MoneyRecords = () => {
     const currentYear = new Date().getFullYear();
@@ -28,144 +21,32 @@ export const MoneyRecords = () => {
     const [records, setRecords] = useState([]);
     const [children, setChildren] = useState([]);
     const [selectedChild, setSelectedChild] = useState(null);
-    const [viewMode, setViewMode] = useState('records');
-    const [doneTasks, setDoneTasks] = useState([]);
 
-    // 過去の記録、今月の記録の切り替え
-    const viewModeOptions = [
-        { value: 'records', label: '過去のの記録' },
-        { value: 'monthTasks', label: '今月の完了タスク' },
-    ];
-
-    // 1〜12月の固定ラベル
-    const monthLabelsAll = useMemo(
-        () => Array.from({ length: 12 }, (_, i) => `${i + 1}月`),
-        []
-    );
-
-    // records → 年の月別合計（欠けは0埋め）
-    const { monthRewardData } = useMemo(() => {
-        const arr = Array(12).fill(0);
-
-        const yearNum = Number(selectedYear);
-
-        (records ?? []).forEach((r) => {
-            const d = r.inserted_month ? new Date(r.inserted_month) : null;
-            if (!d) return;
-            // 表示している年だけ集計
-            if (d.getFullYear() !== yearNum) return;
-
-            const m = d.getMonth(); // 0..11
-            arr[m] += Number(r.reward ?? 0);
-            // cnt[m] += Number(r.number ?? 0); // 件数合計が必要なら
-        });
-
-        return { monthRewardData: arr /*, monthCountData: cnt*/ };
-    }, [records, selectedYear]);
-
-    // doneTasks → 今月の日別集計（合計金額＆件数）
-    const { dayLabelsAll, dayRewardData, dayCountData, filledDayIndexes } = useMemo(() => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const monthIdx = now.getMonth(); // 0-based
-        const last = getLastDayOfThisMonth();
-
-        const labels = Array.from({ length: last }, (_, i) => `${i + 1}日`);
-        const rewardSumByDay = Array(last).fill(0);
-        const countByDay = Array(last).fill(0);
-
-        doneTasks.forEach((t) => {
-            const when = t.updated_at;
-            if (!when) return;
-            const d = new Date(when);
-
-            if (d.getFullYear() !== year || d.getMonth() !== monthIdx) return;
-
-            const idx = d.getDate() - 1; // 0-based
-            rewardSumByDay[idx] += Number(t.reward ?? 0);
-            countByDay[idx] += 1;
-        });
-
-        // “記録がある日”のインデックスだけ抽出
-        const filled = [];
-        for (let i = 0; i < last; i++) {
-            if (countByDay[i] > 0 || rewardSumByDay[i] > 0) filled.push(i);
-        }
-
-        return {
-            dayLabelsAll: labels,
-            dayRewardData: rewardSumByDay,
-            dayCountData: countByDay,
-            filledDayIndexes: filled,
-        };
-    }, [doneTasks]);
-
-    // 累計金額の配列
-    const monthCumulativeData = useMemo(() => {
-        let acc = 0;
-        return monthRewardData.map(v => (acc += v));
-    }, [monthRewardData]);
-
-    const dayCumulativeData = useMemo(() => {
-        let acc = 0;
-        return dayRewardData.map(v => (acc += v));
-    }, [dayRewardData]);
 
     // グラフ設定
-    const chartData =
-        viewMode === "records"
-            ? {
-                labels: monthLabelsAll,
-                datasets: [
-                    {
-                        label: "報酬額（円）",
-                        data: monthRewardData,
-                        borderColor: "rgba(75,192,192,1)",
-                        backgroundColor: "rgba(75,192,192,0.2)",
-                        tension: 0.3,
-                        fill: true,
-                    },
-                    {
-                        label: "累計（円）",
-                        data: monthCumulativeData,
-                        borderColor: "rgba(0,0,0,0.7)",
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        tension: 0.2,
-                        fill: false,
-                        borderDash: [6, 4], // 視覚的に区別
-                    },
-                ],
-            }
-            : {
-                labels: dayLabelsAll,
-                datasets: [
-                    {
-                        label: "日別報酬額（円）",
-                        data: dayRewardData,
-                        borderColor: "rgba(75,192,192,1)",
-                        backgroundColor: "rgba(75,192,192,0.2)",
-                        tension: 0.3,
-                        fill: true,
-                    },
-                    {
-                        label: "累計（円）",
-                        data: dayCumulativeData,
-                        borderColor: "rgba(0,0,0,0.7)",
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                        tension: 0.2,
-                        fill: false,
-                        borderDash: [6, 4],
-                    },
-                ],
-            };
-
+    const chartData = {
+        labels: records.map((record) =>
+            new Date(record.inserted_month).toLocaleDateString("ja-JP", {
+                month: "short",
+            })
+        ),
+        datasets: [
+            {
+                label: "報酬額（円）",
+                data: records.map((record) => record.reward),
+                borderColor: "rgba(75,192,192,1)",
+                backgroundColor: "rgba(75,192,192,0.2)",
+                tension: 0.3, // 線を滑らかに
+                fill: true,
+            },
+        ],
+    };
 
     const chartOptions = {
         responsive: true,
-        maintainAspectRatio: false,
         plugins: {
             legend: {
-                display: true,
+                position: false,
             },
             tooltip: {
                 enabled: true,
@@ -182,18 +63,12 @@ export const MoneyRecords = () => {
             x: {
                 title: {
                     display: true,
-                    text: viewMode === "records" ? "月" : "日",
+                    text: "月",
                 },
-                type: "category",
-                ticks: {
-                    autoSkip: false,   // 全日付を表示
-                    maxRotation: 0,    // ラベル回転なし
-                    minRotation: 0,
-                },
-                grid: { display: false },
             },
         },
     };
+
 
     // 年を格納する配列
     const yearList = [];
@@ -206,10 +81,10 @@ export const MoneyRecords = () => {
         const fetchChildren = async () => {
             try {
                 const response = await apiClient.get(CHILDREN_LIST);
-                for (const child of response.data.children) {
-                    setChildren((prevChildren) => [...prevChildren, child]);
+                if (response.data.length > 0) {
+                    setChildren(response.data);
+                    setSelectedChild(response.data[0]);
                 }
-                setSelectedChild(response.data.children[0]);
             } catch (error) {
                 console.error("子供情報取得エラー:", error);
             }
@@ -232,32 +107,22 @@ export const MoneyRecords = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!selectedChild?.user_id) return;
-
             try {
-                if (viewMode === "records") {
-                    // 過去の記録
-                    const response = await apiClient.get(
-                        `${CHILDREN_BASE}/${selectedChild.user_id}/payments`,
-                        { params: { year: selectedYear } }
-                    );
-                    setRecords(response.data.result);
-                } else {
-                    // 今月の記録
-                    const response = await apiClient.get(TASKS_COLLECTION(["DONE"]), {
+                const response = await apiClient.get(
+                    `${CHILDREN_BASE}/${selectedChild.user_id}/payments`,
+                    {
                         params: {
-                            child_id: selectedChild.user_id
+                            year: selectedYear,
                         },
-                    });
-                    setDoneTasks(response.data)
-                    // console.log(doneTasks)
-                    // console.log(response)
-                }
+                    }
+                );
+                setRecords(response.data);
             } catch (error) {
                 console.error("データ取得エラー:", error);
             }
         };
         fetchData();
-    }, [selectedChild, selectedYear, viewMode]);
+    }, [selectedChild, selectedYear]);
 
     return (
         <div className="m-10">
@@ -267,87 +132,54 @@ export const MoneyRecords = () => {
 
             <div className="flex justify-end mb-8 mr-28">
                 <Select
-                    options={viewModeOptions}
-                    value={viewMode}
-                    onChange={(e) => setViewMode(e.target.value)}
-                    className="w-40 mr-10"
-                />
-            </div>
-            <div className="flex justify-end mb-8 mr-28">
-                <Select
                     options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
                     value={selectedChild ? selectedChild.user_id : ""}
                     onChange={handleChildChange}
                     className="w-26 mr-10"
                 />
             </div>
-            {viewMode === 'records' && (
-                <div className="flex justify-end mb-8 mr-28">
-                    <Select
-                        options={yearList}
-                        value={selectedYear}
-                        onChange={handleYearChange}
-                        className="w-26 mr-10"
-                    />
-                </div>
-            )}
-
+            <div className="flex justify-end mb-8 mr-28">
+                <Select
+                    options={yearList}
+                    value={selectedYear}
+                    onChange={handleYearChange}
+                    className="w-26 mr-10"
+                />
+            </div>
             {/* グラフ */}
             <div className="flex justify-center mb-10 ">
-                <div className="w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
+                <div className="w-3/4 bg-white p-6 rounded-lg shadow">
                     <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
-            {viewMode === "monthTasks" ? (
-                <div className="flex justify-center mt-10">
-                    <div className="w-3/4 space-y-3">
-                        {filledDayIndexes.map((i) => (
-                            <div
-                                key={i}
-                                className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 flex items-center justify-between shadow-sm"
-                            >
-                                <div className="text-gray-900 font-semibold text-lg">{dayLabelsAll[i]}</div>
-                                <div className="flex items-center space-x-6">
-                                    <span className="text-base text-gray-600">
-                                        完了件数：<span className="font-semibold">{dayCountData[i]}件</span>
-                                    </span>
-                                    <span className="text-lg font-bold text-green-600">
-                                        ¥{dayRewardData[i]}
-                                    </span>
-                                </div>
+            
+            <div className="flex justify-center">
+                <div className="w-3/4 h-6 space-y-8">
+                    {records.map((record) => (
+                        <div
+                            key={`${record.user_id}-${record.inserted_month}`}
+                            className="bg-gray-50 h-30 border border-gray-200 rounded-lg px-20 flex items-center justify-between shadow-sm"
+                        >
+                            <div className="text-gray-900 font-semibold text-2xl">
+                                {record.inserted_month &&
+                                    new Date(record.inserted_month).toLocaleDateString(
+                                        "ja-JP",
+                                        { year: "numeric", month: "long" }
+                                    )}
                             </div>
-                        ))}
-                    </div>
-                </div>
-            ) : (
-                <div className="flex justify-center">
-                    <div className="w-3/4 h-6 space-y-8">
-                        {records.map((record) => (
-                            <div
-                                key={`${record.user_id}-${record.inserted_month}`}
-                                className="bg-gray-50 h-30 border border-gray-200 rounded-lg px-20 flex items-center justify-between shadow-sm"
-                            >
-                                <div className="text-gray-900 font-semibold text-2xl">
-                                    {record.inserted_month &&
-                                        new Date(record.inserted_month).toLocaleDateString("ja-JP", {
-                                            year: "numeric",
-                                            month: "long",
-                                        })}
-                                </div>
-                                <div className="flex items-center space-x-10">
-                                    <span className="text-xl font-bold text-green-600">
-                                        ¥{record.reward}
-                                    </span>
-                                    <span className="text-gray-600 text-base">
-                                        お手伝い回数：
-                                        <span className="font-semibold">{record.number}回</span>
-                                    </span>
-                                </div>
+                            <div className="flex items-center space-x-10">
+                                <span className="text-xl font-bold text-green-600">
+                                    ¥{record.reward}
+                                </span>
+                                <span className="text-gray-600 text-base">
+                                    お手伝い回数：
+                                    <span className="font-semibold">{record.number}回</span>
+                                </span>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-            )}
+            </div>
         </div>
     );
 };
