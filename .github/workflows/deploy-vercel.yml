@@ -20,18 +20,22 @@ jobs:
     vercel-preview:
         if: github.event_name == 'pull_request'
         runs-on: ubuntu-latest
+        timeout-minutes: 10
         defaults:
             run:
                 working-directory: frontend
+        env:
+            CI: "1"
         steps:
             - uses: actions/checkout@v4
+
             - uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
                   cache-dependency-path: frontend/package-lock.json
 
-            - name: Install
+            - name: Install deps
               run: npm ci
 
             - name: Link Vercel project (non-interactive)
@@ -40,22 +44,32 @@ jobs:
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
                   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
-                  if [ ! -f ".vercel/project.json" ] && [ -n "$VERCEL_PROJECT_NAME" ]; then
-                    npx vercel link --yes --project "$VERCEL_PROJECT_NAME" --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
+                  if [ ! -f ".vercel/project.json" ]; then
+                    npx vercel link --yes \
+                      --project "$VERCEL_PROJECT_ID" \
+                      --scope "$VERCEL_ORG_ID" \
+                      --token "$VERCEL_TOKEN" --debug
                   fi
+                  cat .vercel/project.json || true
 
-            - name: Deploy Preview to Vercel
+            - name: Build (local)
+              run: |
+                  npm run build
+
+            - name: Deploy Preview (prebuilt)
               id: vercel
               env:
                   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
                   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
               run: |
-                  URL=$(npx vercel --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID")
+                  URL=$(npx vercel deploy --prebuilt --yes \
+                    --token "$VERCEL_TOKEN" \
+                    --scope "$VERCEL_ORG_ID" --debug)
                   echo "url=$URL" >> $GITHUB_OUTPUT
-                  echo "$URL" > preview_url.txt
                   echo "### Preview URL" >> $GITHUB_STEP_SUMMARY
                   echo "$URL" >> $GITHUB_STEP_SUMMARY
+                  echo "$URL" > preview_url.txt
 
             - name: Upload preview URL artifact
               uses: actions/upload-artifact@v4
@@ -63,7 +77,6 @@ jobs:
                   name: preview-url
                   path: frontend/preview_url.txt
 
-            # フォークからのPRだと権限の都合で403になるので回避
             - name: Comment preview URL on PR
               if: github.event.pull_request.head.repo.fork == false
               uses: actions/github-script@v7
@@ -78,38 +91,3 @@ jobs:
                           body: `Preview deployed: ${url}`
                         });
                       }
-
-    vercel-production:
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-                working-directory: frontend
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: npm
-                  cache-dependency-path: frontend/package-lock.json
-
-            - name: Install
-              run: npm ci
-
-            - name: Link Vercel project (non-interactive)
-              env:
-                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-              run: |
-                  if [ ! -f ".vercel/project.json" ] && [ -n "$VERCEL_PROJECT_NAME" ]; then
-                    npx vercel link --yes --project "$VERCEL_PROJECT_NAME" --scope "$VERCEL_ORG_ID" --token "$VERCEL_TOKEN"
-                  fi
-
-            - name: Deploy Production to Vercel
-              env:
-                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-              run: |
-                  npx vercel --prod --yes --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
