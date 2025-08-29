@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { setToken } from "../config/Token";
 import { apiClient } from "../lib/apiClient";
 import { PARENT_LOGIN } from "../config/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,10 +14,21 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      alert('入力エラー', 'メールアドレスとパスワードを入力してください');
+    if (!email.trim()) {
+      toast.error("メールアドレスを入力してください")
       return;
     }
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
+      toast.error("メールアドレスの形式が正しくありません");
+      return;
+    }
+    if (!password) {
+      toast.error("パスワードを入力してください");
+      return;
+    }
+
+
     try {
       const response = await apiClient.post(PARENT_LOGIN,
         {
@@ -26,8 +39,8 @@ export const Login = () => {
       const Token = response.data.token;
       setToken(Token);
       navigate('./top', { state: { token: setToken(Token) } });
-    } catch (error) {
-      console.error('ログインエラー:', error);
+    } catch {
+      toast.error("メールアドレスまたはパスワードが正しくありません");
     }
   };
 
@@ -35,6 +48,7 @@ export const Login = () => {
 
   return (
     <div className="bg-orange-100 h-screen">
+      <ToastContainer/>
       <h1 className="text-6xl font-bold text-center w-full py-30">ログイン</h1>
       <form>
         <div className="flex flex-col items-center justify-center space-y-4">
