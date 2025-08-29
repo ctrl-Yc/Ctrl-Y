@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
-import { PARENT_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
+
+import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
 const STATUS = {
@@ -11,30 +12,10 @@ const STATUS = {
   DONE: "DONE",
 };
 
-const VAPID_PUBLIC_KEY =
-  "BJI-8poQYapHkP_ao98GFzctHKUG-ILAd_4BeBwwTy2PHsbcEMgE4RvWHo9ID-peTlbPY59cNgp2iK3SFigHGDA";
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
 export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const [isRequestingPermission, setIsRequestingPermission] = useState(false);
-
     const fetchTasks = async () => {
         setLoading(true);
         try {
@@ -57,57 +38,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
 
   useEffect(() => {
     fetchTasks();
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      console.warn("プッシュ通知はサポートされていません");
-      setIsPermissionGranted(false);
-      return;
-    }
-
-    navigator.serviceWorker
-      .register("sw.js")
-      .then(() => {
-        console.log("Service Worker登録成功");
-        if (Notification.permission === "granted") {
-          setIsPermissionGranted(true);
-        }
-      })
-      .catch((err) => {
-        console.error("Service Worker登録失敗:", err);
-      });
   }, []);
-
-  const handleRequestPermission = async () => {
-    setIsRequestingPermission(true);
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission !== "granted") {
-        console.log("通知が許可されませんでした。");
-        setIsRequestingPermission(false);
-        return;
-      }
-      console.log("通知が許可されました。");
-
-      const swRegistration = await navigator.serviceWorker.ready;
-      const subscription = await swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-      });
-
-
-      // 購読情報をサーバーに送信
-      const response = await apiClient.post(PARENT_NOTIFY, subscription);
-      if (response.status === 200) {
-        console.log("サーバーへの購読情報送信に成功しました。");
-        setIsPermissionGranted(true);
-      } else {
-        console.error("サーバーへの購読情報送信に失敗しました。");
-      }
-    } catch (error) {
-      console.error("処理中にエラーが発生しました:", error);
-    } finally {
-      setIsRequestingPermission(false);
-    }
-  };
 
   const handleCreateClick = (e) => {
     e.preventDefault();
@@ -149,17 +80,6 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
           />
         </div>
       </div>
-
-      {!isPermissionGranted && (
-        <div className="mb-4 flex justify-center">
-          <CustomButton
-            label={isRequestingPermission ? "許可をリクエスト中..." : "通知を許可する"}
-            onClick={handleRequestPermission}
-            disabled={isRequestingPermission}
-            className="bg-green-500 hover:bg-green-400 text-white px-6 py-3 rounded"
-          />
-        </div>
-      )}
 
       {loading ? (
         <p className="text-center text-gray-500">読み込み中...</p>
