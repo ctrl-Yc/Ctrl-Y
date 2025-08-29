@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { ChildTask } from "./ChildTask";
-import { TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
+import { PARENT_NOTIFY, TASK_STATUS, TASKS_COLLECTION } from "../../../config/api";
 import { apiClient } from "../../../lib/apiClient";
+import { getChildToken } from '../../../config/Token';
 
 const STATUS = {
   TODO: 'TODO',
@@ -46,6 +47,21 @@ export const ChildTasks = () => {
     if (!next) return;
     try {
       await apiClient.patch(TASK_STATUS(task.task_id, next));
+
+      if (next === STATUS.WAIT_REVIEW) {
+        try {
+          await apiClient.post(PARENT_NOTIFY, {
+            parent_id: getChildToken(),
+            title: '新しいタスク',
+            body: 'タスクが追加されました',
+            icon: '/pwa-192x192.png',
+          });
+          console.log('親に通知を送信しました');
+        } catch (notifyError) {
+          console.error('親への通知送信に失敗しました:', notifyError);
+        }
+      }
+
       fetchTasks();
     } catch (error) {
       console.error(error);

@@ -1,16 +1,12 @@
 const { TaskStatusCode } = require("@prisma/client");
 const prisma = require("@db");
 
-exports.findAllTasks = async (parent_id, labels, child_id) => {
+exports.findAllTasks = async (parent_id, labels) => {
     const list = labels === undefined ? [] : Array.isArray(labels) ? labels : [labels];
-    const enumList = list.filter((item) => Object.values(TaskStatusCode).includes(item));
+	const enumList = list.filter((item) => Object.values(TaskStatusCode).includes(item));
 
     return await prisma.task.findMany({
-        where: {
-            parent_id,
-            ...(enumList.length && { status: { in: enumList } }),
-            ...(child_id ? { child_id } : {}),
-        },
+        where: { parent_id, ...(enumList.length && { status: { in: enumList } }) },
     });
 };
 

@@ -5,8 +5,6 @@ const auth = require('../middlewares/auth.js');
 
 router.get('/getChild', auth, settingController.getChildSettings);
 
-router.post('/change', auth, settingController.changeKeyword);
-
 router.route('/paycut')
     .get(auth, settingController.payCutHandler)
     .post(auth, settingController.updatePayCutHandler);
