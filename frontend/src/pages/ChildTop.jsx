@@ -37,6 +37,7 @@ export const ChildTop = () => {
     };
 
     return (
+        //ローディングの時デザイン必要
         <Suspense fallback={<div>Loading...</div>}>
             <div className="flex h-screen overflow-hidden">
                 <ChildSidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />

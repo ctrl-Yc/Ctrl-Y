@@ -7,28 +7,27 @@ webpush.setVapidDetails(
     process.env.VAPID_PRIVATE_KEY
 );
 
-exports.saveSubscription = async (user_id, subscription) => {
+exports.saveSubscription = async (parent_id, subscription) => {
     return prisma.user.update({
-        where: { user_id },
-        data: { subscription }
+        where: { parent_id },
+        data: { subscription: subscription }
     });
 } 
 
-//通知送信
 exports.sendNotification = async (parent_id, payload) => {
     const parent = await prisma.user.findUnique({
-        where: { user_id: parent_id }
+        where: { parent_id }
     });
 
     if (!parent || !parent.subscription) {
-        throw new Error(`Subscription がない parent_id: ${parent_id}`);
+        throw new Error(`Subscription がない parent_id: ${parentId}`);
     };
 
     return webpush.sendNotification(parent.subscription, payload)
         .catch(error => {
             if (error.statusCode === 410) {
                 return prisma.user.update({
-                    where: { user_id: parent_id },
+                    where: { parent_id },
                     data: { subscription: null }
                 });
             } else {

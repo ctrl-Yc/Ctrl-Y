@@ -6,8 +6,6 @@ const anonKey = process.env.SB_SERVICE_ROLE;
 const connect = process.env.SB_CONNECT;
 const port = process.env.PORT;
 
-app.use(express.static('public'));
-
 app.listen(port, () => {
 	console.log(`サーバー起動 ${process.env.API_BASE_URL}:${port}`);
 	console.log(`URL: ${url}`);
