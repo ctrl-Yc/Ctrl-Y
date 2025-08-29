@@ -33,7 +33,7 @@ export const ChildSignup = () => {
       });
       
       navigate('/ChildUrl',{ state: { childId: response.data.user_id } });
-    } catch (error) {
+    } catch {
       toast.error("子供のアカウント作成に失敗しました")
     }
   };

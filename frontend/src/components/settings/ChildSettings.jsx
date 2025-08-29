@@ -26,8 +26,8 @@ export const ChildSettings = ({ setActiveTab }) => {
             const response = await apiClient.get(CHILDREN_LIST);
             setChildren(response.data.children);
             setSelectedChild(response.data.children[0]);
-        } catch (error) {
-            console.error("子供情報取得エラー:", error);
+        } catch {
+            toast.error("子供情報取得エラー");
         }
     };
 

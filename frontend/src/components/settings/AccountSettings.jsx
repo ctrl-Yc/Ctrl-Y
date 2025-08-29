@@ -33,7 +33,7 @@ export const AccountSettings = ({ setActiveTab }) => {
             }
         };
         fetchProfile();
-    }, []);
+    }, [navigate]);
 
     // パスワード変更処理
     const handlePasswordChange = async () => {
