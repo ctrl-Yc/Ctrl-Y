@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomButton } from "../components/common/CustomButton"
 import { InputField } from "../components/common/InputField"
 import { Link, useNavigate } from "react-router-dom"
 import { setToken } from "../config/Token";
 import { apiClient } from "../lib/apiClient";
 import { PARENT_LOGIN } from "../config/api";
+import { getToken } from "../config/Token";
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      navigate('/top');
+    }
+  }, [navigate]);
 
   const handleLogin = async () => {
     if (!email || !password) {
