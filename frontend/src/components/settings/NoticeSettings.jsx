@@ -68,9 +68,9 @@ export const NoticeSettings = ({ setActiveTab }) => {
         console.log("プッシュ通知の購読に成功しました:", subscription);
   
         // 購読情報をサーバーに送信
-        const response = await apiClient.post(PARENT_SUBSCRIBE, subscription, );
+        const response = await apiClient.post(PARENT_SUBSCRIBE, subscription );
   
-        if (response.status === 200) {
+        if (response.status === 201) {
           console.log("サーバーへの購読情報送信に成功しました。");
           setIsPermissionGranted(true);
         } else {
