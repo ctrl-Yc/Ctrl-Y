@@ -45,7 +45,7 @@ export const SalarySettings = ({ setActiveTab }) => {
       }
     };
     fetchSettings();
-  }, []);
+  }, [navigate]);
 
   const handlePaydayChange = (e) => {
     setSelectedPayday(e.target.value);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { Select } from "../common/Select";
-import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN_URL } from "../../config/api";
+import { CHILDREN_BASE, CHILDREN_LIST, CHILD_LOGIN_URL, KEYWORD_CHANGE } from "../../config/api";
 import { apiClient } from "../../lib/apiClient";
 import { Modal } from "../ui/Modal";
 import { toast, ToastContainer } from "react-toastify";
@@ -14,6 +14,7 @@ export const ChildSettings = ({ setActiveTab }) => {
     const [children, setChildren] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [newChildName, setNewChildName] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
 
     // 子供全取得
     useEffect(() => {
@@ -25,8 +26,8 @@ export const ChildSettings = ({ setActiveTab }) => {
             const response = await apiClient.get(CHILDREN_LIST);
             setChildren(response.data.children);
             setSelectedChild(response.data.children[0]);
-        } catch (error) {
-            console.error("子供情報取得エラー:", error);
+        } catch {
+            toast.error("子供情報取得エラー");
         }
     };
 
@@ -58,8 +59,24 @@ export const ChildSettings = ({ setActiveTab }) => {
     };
 
     // 決定ボタン
-    const handleSubmitClick = (e) => {
+    const handleSubmitClick = async (e) => {
         e.preventDefault();
+
+        if (!keyword.trim()) {
+            toast.error("あいことばを入力してください");
+            return;
+        }
+        try {
+            setIsSaving(true);
+            await apiClient.post(KEYWORD_CHANGE, { newKeyword: keyword });
+
+            toast.success("あいことばを更新しました");
+            setKeyword("");
+        } catch {
+            toast.error("あいことばの更新に失敗しました")
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     // コピーボタン
@@ -70,7 +87,7 @@ export const ChildSettings = ({ setActiveTab }) => {
         navigator.clipboard
             .writeText(url)
             .then(() => {
-                toast.success("URLをコピーしました ✅");
+                toast.success("URLをコピーしました");
             })
             .catch(() => {
                 toast.error("コピーに失敗しました");
@@ -148,6 +165,7 @@ export const ChildSettings = ({ setActiveTab }) => {
                         type="button"
                         label="決定"
                         onClick={handleSubmitClick}
+                        disabled={isSaving}
                         className="w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
                       transition-colors duration-300"
                     />
