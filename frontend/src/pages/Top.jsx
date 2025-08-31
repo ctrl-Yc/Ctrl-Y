@@ -59,11 +59,13 @@ export const Top = () => {
     return (
         //ローディングの時デザイン必要
         <Suspense fallback={<div>Loading...</div>}>
-            <div className="flex h-screen overflow-hidden">
-                <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
-                <main className="flex-grow items-center p-6 bg-[#FFE1AD] overflow-y-auto h-screen">
-                    {renderMainContent()}
-                </main>
+            <div className="bg-[#FFF877]">
+                <div className="flex h-screen overflow-hidden bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center w-full position-absolute">
+                    <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
+                    <main className="w-2/3 p-6 pt-10 overflow-y-auto h-9/10">
+                        {renderMainContent()}
+                    </main>
+                </div>
             </div>
         </Suspense>
     );

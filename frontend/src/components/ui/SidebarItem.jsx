@@ -8,8 +8,8 @@ export const SidebarItem = ({text, isActive, onClick }) => {
 
     // とりあえずtextで表示
     const renderIcon = () => {
-        if (text === "おてつだい一覧") return <img src='/images/icon-task.png' className="h-8 w-8"/>;
-        if (text === "おこづかい記録") return <img src='/images/icon-money.png'  className="h-8 w-8"/>;
+        if (text === "おてつだい") return <img src='/images/icon-task.png' className="h-8 w-8"/>;
+        if (text === "おこづかい") return <img src='/images/icon-money.png'  className="h-8 w-8"/>;
         if (text === "設定") return <img src='/images/icon-setting.png'  className="h-8 w-8"/>;
         if (text === "ログアウト")
         return "";
