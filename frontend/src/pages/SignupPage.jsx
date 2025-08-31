@@ -28,7 +28,7 @@ export const SignupPage = () => {
       setToken(Token);
       console.log('登録成功:', response.data);
       navigate('/childName');
-    } catch {
+    } catch (error) {
       let msg = "登録に失敗しました";
       const data = error?.response?.data;
 
