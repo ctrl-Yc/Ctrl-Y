@@ -3,13 +3,7 @@ const BASE_URL ='http://localhost:3000';
 
 exports.sendNotification = async (req,res,next) => {
     const parent_id = req.user.parent_id;
-    const payload = JSON.stringify({
-        title: 'ご褒美ポケット',
-        body: 'こどもがお手伝いを終わらせました！',
-        icon: `${BASE_URL}/images/192icon.png`,
-        url: 'http://localhost:5173/'
-    });
-
+    const payload = JSON.stringify({});
     try {
         const sent = await notificationServices.sendNotification(parent_id,payload);
         if(!sent) {

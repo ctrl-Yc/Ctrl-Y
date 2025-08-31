@@ -1,18 +1,16 @@
 const BASE_URL = 'http://localhost:5173/';
-const LOGIN_URL = 'http://localhost:5173/'
 
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
-  const title = data.title || 'ご褒美ポケット';
+  const title = 'ご褒美ポケット';
   const options = {
-    body: data.body || 'こどもがお手伝いを終わらせました！',
-    icon: data.icon || `${BASE_URL}/images/192icon.png`,
-    badge: data.badge || `${LOGIN_URL}/images/money_96x96.png`,
+    body: data.title ||  'こどもがお手伝いを終わらせました！',
+    icon: `${BASE_URL}/images/192icon.png`,
+    badge:`${BASE_URL}/images/money_96x96.png`,
     data: {
-      url:  LOGIN_URL
+      url:  BASE_URL
     }
   };
-
   event.waitUntil(self.registration.showNotification(title, options));
 });
 
