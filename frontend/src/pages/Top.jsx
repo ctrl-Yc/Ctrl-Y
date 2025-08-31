@@ -60,9 +60,9 @@ export const Top = () => {
         //ローディングの時デザイン必要
         <Suspense fallback={<div>Loading...</div>}>
             <div className="bg-[#FFF877]">
-                <div className="flex h-screen overflow-hidden bg-[url('/images/background-cork.png')] bg-no-repeat bg-cover bg-center w-full position-absolute">
+                <div className="flex h-screen overflow-hidden bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center w-full position-absolute">
                     <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
-                    <main className="w-2/3 p-6 pt-10  bg-[url('/images/background-main.png')]  bg-no-repeat bg-cover bg-center overflow-y-auto h-9/10">
+                    <main className="w-2/3 p-6 pt-10 overflow-y-auto h-9/10">
                         {renderMainContent()}
                     </main>
                 </div>
