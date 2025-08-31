@@ -23,19 +23,23 @@ export const NoticeSettings = ({ setActiveTab }) => {
   }
 
   const [cutoffNoticeOn, setCutoffNoticeOn] = useState(false);
-  const [paydayNoticeOn, setPaydayNoticeOn] = useState(false);
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
 
   //通知
   useEffect(() => {
+
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
         console.warn("プッシュ通知はサポートされていません");
         setIsPermissionGranted(false);
         return;
       }
-  
-      navigator.serviceWorker
+
+      const toggleSave = localStorage.getItem("Notification");
+      if (toggleSave !== null) {
+        setCutoffNoticeOn(toggleSave === "true");
+      } else {
+        navigator.serviceWorker
         .register("sw.js")
         .then(() => {
           console.log("Service Worker登録成功");
@@ -46,6 +50,7 @@ export const NoticeSettings = ({ setActiveTab }) => {
         .catch((err) => {
           console.error("Service Worker登録失敗:", err);
         });
+      }
     }, []);
   
     const handleRequestPermission = async () => {
@@ -66,13 +71,12 @@ export const NoticeSettings = ({ setActiveTab }) => {
         });
   
         console.log("プッシュ通知の購読に成功しました:", subscription);
-  
-        // 購読情報をサーバーに送信
-        const response = await apiClient.post(PARENT_SUBSCRIBE, subscription );
-  
+          // 購読情報をサーバーに送信
+          const response = await apiClient.post(PARENT_SUBSCRIBE, subscription );
         if (response.status === 201) {
           console.log("サーバーへの購読情報送信に成功しました。");
           setIsPermissionGranted(true);
+          console.log("通知ON");
         } else {
           console.error("サーバーへの購読情報送信に失敗しました。");
         }
@@ -82,7 +86,38 @@ export const NoticeSettings = ({ setActiveTab }) => {
         setIsRequestingPermission(false);
       }
     };
-  //
+
+    const handleDeleteSubscription = async () => {
+      try {
+        const swRegistration = await navigator.serviceWorker.ready;
+        const subscription = await swRegistration.pushManager.getSubscription();
+        if (subscription) {
+          //購読情報を削除
+          await apiClient.patch(PARENT_SUBSCRIBE);
+          await subscription.unsubscribe();
+          console.log("購読情報解除に成功しました");
+        } else {
+          console.log("購読情報がない");
+        }
+        setIsPermissionGranted(false);
+        console.log("通知OFF");
+      } catch (error) {
+        console.error("購読情報解除に失敗しました:", error)
+      }
+    };
+
+    const handleToggleChange = async (e) => {
+    const checked = e.target.checked;
+    setCutoffNoticeOn(checked);
+    localStorage.setItem("Notification",String(checked));
+
+    if(checked && !isPermissionGranted && !isRequestingPermission) {
+      //購読情報登録
+      await handleRequestPermission();
+    }else if (!checked) {
+      await handleDeleteSubscription();
+    };
+  };
 
   // 戻るボタン
   const handleBackClick = (e) => {
@@ -90,33 +125,18 @@ export const NoticeSettings = ({ setActiveTab }) => {
     setActiveTab('settings');
   };
 
-  // 決定ボタン
-  const handleSubmitClick = (e) => {
-    e.preventDefault();
-    console.log('決定ボタンが押されました');
-  };
   return (
     <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
       <div className="flex justify-between items-center">
         <h2 className="text-5xl font-bold p-16">通知</h2>
       </div>
-      {/* 通知許可ボタン */}
-      {!isPermissionGranted && (
-        <div className="mb-4 flex justify-center">
-          <CustomButton
-            label={isRequestingPermission ? "許可をリクエスト中..." : "通知を許可する"}
-            onClick={handleRequestPermission}
-            disabled={isRequestingPermission}
-            className="bg-green-500 hover:bg-green-400 text-white px-6 py-3 rounded"
-          />
-        </div>
-      )}
       <div className="mx-20 space-y-4">
+
         <div>
-          <p className="text-2xl mr-4 mb-4">締め日通知</p>
+          <p className="text-2xl mr-4 mb-4">通知OFF/ON</p>
           <ToggleSwitch
             checked={cutoffNoticeOn}
-            onChange={() => setCutoffNoticeOn(prev => !prev)}
+            onChange={handleToggleChange}
             className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 
                       dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full 
                       rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute 
@@ -124,33 +144,12 @@ export const NoticeSettings = ({ setActiveTab }) => {
                       after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"
           />
         </div>
-
-        <div>
-          <p className="text-2xl mr-4 mb-4">給料日通知</p>
-          <ToggleSwitch
-            checked={paydayNoticeOn}
-            onChange={() => setPaydayNoticeOn(prev => !prev)}
-            className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 
-                      dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full 
-                      rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute 
-                      after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
-                      after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"
-          />
-        </div>
-
         <div className="mt-8 space-x-12">
           <CustomButton
             type="button"
             label="戻る"
             onClick={handleBackClick}
             className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300'
-          />
-          <CustomButton
-            type="button"
-            label="決定"
-            onClick={handleSubmitClick}
-            className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
                       transition-colors duration-300'
           />
         </div>
