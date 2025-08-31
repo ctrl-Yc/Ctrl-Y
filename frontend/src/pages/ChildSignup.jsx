@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../config/Token";
 import { INIT_SETUP } from "../config/api";
 import { apiClient } from "../lib/apiClient";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const ChildSignup = () => {
   const [c_name, setName] = useState('');
@@ -13,14 +15,14 @@ export const ChildSignup = () => {
 
   const handleSignup = async () => {
     if (!c_name || !keyword) {
-      alert('入力エラー', '入力してください');
+      toast.error("名前とあいことばを入力してください")
       return;
     }
 
     const token = getToken();
 
     if (!token) {
-      alert('親アカウントからやり直してください。');
+      toast.error("親のアカウントからやり直してください")
       return;
     }
     try {
@@ -30,14 +32,14 @@ export const ChildSignup = () => {
         keyword,
       });
       
-      console.log('登録成功:', response.data);
       navigate('/ChildUrl',{ state: { childId: response.data.user_id } });
-    } catch (error) {
-      console.error('エラー:', error);
+    } catch {
+      toast.error("子供のアカウント作成に失敗しました")
     }
   };
   return (
       <div className="bg-orange-100 h-screen">
+        <ToastContainer />
         <h1 className="text-6xl font-bold text-center w-full py-25">子供用アカウント作成</h1>
         <form className="space-y-4">
           <div className="flex flex-col items-center justify-center space-y-4">
@@ -48,8 +50,9 @@ export const ChildSignup = () => {
               onChange={e => setName(e.target.value)}
               className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
             />
+            <p className="text-3xl font-bold text-center pb-10">あいことばを入力してください</p>
             <InputField
-              type="password"
+              type="text"
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
               className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
