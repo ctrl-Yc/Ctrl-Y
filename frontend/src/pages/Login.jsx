@@ -13,11 +13,10 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  // ログインスキップ
   useEffect(() => {
     const token = getToken();
     if (token) {
-      navigate("/top", { replace: true });
+      navigate('/top');
     }
   }, [navigate]);
 

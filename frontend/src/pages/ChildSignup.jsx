@@ -49,6 +49,7 @@ export const ChildSignup = () => {
               value={c_name}
               onChange={e => setName(e.target.value)}
               className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
+              placeholder="名前"
             />
             <p className="text-3xl font-bold text-center pb-10">あいことばを入力してください</p>
             <InputField
@@ -56,6 +57,7 @@ export const ChildSignup = () => {
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
               className="mb-12 w-150 h-15 px-4 border rounded-lg bg-gray-100"
+              placeholder="あいことば"
             />
           </div>
 
