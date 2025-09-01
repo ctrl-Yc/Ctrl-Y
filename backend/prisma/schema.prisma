@@ -75,13 +75,14 @@ model ChildTask {
 }
 
 model Pay {
-  user_id        String   @default(uuid()) @db.Uuid
+  user_id        String   @db.Uuid
   inserted_month DateTime @db.Date
   number         Int      @db.SmallInt
   reward         Int      @db.SmallInt
   child_acc      Child    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([user_id, inserted_month])
+  @@unique([user_id, inserted_month], name: "user_id_inserted_month")
   @@map("payroll")
   @@schema("ctrl-Y")
 }
