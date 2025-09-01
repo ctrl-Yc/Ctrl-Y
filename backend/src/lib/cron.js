@@ -4,7 +4,7 @@ const prisma = require('@db');
 
 function startCronJobs() {
     cron.schedule(
-        "0 0 1 * *", // N月1日だけ実行
+        "32 2 * * *", // N月1日だけ実行
         async () => {
             console.log("先月分のtaskをpayrollへ移行開始");
 
@@ -19,7 +19,7 @@ function startCronJobs() {
                 const completedTasks = await prisma.task.findMany({
                     where: {
                         status: "DONE",
-                        deadline: {
+                        updated_at: {
                             gte: firstDayOfPrevMonth,
                             lte: lastDayOfPrevMonth,
                         },
