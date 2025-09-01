@@ -1,11 +1,15 @@
 require('module-alias/register');
 const express = require('express');
-const app = require('./src/index.js');
+const app = require('./src/index.js'); 
+const { startCronJobs } = require("./src/lib/cron.js");
 
 const url = process.env.SB_URL;
 const anonKey = process.env.SB_SERVICE_ROLE;
 const connect = process.env.SB_CONNECT;
 const port = process.env.PORT;
+
+//月初めにタスクをpayrollにまとめる
+startCronJobs();
 
 app.use(express.static('public'));
 
