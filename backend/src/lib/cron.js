@@ -19,7 +19,7 @@ function startCronJobs() {
                 const completedTasks = await prisma.task.findMany({
                     where: {
                         status: "DONE",
-                        deadline: {
+                        updated_at: {
                             gte: firstDayOfPrevMonth,
                             lte: lastDayOfPrevMonth,
                         },
