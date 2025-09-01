@@ -82,7 +82,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
             ) : error ? (
                 <p className="text-center text-red-500">{error}</p>
             ) : tasks.length === 0 ? (
-                <p className="text-center text-gray-400 text-2xl">表示できるタスクがありません。</p>
+                <p className="text-center text-gray-400 text-2xl">表示できるお手伝いがありません。<br/>子供にお手伝いを作成してあげてください！</p>
             ) : (
                 <>
                     <ul className="space-y-3 flex justify-center items-center flex-col">

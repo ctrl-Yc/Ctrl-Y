@@ -76,7 +76,7 @@ export const ChildTasks = () => {
 
         <ul className="space-y-3 flex justify-center items-center flex-col">
           {tasks.length === 0 ? (
-            <p className="text-center text-gray-400 text-xl">現在表示できるおてつだいはありません。</p>
+            <p className="text-center text-gray-400 text-xl">いまできるおてつだいがないよ<br/>親におてつだいをつくってもらおう！！</p>
           ) : (
             tasks.map((task) => (
               <div key={task.task_id} className="w-full flex flex-col items-center">
