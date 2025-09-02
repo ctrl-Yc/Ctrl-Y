@@ -2,7 +2,7 @@ export const Card = ({ title, icon, className, onClick }) => {
     return (
         <div
             className={`
-                h-50 w-50 bg-gray-50 border border-gray rounded-lg m-5
+                h-50 w-50 bg-gray-50 border border-gray rounded-lg m-20
                 cursor-pointer hover:shadow-md transition-shadow duration-100
             `}
             onClick={onClick}

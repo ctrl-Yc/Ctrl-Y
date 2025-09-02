@@ -65,27 +65,25 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId }) => {
     };
 
     return (
-        <div className="m-10">
-            <div className="flex justify-between items-center">
-                <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
-                <div className="my-12 flex justify-center items-center space-x-32">
+        <div className="m-4 bg-[#FFFFB3] bg-[repeating-linear-gradient(to_right,#FFFEF0_0px,#FFFEF0_25px,transparent_8px,transparent_120px)] h-[760px] flex flex-col">
+                <h1 className="text-5xl font-bold p-12 text-center">お手伝い一覧</h1>
+                <div className="text-right mr-38 -mt-3">
                     <CustomButton
                         type="button"
                         label="お手伝いを作成"
                         onClick={handleCreateClick}
-                        className="shadow-lg border-3 border-[#5C410E] rounded-lg w-55 h-15 bg-orange-300 text-white text-2xl font-extrabold hover:bg-orange-200 transition-colors duration-300"
+                        className="shadow-lg  rounded-lg w-65 h-14 bg-orange-300 text-[#5C410E] text-3xl font-extrabold hover:bg-orange-400 transition-colors duration-300”"
                     />
                 </div>
-            </div>
             {loading ? (
-                <p className="text-center text-gray-500">読み込み中...</p>
+                <p className="text-center p-50 text-2xl text-gray-500">読み込み中...</p>
             ) : error ? (
-                <p className="text-center text-red-500">{error}</p>
+                <p className="text-center p-50 text-2xl text-red-500">{error}</p>
             ) : tasks.length === 0 ? (
-                <p className="text-center text-gray-400 text-2xl">表示できるタスクがありません。</p>
+                <p className="text-center p-50  text-gray-400 text-2xl">表示できるお手伝いがありません。<br/> 子供にお手伝いを作成しましょう！</p>
             ) : (
                 <>
-                    <ul className="space-y-3 flex justify-center items-center flex-col">
+                    <ul className="p-10 space-y-3 flex flex-col items-center overflow-y-auto flex-1">
                         {tasks.map((task) => (
                             <Task
                                 key={task.task_id}
