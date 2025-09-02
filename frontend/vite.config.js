@@ -1,35 +1,35 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import tailwindcss from '@tailwindcss/vite' 
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
     react(),
-     tailwindcss(),
+    tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
-        name: 'My Vite PWA App',
-        short_name: 'VitePWA',
+        name: 'ご褒美ポケット',
+        short_name: 'ご褒美ポケット',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#317EFB',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: '/images/192icon.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: '/images/512icon.png',
             sizes: '512x512',
             type: 'image/png'
           }
         ]
-      } ,
+      },
       workbox: {
         runtimeCaching: [
           {
@@ -43,7 +43,7 @@ export default defineConfig({
               cacheName: 'images-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30 
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30日
               }
             }
           }

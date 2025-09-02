@@ -12,7 +12,15 @@ exports.saveSubscription = async (user_id, subscription) => {
         where: { user_id },
         data: { subscription }
     });
-} 
+};
+
+exports.unSubscription = async (user_id) => {
+    return prisma.user.update({
+        where: { user_id },
+        data: { subscription: null }
+    });
+};
+
 
 //通知送信
 exports.sendNotification = async (parent_id, payload) => {
@@ -21,7 +29,7 @@ exports.sendNotification = async (parent_id, payload) => {
     });
 
     if (!parent || !parent.subscription) {
-        throw new Error(`Subscription がない parent_id: ${parent_id}`);
+        return null;
     };
 
     return webpush.sendNotification(parent.subscription, payload)
@@ -36,4 +44,24 @@ exports.sendNotification = async (parent_id, payload) => {
             }
         });
 }
+
+exports.paydayNotification = async (user_id,payload) => {
+    const parent = await prisma.user.findUnique({
+        where: {user_id}
+    });
+
+    if (!parent || !parent.subscription) {
+        return null;
+    };
+
+    return webpush.paydayNotification(parent.subscription, payload)
+        .catch(error => {
+            if (error.statusCode === 410) {
+                return prisma.user.update({
+                    where: { user_id },
+                    data: { subscription: null }
+                });
+            };
+        });
+};
 

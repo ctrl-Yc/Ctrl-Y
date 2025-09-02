@@ -1,14 +1,20 @@
+
 import { useState } from "react";
-import { InputField } from "../components/common/InputField"
+import { InputField } from "../components/common/InputField";
 import { CustomButton } from "../components/common/CustomButton";
 import { PASS_RESET } from "../config/api";
 import { apiClient } from "../lib/apiClient";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const PasswordReset = () => {
+
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const searchParams = new URLSearchParams(location.search);
+    const token = searchParams.get('token');
 
     const handleSubmitClick = async () => {
         if (!newPassword || !confirmNewPassword) {
@@ -19,8 +25,16 @@ export const PasswordReset = () => {
             return;
         }
 
+        if (!token) {
+            return;
+        }
+
         try {
-            await apiClient.post(PASS_RESET, { newPassword });
+            await apiClient.post( PASS_RESET, { newPassword }, {
+              headers: {
+              Authorization: `Bearer ${token}`, 
+              },
+            });
             navigate("/");
         } catch (error) {
             console.error("リセットエラー:", error);
@@ -55,5 +69,5 @@ export const PasswordReset = () => {
                 />
             </div>
         </div>
-    )
-}
+    );
+};

@@ -1,0 +1,35 @@
+{
+    "name": "ご褒美ポケット",
+    "short_name": "ご褒美ポケット",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#317EFB",
+    "icons": [
+    {
+        "src": "/images/192icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    },
+    {
+        "src": "/images/512icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/screenshot.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "ご褒美ポケットのワイドスクリーンショット"
+        },
+        {
+        "src": "/images/screenshot-mobile.png",
+        "sizes": "720x1280",
+        "type": "image/png",
+        "label": "ご褒美ポケットのモバイルスクリーンショット"
+        }
+    ]
+}
