@@ -16,13 +16,13 @@ export const Settings = ({ onSettingItemClick }) => {
   };
 
   return (
-      <div className="bg-stone-100 w-full h-full rounded-xl">
-        <h1 className="text-5xl font-bold p-16">設定</h1>
+      <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+        <h1 className="text-5xl font-bold p-30 -mt-6">設定</h1>
         
           <Cards
             items={settingItems}
             onItemClick={(item) => handleClick(item.id)}
-            cardClassName=""
+            className="-mt-20"
           />
       </div>
   )

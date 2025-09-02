@@ -80,113 +80,115 @@ export const AccountSettings = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-            <ToastContainer />
-            <div className="flex justify-between items-center">
-                <h2 className="text-5xl font-bold p-16">アカウント</h2>
-            </div>
-            <div className="mx-20 space-y-4">
-                <div className="space-y-4">
-                    <p className="text-2xl">メールアドレス</p>
-                    <div className=" items-center space-x-2">
-                        <InputField
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={editField !== "email"}
-                            className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
-                        />
-                        {editField === "email" ? (
-                            <div className="space-x-2">
+        <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+            <div className="ml-[80px] mt-10">
+                <ToastContainer />
+                <div className="flex justify-between items-center ">
+                    <h2 className="text-5xl font-bold p-16">アカウント</h2>
+                </div>
+                <div className="mx-20 space-y-4">
+                    <div className="space-y-4">
+                        <p className="text-2xl">メールアドレス</p>
+                        <div className=" items-center space-x-2">
+                            <InputField
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={editField !== "email"}
+                                className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
+                            />
+                            {editField === "email" ? (
+                                <div className="space-x-2">
+                                    <CustomButton
+                                        type="button"
+                                        label="決定"
+                                        onClick={handleSaveClick}
+                                        className="w-24 h-10 bg-green-500 text-white text-lg font-bold rounded hover:bg-green-400 transition"
+                                    />
+                                    <CustomButton
+                                        type="button"
+                                        label="キャンセル"
+                                        onClick={() => setEditField(null)}
+                                        className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
+                                    />
+                                </div>
+                            ) : (
                                 <CustomButton
                                     type="button"
-                                    label="決定"
-                                    onClick={handleSaveClick}
-                                    className="w-24 h-10 bg-green-500 text-white text-lg font-bold rounded hover:bg-green-400 transition"
+                                    label="編集"
+                                    onClick={() => setEditField("email")}
+                                    className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
                                 />
+                            )}
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        <p className="text-2xl">パスワードの変更</p>
+                        <div className="flex items-center space-x-2 mb-9">
+                            <InputField
+                                type="password"
+                                placeholder="現在のパスワード"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                className="w-100 h-12 px-4 border rounded-lg bg-white"
+                            />
+                            {editField === "password" ? (
                                 <CustomButton
                                     type="button"
                                     label="キャンセル"
-                                    onClick={() => setEditField(null)}
+                                    onClick={() => {
+                                        setEditField(null);
+                                        setCurrentPassword("");
+                                        setNewPassword("");
+                                        setConfirmNewPassword("");
+                                    }}
                                     className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
                                 />
-                            </div>
-                        ) : (
-                            <CustomButton
-                                type="button"
-                                label="編集"
-                                onClick={() => setEditField("email")}
-                                className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
-                            />
-                        )}
-                    </div>
-                </div>
-                <div className="space-y-4">
-                    <p className="text-2xl">パスワードの変更</p>
-                    <div className="flex items-center space-x-2 mb-9">
-                        <InputField
-                            type="password"
-                            placeholder="現在のパスワード"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            className="w-100 h-12 px-4 border rounded-lg bg-white"
-                        />
-                        {editField === "password" ? (
-                            <CustomButton
-                                type="button"
-                                label="キャンセル"
-                                onClick={() => {
-                                    setEditField(null);
-                                    setCurrentPassword("");
-                                    setNewPassword("");
-                                    setConfirmNewPassword("");
-                                }}
-                                className="w-24 h-10 bg-gray-400 text-white text-lg font-bold rounded hover:bg-gray-300 transition"
-                            />
-                        ) : (
-                            <CustomButton
-                                type="button"
-                                label="編集"
-                                onClick={() => setEditField("password")}
-                                className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
-                            />
-                        )}
-                    </div>
-                    {editField === "password" && (
-                        <div className="flex flex-col space-y-4">
-                            <InputField
-                                type="password"
-                                placeholder="新しいパスワード"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                className="mb-8 w-[400px] h-12 px-4 border rounded-lg bg-white"
-                            />
-                            <InputField
-                                type="password"
-                                placeholder="新しいパスワード(確認)"
-                                value={confirmNewPassword}
-                                onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                className="mb-12 w-[400px] h-12 px-4 border rounded-lg bg-white"
-                            />
-                            <div className="space-x-4">
+                            ) : (
                                 <CustomButton
                                     type="button"
-                                    label="決定"
-                                    onClick={handlePasswordChange}
-                                    className="w-24 h-10 bg-orange-400 text-white text-lg font-bold rounded hover:bg-orange-300 transition"
+                                    label="編集"
+                                    onClick={() => setEditField("password")}
+                                    className="w-24 h-10 bg-blue-500 text-white text-lg font-bold rounded hover:bg-blue-400 transition"
                                 />
-                            </div>
+                            )}
                         </div>
-                    )}
-                </div>
-                <div className="mt-8 space-x-12">
-                    <CustomButton
-                        type="button"
-                        label="戻る"
-                        onClick={handleBackClick}
-                        className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300"
-                    />
+                        {editField === "password" && (
+                            <div className="flex flex-col space-y-4">
+                                <InputField
+                                    type="password"
+                                    placeholder="新しいパスワード"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    className="mb-8 w-[400px] h-12 px-4 border rounded-lg bg-white"
+                                />
+                                <InputField
+                                    type="password"
+                                    placeholder="新しいパスワード(確認)"
+                                    value={confirmNewPassword}
+                                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                    className="mb-12 w-[400px] h-12 px-4 border rounded-lg bg-white"
+                                />
+                                <div className="space-x-4">
+                                    <CustomButton
+                                        type="button"
+                                        label="決定"
+                                        onClick={handlePasswordChange}
+                                        className="w-24 h-10 bg-orange-400 text-white text-lg font-bold rounded hover:bg-orange-300 transition"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="mt-8 space-x-12">
+                        <CustomButton
+                            type="button"
+                            label="戻る"
+                            onClick={handleBackClick}
+                            className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+                        transition-colors duration-300"
+                        />
+                    </div>
                 </div>
             </div>
         </div>

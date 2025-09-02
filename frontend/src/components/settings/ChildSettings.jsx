@@ -95,108 +95,110 @@ export const ChildSettings = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
-            <ToastContainer />
-            <div className="flex justify-between items-center">
-                <h2 className="text-5xl font-bold p-16">子供</h2>
-            </div>
+        <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+            <div className="ml-[80px] mt-10">
+                <ToastContainer />
+                <div className="flex justify-between items-center">
+                    <h2 className="text-5xl font-bold p-16">子供</h2>
+                </div>
 
-            <div className="mx-20 space-y-4">
-                <div>
-                    <p className="text-2xl">あいことばの変更</p>
+                <div className="mx-20 space-y-4">
+                    <div>
+                        <p className="text-2xl">あいことばの変更</p>
+                        <InputField
+                            type="text"
+                            placeholder=""
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            className="my-6 w-70 h-10 px-4 border bg-white rounded-lg"
+                        />
+                    </div>
+
+                    <div>
+                        <CustomButton
+                            type="button"
+                            label="+子供の追加"
+                            onClick={() => setIsDialogOpen(true)}
+                            className="w-32 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+                        mb-6 hover:bg-orange-200 transition-colors duration-300"
+                        />
+                    </div>
+
+                    <p className="text-2xl">ログイン用URL</p>
+                    <Select
+                        options={children.map((child) => ({
+                            value: child.user_id,
+                            label: child.c_name,
+                        }))}
+                        value={selectedChild ? selectedChild.user_id : ""}
+                        onChange={(e) => {
+                            const selected = children.find((c) => c.user_id === e.target.value);
+                            setSelectedChild(selected);
+                        }}
+                        placeholder="子供を選択"
+                        className="w-70"
+                    />
+                    <div className="flex items-center space-x-4 my-6">
+                        <InputField
+                            type="text"
+                            placeholder=""
+                            value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ""}
+                            readOnly
+                            className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
+                        />
+                        <CustomButton
+                            type="button"
+                            label="コピー"
+                            onClick={handleCopyUrl}
+                            className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
+                        hover:bg-orange-200 transition-colors duration-300"
+                        />
+                    </div>
+                    <div className="mt-4 space-x-12">
+                        <CustomButton
+                            type="button"
+                            label="戻る"
+                            onClick={handleBackClick}
+                            className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
+                        transition-colors duration-300"
+                        />
+                        <CustomButton
+                            type="button"
+                            label="決定"
+                            onClick={handleSubmitClick}
+                            disabled={isSaving}
+                            className="w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
+                        transition-colors duration-300"
+                        />
+                    </div>
+                </div>
+                {/* モーダル */}
+                <Modal
+                    title="子供の名前を入力"
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                >
                     <InputField
                         type="text"
-                        placeholder=""
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                        className="my-6 w-70 h-10 px-4 border bg-white rounded-lg"
+                        value={newChildName}
+                        onChange={(e) => setNewChildName(e.target.value)}
+                        className="w-full px-4 py-2 border rounded"
+                        placeholder="名前を入力"
                     />
-                </div>
-
-                <div>
-                    <CustomButton
-                        type="button"
-                        label="+子供の追加"
-                        onClick={() => setIsDialogOpen(true)}
-                        className="w-32 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
-                      mb-6 hover:bg-orange-200 transition-colors duration-300"
-                    />
-                </div>
-
-                <p className="text-2xl">ログイン用URL</p>
-                <Select
-                    options={children.map((child) => ({
-                        value: child.user_id,
-                        label: child.c_name,
-                    }))}
-                    value={selectedChild ? selectedChild.user_id : ""}
-                    onChange={(e) => {
-                        const selected = children.find((c) => c.user_id === e.target.value);
-                        setSelectedChild(selected);
-                    }}
-                    placeholder="子供を選択"
-                    className="w-70"
-                />
-                <div className="flex items-center space-x-4 my-6">
-                    <InputField
-                        type="text"
-                        placeholder=""
-                        value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ""}
-                        readOnly
-                        className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
-                    />
-                    <CustomButton
-                        type="button"
-                        label="コピー"
-                        onClick={handleCopyUrl}
-                        className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
-                      hover:bg-orange-200 transition-colors duration-300"
-                    />
-                </div>
-                <div className="mt-4 space-x-12">
-                    <CustomButton
-                        type="button"
-                        label="戻る"
-                        onClick={handleBackClick}
-                        className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                      transition-colors duration-300"
-                    />
-                    <CustomButton
-                        type="button"
-                        label="決定"
-                        onClick={handleSubmitClick}
-                        disabled={isSaving}
-                        className="w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-                      transition-colors duration-300"
-                    />
-                </div>
+                    <div className="mt-4 flex justify-end space-x-4">
+                        <CustomButton
+                            label="キャンセル"
+                            onClick={() => setIsDialogOpen(false)}
+                            className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-200"
+                        />
+                        <CustomButton
+                            label="追加"
+                            onClick={handleAddChild}
+                            className="bg-orange-300 text-black px-4 py-2 rounded hover:bg-orange-200"
+                        />
+                    </div>
+                </Modal>
             </div>
-            {/* モーダル */}
-            <Modal
-                title="子供の名前を入力"
-                isOpen={isDialogOpen}
-                onClose={() => setIsDialogOpen(false)}
-            >
-                <InputField
-                    type="text"
-                    value={newChildName}
-                    onChange={(e) => setNewChildName(e.target.value)}
-                    className="w-full px-4 py-2 border rounded"
-                    placeholder="名前を入力"
-                />
-                <div className="mt-4 flex justify-end space-x-4">
-                    <CustomButton
-                        label="キャンセル"
-                        onClick={() => setIsDialogOpen(false)}
-                        className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-200"
-                    />
-                    <CustomButton
-                        label="追加"
-                        onClick={handleAddChild}
-                        className="bg-orange-300 text-black px-4 py-2 rounded hover:bg-orange-200"
-                    />
-                </div>
-            </Modal>
         </div>
     );
 };
