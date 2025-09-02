@@ -1,15 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { apiClient } from "../../lib/apiClient";
 import { Task } from "./Task";
 import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 
-const STATUS = {
-  TODO: "TODO",
-  IN_PROGRESS: "IN_PROGRESS",
-  WAIT_REVIEW: "WAIT_REVIEW",
-  DONE: "DONE",
-};
+const STATUS = { TODO:"TODO", IN_PROGRESS:"IN_PROGRESS", WAIT_REVIEW:"WAIT_REVIEW", DONE:"DONE" };
 
 export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
   const [tasks, setTasks] = useState([]);
@@ -21,19 +16,16 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
     return () => { mountedRef.current = false; };
   }, []);
 
-  const fetchTasks = async (signal) => {
+  const fetchTasks = useCallback(async (signal) => {
     onLoadingChange?.(true);
     setError(null);
     try {
       const labels = [STATUS.TODO, STATUS.IN_PROGRESS, STATUS.WAIT_REVIEW];
       const res = await apiClient.get(TASKS_COLLECTION(labels), { signal });
       if (!mountedRef.current) return;
-      const sorted = (res.data ?? []).sort(
-        (a, b) => new Date(a.deadline) - new Date(b.deadline)
-      );
+      const sorted = (res.data ?? []).sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
       setTasks(sorted);
     } catch (err) {
-      // fetch/axios のキャンセルは無視
       if (err?.name !== "CanceledError" && err?.code !== "ERR_CANCELED") {
         console.error(err);
         if (mountedRef.current) setError("タスクの取得に失敗しました");
@@ -41,15 +33,13 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
     } finally {
       if (mountedRef.current) onLoadingChange?.(false);
     }
-  };
+  }, [onLoadingChange]);
 
   useEffect(() => {
     const controller = new AbortController();
     fetchTasks(controller.signal);
     return () => controller.abort();
-    // 初回マウント時だけ
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchTasks]);
 
   const handleCreateClick = (e) => {
     e.preventDefault();
@@ -71,11 +61,7 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
     try {
       await apiClient.patch(TASK_STATUS(task.task_id, next), {});
       if (!mountedRef.current) return;
-
-      // 状態更新後に一覧をリロード
-      const controller = new AbortController();
-      await fetchTasks(controller.signal);
-      // controller は fetchTasks 内でしか使っていないのでここで abort は不要
+      await fetchTasks();
     } catch (err) {
       console.error(err);
     } finally {
