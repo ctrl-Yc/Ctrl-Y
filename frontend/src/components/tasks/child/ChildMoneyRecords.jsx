@@ -9,20 +9,16 @@ import { apiClient } from "../../../lib/apiClient";
 export const ChildMoneyRecords = ({ setActiveTab }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [doneTasks, setDoneTasks] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchDoneTasks = async () => {
-            setLoading(true);
             try {
                 const response = await apiClient.get(TASKS_COLLECTION(["DONE"]));
                 setDoneTasks(response.data);
             } catch (error) {
                 console.error(error);
                 setError("データの取得に失敗しました");
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -38,7 +34,6 @@ export const ChildMoneyRecords = ({ setActiveTab }) => {
         ? doneTasks.filter((task) => isSameDay(new Date(task.updated_at), selectedDate))
         : doneTasks;
 
-    if (loading) return <p className="text-center text-gray-500">読み込み中...</p>;
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
