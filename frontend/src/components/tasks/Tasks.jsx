@@ -1,10 +1,15 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { apiClient } from "../../lib/apiClient";
-import { Task } from "./Task";
-import { TASK_STATUS, TASKS_COLLECTION } from "../../config/api";
-import { CustomButton } from "../common/CustomButton";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { apiClient } from '../../lib/apiClient';
+import { Task } from './Task';
+import { TASK_STATUS, TASKS_COLLECTION } from '../../config/api';
+import { CustomButton } from '../common/CustomButton';
 
-const STATUS = { TODO:"TODO", IN_PROGRESS:"IN_PROGRESS", WAIT_REVIEW:"WAIT_REVIEW", DONE:"DONE" };
+const STATUS = {
+	TODO: 'TODO',
+	IN_PROGRESS: 'IN_PROGRESS',
+	WAIT_REVIEW: 'WAIT_REVIEW',
+	DONE: 'DONE',
+};
 
 export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
     const [tasks, setTasks] = useState([]);
