@@ -71,20 +71,32 @@ export const ChildTasks = () => {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-      <div className="m-10">
-        <h1 className="text-5xl font-bold p-8">おてつだい一覧</h1>
+      <div className="p-10 m-15 h-[780px] bg-[url('/images/kokuban.png')] bg-no-repeat bg-cover bg-center flex flex-col">
+      {/* タイトル */}
+      <h1 className="text-5xl font-bold text-white px-12 pt-12 text-center">おてつだい&nbsp;いちらん</h1>
 
-        <ul className="space-y-3 flex justify-center items-center flex-col">
-          {tasks.length === 0 ? (
-            <p className="text-center text-gray-400 text-xl">現在表示できるおてつだいはありません。</p>
-          ) : (
-            tasks.map((task) => (
-              <div key={task.task_id} className="w-full flex flex-col items-center">
-                <ChildTask task={task} onNext={() => nextTaskStatus(task)} />
-              </div>
-            ))
-          )}
-        </ul>
-      </div>
+      {loading ? (
+        <p className="text-center p-50 text-2xl text-gray-500">よみこみちゅう...</p>
+      ) : error ? (
+        <p className="text-center p-50 text-2xl text-red-500">{error}</p>
+      ) : tasks.length === 0 ? (
+        <p className="text-center p-50 text-gray-400 text-2xl">
+          いまできるおてつだいがないよ<br />
+          親におてつだいをつくってもらおう！
+        </p>
+      ) : (
+        <div className="p-15 h-[500px] overflow-y-auto px-10 pb-5 custom-scrollbar">
+          <ul className="space-y-3 flex flex-col items-center">
+            {tasks.map((task) => (
+              <ChildTask
+                key={task.task_id}
+                task={task}
+                onNext={() => nextTaskStatus(task)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
     );
   };

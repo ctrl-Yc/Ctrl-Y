@@ -33,7 +33,7 @@ export const MoneyRecords = () => {
 
     // 過去の記録、今月の記録の切り替え
     const viewModeOptions = [
-        { value: 'records', label: '過去のの記録' },
+        { value: 'records', label: '過去の記録' },
         { value: 'monthTasks', label: '今月の完了タスク' },
     ];
 

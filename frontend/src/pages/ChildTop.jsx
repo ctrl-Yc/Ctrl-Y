@@ -41,7 +41,7 @@ export const ChildTop = () => {
         <Suspense fallback={<div>Loading...</div>}>
             <div className="flex h-screen overflow-hidden">
                 <ChildSidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
-                <main className="flex-grow items-center p-6 bg-orange-200 overflow-y-auto h-screen">
+                <main className="flex-grow items-center p-6 bg-[#FFF877] bg-[url('/images/back.png')] overflow-y-auto h-screen">
                     {renderMainContent()}
                 </main>
             </div>
