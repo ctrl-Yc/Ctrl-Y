@@ -293,7 +293,7 @@ export const ChildMoneyRecords = () => {
                 <>
                     {/* グラフ */}
                     <div className="flex justify-center md:mb-10">
-                        <div className="md:w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
+                        <div className="md:w-3/4 w-80 bg-white md:p-6 p-6 rounded-lg shadow md:h-[320px] h-60 md:mr-0 mr-4" >
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
@@ -304,8 +304,8 @@ export const ChildMoneyRecords = () => {
                             今月完了したおてつだいはまだありません。
                         </p>
                     ) : (
-                        <div className="flex justify-center">
-                            <div className="w-[950px] overflow-x-auto">
+                        <div className="flex justify-center ">
+                            <div className="md:w-[950px] w-[300px] overflow-x-auto">
                                 <div className="flex space-x-2">
                                     {filledDayIndexes.map((i) => (
                                         <div
