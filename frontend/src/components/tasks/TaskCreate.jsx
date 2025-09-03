@@ -3,20 +3,14 @@ import { TASKS_BASE } from "../../config/api";
 import { CustomButton } from "../common/CustomButton";
 import { InputField } from "../common/InputField";
 import { apiClient } from "../../lib/apiClient";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const TaskCreate = ({ setActiveTab }) => {
+export const TaskCreate = ({ setActiveTab, onClose, onCreated }) => {
     const [name, setName] = useState('');
     const [reward, setReward] = useState('');
     const [deadline, setDeadline] = useState('');
     const [memo, setMemo] = useState('');
-
-    // 戻るボタン
-    const handleBackClick = (e) => {
-        e.preventDefault();
-        setActiveTab('tasks');
-    };
 
     // 決定ボタン
     const handleSubmitClick = async (e) => {
@@ -24,7 +18,7 @@ export const TaskCreate = ({ setActiveTab }) => {
 
         // 必須項目のチェック
         if (!name.trim()) {
-            toast.error("名前を入力してください。");
+            toast.error("おてつだい名を入力してください。");
             return;
         }
 
@@ -59,6 +53,11 @@ export const TaskCreate = ({ setActiveTab }) => {
                 }
             );
             toast.success("おてつだいを登録しました！");
+
+            if (onCreated) onCreated();
+            if (onClose) return onClose();
+
+            setTimeout(() => setActiveTab('tasks'), 800);
             setTimeout(() => {
                 setActiveTab('tasks');
             }, 1500);
@@ -68,76 +67,64 @@ export const TaskCreate = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="p-10 m-15 h-full w-full bg-[url('./images/kokuban.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
-            <ToastContainer />
-            <div className="m-10">
-                <h1 className="text-5xl font-bold p-8">おてつだいの作成</h1>
-                <div className="w-3/5 mx-auto mt-8 space-y-16">
-                    <div className="flex mb-8">
-                        <p className="text-4xl mr-4">・名前</p>
-                        <InputField
-                            type="text"
-                            placeholder=""
-                            value={name}
-                            onChange={e => setName(e.target.value)}
-                            className="w-70 h-11 px-4 text-3xl border bg-white rounded-lg"
-                        />
-                    </div>
-                    <div className="flex justify-start items-center space-x-4 mb-8">
-                        <p className="text-4xl">・金額</p>
-                        <InputField
-                            type="number"
-                            placeholder=""
-                            value={reward}
-                            onChange={e => setReward(e.target.value)}
-                            className="w-30 h-11 px-4 text-3xl border bg-white rounded-lg"
-                            min="0"
-                        />
-                        <span className="text-4xl">（円）</span>
-                    </div>
+        <form onSubmit={handleSubmitClick} className="space-y-4">
+            {/* おてつだい名 */}
+            <label className="block text-base font-semibold text-gray-800">おてつだい名</label>
+            <InputField
+                type="text"
+                placeholder=""
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full h-11 px-4 text-lg border rounded bg-white
+                   focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+            />
 
-                    <div className="flex justify-start items-center space-x-4 mb-8">
-                        <p className="text-4xl">・期限</p>
-                        <InputField
-                            type="datetime-local"
-                            placeholder=""
-                            value={deadline}
-                            onChange={e => setDeadline(e.target.value)}
-                            className="text-2xl w-67 h-11 px-4 border bg-white rounded-lg"
-                            min={new Date().toISOString().slice(0, 16)}
-                        />
-                    </div>
-
-                    <div className="flex justify-start space-x-4 mb-8">
-                        <p className="text-4xl">・説明</p>
-                        <InputField
-                            type="text"
-                            placeholder=""
-                            value={memo}
-                            onChange={e => setMemo(e.target.value)}
-                            className="text-2xl w-3/5 h-11 px-4 border bg-white rounded-lg"
-                        />
-                    </div>
-
-                </div>
-                <div className="w-3/5 mt-24 flex justify-between mx-auto">
-                    <CustomButton
-                        type="button"
-                        label="戻る"
-                        onClick={handleBackClick}
-                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-gray-300 hover:bg-gray-200
-                                      text-black font-bold"
-                    />
-                    <CustomButton
-                        type="button"
-                        label="決定"
-                        onClick={handleSubmitClick}
-                        className="w-30 h-12 px-4 text-3xl border rounded-lg bg-orange-300 hover:bg-orange-200
-                                      text-black font-bold"
-                    />
-                </div>
-
+            {/* 金額 */}
+            <label className="block text-base font-semibold text-gray-800">金額</label>
+            <div className="flex items-center gap-3">
+                <InputField
+                    type="number"
+                    placeholder=""
+                    value={reward}
+                    onChange={(e) => setReward(e.target.value)}
+                    className="w-40 h-11 px-4 text-lg border rounded bg-white
+                     focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+                    min="0"
+                />
+                <span className="text-lg text-gray-700">（円）</span>
             </div>
-        </div>
+
+            {/* 期限 */}
+            <label className="block text-base font-semibold text-gray-800">期限</label>
+            <InputField
+                type="datetime-local"
+                placeholder=""
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="w-[280px] h-11 px-4 text-lg border rounded bg-white
+                   focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+                min={new Date().toISOString().slice(0, 16)}
+            />
+
+            {/* 説明 */}
+            <label className="block text-base font-semibold text-gray-800">説明</label>
+            <InputField
+                type="text"
+                placeholder=""
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                className="w-full h-11 px-4 text-lg border rounded bg-white
+                   focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+            />
+
+            {/* フッター（子供追加と同じ配色・位置） */}
+            <div className="mt-4 flex justify-end space-x-4">
+                <CustomButton
+                    type="submit"
+                    label="追加"
+                    className="bg-orange-300 text-black px-4 py-2 rounded hover:bg-orange-200"
+                />
+            </div>
+        </form>
     )
 }

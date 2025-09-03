@@ -1,5 +1,6 @@
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import ja from "date-fns/locale/ja";
 
 export const DateSelector = ({ selectedDate, onChange }) => {
   return (
@@ -9,8 +10,10 @@ export const DateSelector = ({ selectedDate, onChange }) => {
         <DatePicker
           selected={selectedDate}
           onChange={onChange}
-          dateFormat="yyyy/MM/dd"
+          locale={ja}
+          dateFormat="yyyy/MM/dd (EEE)"
           placeholderText="日付を選んでください"
+          todayButton="今日"
           className="w-full border border-gray-300 rounded-lg px-10 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
         />
       </div>

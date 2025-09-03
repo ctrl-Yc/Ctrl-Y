@@ -8,19 +8,34 @@ import { ChildUrl } from "./pages/ChildUrl.jsx";
 import { ChildTop } from "./pages/ChildTop.jsx";
 import { PasswordResetRequest } from "./pages/PasswordResetRequest.jsx";
 import { PasswordReset } from "./pages/PasswordReset.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function App() {
     return (
-        <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/resetRequest" element={<PasswordResetRequest />} />
-            <Route path="/reset" element={<PasswordReset />} />
-            <Route path="/child/login/:childUUID" element={<Keyword />} />
-            <Route path="/child/top/:childUUID" element={<ChildTop />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/top" element={<Top />} />
-            <Route path="/childName" element={<ChildSignup />} />
-            <Route path="/childUrl" element={<ChildUrl />} />
-        </Routes>
+        <>
+            <ToastContainer
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                pauseOnFocusLoss={false}
+                pauseOnHover={false}
+                draggable={false}
+                theme="light"
+                containerClassName="!z-[10000]"
+            />
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/resetRequest" element={<PasswordResetRequest />} />
+                <Route path="/reset" element={<PasswordReset />} />
+                <Route path="/child/login/:childUUID" element={<Keyword />} />
+                <Route path="/child/top/:childUUID" element={<ChildTop />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/top" element={<Top />} />
+                <Route path="/childName" element={<ChildSignup />} />
+                <Route path="/childUrl" element={<ChildUrl />} />
+            </Routes>
+        </>
     );
 }
