@@ -76,21 +76,22 @@ export const ChildTasks = ({ onLoadingChange }) => {
 	};
 
   return (
-    <div className="m-10 m-15 h-[780px] bg-[url('/images/kokuban.png')] bg-no-repeat bg-cover bg-center flex flex-col">
-      <h1 className="text-5xl font-bold text-white px-12 pt-12 text-center">おてつだい&nbsp;いちらん</h1>
+    <div className="h-[calc(100vh-120px)] w-full bg-[url('/images/kokuban.png')] bg-no-repeat bg-center md:bg-[length:100%_100%] mt-5 md:m-15 md:flex md:flex-col">
+      <h1 className="text-5xl font-bold text-black px-12 pt-53 md:font-bold md:text-white md:px-12 md:pt-18 text-center">おてつだい&nbsp;いちらん</h1>
 
-      {error && (
+    {error && (
         <p className="text-center p-50 text-2xl text-red-500">{error}</p>
-      )}
+    )}
 
-      <div className="p-15 h-[500px] overflow-y-auto px-10 pb-5 custom-scrollbar">
+
+      <div className="md:p-15 h-[calc(100vh-400px)] overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar">
         <ul className="space-y-3 flex justify-center items-center flex-col">
-          {(!tasks || tasks.length === 0) ? (
+        {(!tasks || tasks.length === 0) ? (
             <p className="text-center p-50 text-gray-400 text-2xl">
-              いまできるおてつだいがないよ<br />
-              親におてつだいをつくってもらおう！
+				いまできるおてつだいがないよ<br />
+				親におてつだいをつくってもらおう！
             </p>
-          ) : (
+        ) : (
             tasks.map((task) => (
             <li key={task.task_id} className="w-full flex justify-center">
               <ChildTask task={task} onNext={() => nextTaskStatus(task)} />

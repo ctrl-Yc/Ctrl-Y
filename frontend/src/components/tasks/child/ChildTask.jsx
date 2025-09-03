@@ -3,8 +3,8 @@ import { Deadline } from "../../common/Deadline.jsx";
 
 const labelMap = { 
     TODO: "はじめる", 
-    IN_PROGRESS: "できた‼", 
-    WAIT_REVIEW: "かくにんちゅう", 
+    IN_PROGRESS: "できた!", 
+    WAIT_REVIEW: "まってね", 
 }; 
 
 const buttonColorMap = {
@@ -19,26 +19,42 @@ export const ChildTask = ({ task, onNext }) => {
     const isDone = task.status === "DONE"; 
 
     return ( 
-        <li className="px-6 py-4 bg-gray-50 shadow-lg h-[150px] w-[90%] flex items-center my-2 border-3 border-gray-200 rounded-lg"> 
-            <div className="flex flex-row flex-1 items-center space-x-6 ml-6"> 
-                <p className="text-4xl font-bold text-[#5C410E]">{task.t_name}</p> 
-                <p className="text-2xl text-[#5C410E]">{task.memo}</p> 
-            </div> 
-            <div className="flex items-center space-x-12 ml-auto"> 
+        <li className="
+            bg-gray-50 shadow-lg items-center border-3
+            md:px-7 md:py-2  md:h-[150px] md:w-[90%] md:flex  md:my-2  md:rounded-lg md:mr-0
+            px-6 py-2  h-[130px] w-[80%] flex  -my-10  rounded-lg mt-20 mr-3
+        "> 
+            <div className="
+                    md:flex md:flex-row md:items-center md:flex-1 md:ml-5 md:space-x-6
+                    flex flex-col items-start flex-1
+                "> 
+                <p className="md:text-4xl text-3xl font-bold text-[#5C410E]">{task.t_name}</p> 
+                <p className="md:text-2xl text-[21px] text-[#5C410E]">{task.memo}</p> 
+            </div>
+            <div className="
+                    md:flex md:items-center md:space-x-12
+                    flex items-center space-x-1
+                ">
+                <div className="
+                        md:flex md:flex-row md:items-center md:space-x-6 md:text-right md:mr-15
+                        flex flex-col items-end  text-left mr-4
+                "> 
                 <Deadline className="text-3xl text-[#5C410E]" deadline={task.deadline} /> 
                 <p className="text-4xl font-bold text-green-600">¥{task.reward}</p> 
-
+            </div>
                 {!isDone && ( 
                     <CustomButton 
                         label={nextLabel} 
                         onClick={onNext} 
                         disabled={isWaitingReview} 
-                        className={`w-40 h-15 text-3xl font-extrabold rounded-lg mx-auto transition-colors duration-300 ${
-                            buttonColorMap[task.status]
+                        className={` bg-blue-500 text-[#5C410E] font-extrabold rounded-lg hover:bg-orange-400 transition-colors duration-300 mx-auto
+                                    md:w-26 md:h-13  md:text-3xl  
+                                    w-22 h-12  text-2xl  
+                                    ${buttonColorMap[task.status]
                         }`} 
                     /> 
                 )} 
-            </div> 
+                </div> 
         </li> 
     ); 
 };

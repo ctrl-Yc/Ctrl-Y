@@ -80,7 +80,7 @@ export const AccountSettings = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+        <div className="m-15 h-full w-full bg-[url('./images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
             <div className="ml-[80px] mt-10">
                 <ToastContainer />
                 <div className="flex justify-between items-center ">
