@@ -59,8 +59,8 @@ export const SignupPage = () => {
         bg-[#FFF877]
         bg-[url('/images/back2.png')] md:bg-[url('/images/back.png')]
         bg-center bg-no-repeat
-        [@media(min-aspect-ratio:725/1625)]:bg-cover
-        [@media(max-aspect-ratio:725/1625)]:bg-contain
+        [@media(min-aspect-ratio:390/844)]:bg-cover
+        [@media(max-aspect-ratio:390/844)]:bg-contain
         flex flex-col justify-center items-center
         px-5
         pt-[calc(env(safe-area-inset-top)+16px)]
@@ -70,14 +70,14 @@ export const SignupPage = () => {
     >
       <ToastContainer />
 
-      <div className="w-full max-w-[680px] flex flex-col items-center gap-10 md:gap-12">
-        <h1 className="text-5xl md:text-5xl font-extrabold text-center">
+      <div className="w-full max-w-[680px] flex flex-col items-center gap-8 md:gap-10">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-center">
           アカウント作成
         </h1>
 
         <form
           onSubmit={handleSignup}
-          className="w-full flex flex-col items-center gap-8 md:gap-10"
+          className="w-full flex flex-col items-center gap-6 md:gap-10"
         >
           <InputField
             type="email"
@@ -85,10 +85,10 @@ export const SignupPage = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="
-              w-140 md:w-140
-              h-16 md:h-14
-              px-5 border rounded-lg bg-gray-100
-              placeholder-gray-500 text-2xl md:text-lg
+              w-full md:w-140
+              h-12 md:h-14
+              px-3 border rounded-lg bg-gray-100
+              placeholder-gray-500 text-base md:text-lg
             "
           />
           <InputField
@@ -97,22 +97,22 @@ export const SignupPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="
-              w-140 md:w-140
-              h-16 md:h-14
-              px-5 border rounded-lg bg-gray-100
-              placeholder-gray-500 text-2xl md:text-lg
+              w-full md:w-140
+              h-12 md:h-14
+              px-3 border rounded-lg bg-gray-100
+              placeholder-gray-500 text-base md:text-lg
             "
           />
 
-          <div className="flex flex-col sm:flex-row justify-center gap-50 w-full">
+          <div className="flex justify-center gap-40 w-full">
             <CustomButton
               type="button"
               label="もどる"
               onClick={() => navigate(-1)}
               className="
-                w-40 md:w-40
-                h-16 md:h-14
-                bg-gray-300 text-black text-2xl md:text-xl font-extrabold
+                w-28 md:w-40
+                h-12 md:h-14
+                bg-gray-300 text-black text-base md:text-xl font-bold
                 rounded-lg hover:bg-gray-200
                 transition-colors duration-300
               "
@@ -121,9 +121,9 @@ export const SignupPage = () => {
               type="submit"
               label="作成"
               className="
-                w-40 md:w-40
-                h-16 md:h-14
-                bg-blue-500 text-black text-2xl md:text-xl font-extrabold
+                w-28 md:w-40
+                h-12 md:h-14
+                bg-blue-500 text-black text-base md:text-xl font-bold
                 rounded-lg hover:bg-blue-400
                 transition-colors duration-300
               "
