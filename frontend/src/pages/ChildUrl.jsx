@@ -29,10 +29,10 @@ export const ChildUrl = () => {
     return (
         <div className="bg-[#FFF877] min-h-screen w-screen"
             style={{
-            backgroundImage: "url('/images/back.png')",
-            backgroundSize: "cover",      
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
+                backgroundImage: "url('/images/back.png')",
+                backgroundSize: "cover",      
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
             }} 
         >
             <ToastContainer />
