@@ -11,18 +11,26 @@ const ellipsize = (str, max) => {
 export const Task = ({ task, onEdit, onApprove }) => {
     const handleEditClick = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         onEdit();
     };
 
     const handleApproveClick = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         onApprove();
+    };
+
+    const handleCardClick = () => {
+        onEdit();
     };
 
     const memoShort = ellipsize(task.memo || "", 10);
 
     return (
         <li
+            onClick={handleCardClick}
+            role="button"
             className={`
             bg-gray-50 shadow-lg items-center border-3
             md:px-6 md:py-2  md:h-[150px] md:w-[90%] md:flex  md:my-2  md:rounded-lg md:mr-0
