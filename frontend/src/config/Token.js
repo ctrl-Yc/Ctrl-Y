@@ -25,3 +25,18 @@ export const clearTokens = () => {
   localStorage.removeItem(PARENT_TOKEN_KEY);
   localStorage.removeItem(CHILD_TOKEN_KEY);
 };
+
+// JWTトークンからuser_idを取得
+export const getUserIdFromToken = () => {
+  const token = getChildToken();
+  if (!token) return null;
+  
+  try {
+    // JWTトークンをデコード（payload部分を取得）
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.user_id;
+  } catch (error) {
+    console.error('トークンのデコードに失敗しました:', error);
+    return null;
+  }
+};

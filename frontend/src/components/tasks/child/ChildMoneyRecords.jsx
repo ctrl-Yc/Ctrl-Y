@@ -1,7 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
-import { TASKS_COLLECTION } from "../../../config/api";
+import { TASKS_COLLECTION, CHILDREN_BASE } from "../../../config/api";
 import { Select } from "../../common/Select";
 import { apiClient } from "../../../lib/apiClient";
+import { getUserIdFromToken } from "../../../config/Token";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,28 +25,51 @@ const getLastDayOfThisMonth = () => {
 
 export const ChildMoneyRecords = () => {
     const [doneTasks, setDoneTasks] = useState([]);
+    const [records, setRecords] = useState([]);
     const [error, setError] = useState(null);
     const [viewMode, setViewMode] = useState('monthly');
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
 
     // ビューモードのオプション
     const viewModeOptions = [
-        { value: 'monthly', label: '月ごと' },
-        { value: 'daily', label: '日ごと' },
+        { value: 'monthly', label: '過去の記録' },
+        { value: 'daily', label: '今月の完了タスク' },
     ];
 
+    // データ取得
     useEffect(() => {
-        const fetchDoneTasks = async () => {
+        const fetchData = async () => {
             try {
-                const response = await apiClient.get(TASKS_COLLECTION(["DONE"]));
-                setDoneTasks(response.data);
+                const childId = getUserIdFromToken();
+                if (!childId) {
+                    setError("ユーザー情報の取得に失敗しました");
+                    return;
+                }
+
+                if (viewMode === "monthly") {
+                    // 過去の記録（paymentsテーブルから）
+                    const response = await apiClient.get(
+                        `${CHILDREN_BASE}/${childId}/payments`,
+                        { params: { year: selectedYear } }
+                    );
+                    setRecords(response.data.result);
+                } else {
+                    // 今月の完了タスク（tasksテーブルから）
+                    const response = await apiClient.get(TASKS_COLLECTION(["DONE"]), {
+                        params: {
+                            child_id: childId
+                        }
+                    });
+                    setDoneTasks(response.data);
+                }
             } catch (error) {
                 console.error(error);
                 setError("データの取得に失敗しました");
             }
         };
 
-        fetchDoneTasks();
-    }, []);
+        fetchData();
+    }, [viewMode, selectedYear]);
 
     // 1〜12月の固定ラベル
     const monthLabelsAll = useMemo(
@@ -57,19 +81,17 @@ export const ChildMoneyRecords = () => {
     const { monthRewardData, monthCountData, filledMonthIndexes } = useMemo(() => {
         const rewardArr = Array(12).fill(0);
         const countArr = Array(12).fill(0);
-        const currentYear = new Date().getFullYear();
+        const yearNum = Number(selectedYear);
 
-        (doneTasks ?? []).forEach((t) => {
-            const when = t.updated_at;
-            if (!when) return;
-            const d = new Date(when);
-            
-            // 今年のデータのみ集計
-            if (d.getFullYear() !== currentYear) return;
+        (records ?? []).forEach((r) => {
+            const d = r.inserted_month ? new Date(r.inserted_month) : null;
+            if (!d) return;
+            // 表示している年だけ集計
+            if (d.getFullYear() !== yearNum) return;
 
             const m = d.getMonth(); // 0..11
-            rewardArr[m] += Number(t.reward ?? 0);
-            countArr[m] += 1;
+            rewardArr[m] += Number(r.reward ?? 0);
+            countArr[m] += Number(r.number ?? 0);
         });
 
         // "記録がある月"のインデックスだけ抽出
@@ -83,7 +105,7 @@ export const ChildMoneyRecords = () => {
             monthCountData: countArr,
             filledMonthIndexes: filled
         };
-    }, [doneTasks]);
+    }, [records, selectedYear]);
 
     // 今月の日別集計（合計金額とタスク）
     const { dayLabelsAll, dayRewardData, dayTasksData, filledDayIndexes } = useMemo(() => {
@@ -215,6 +237,13 @@ export const ChildMoneyRecords = () => {
         },
     };
 
+    // 年を格納する配列
+    const currentYear = new Date().getFullYear();
+    const yearList = [];
+    for (let y = 2023; y <= currentYear; y++) {
+        yearList.unshift({ value: y.toString(), label: `${y}年` });
+    }
+
 
 
     if (error) return <p className="text-center text-red-500">{error}</p>;
@@ -226,7 +255,7 @@ export const ChildMoneyRecords = () => {
                 <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
             </div>
 
-            {/* フィルタ（ビューモード切り替えと日付セレクタ） */}
+            {/* フィルタ（ビューモード切り替えと年選択） */}
             <div className="flex flex-row justify-end mb-8 mr-28 space-x-4 mt-[-60px]">
                 <Select
                     options={viewModeOptions}
@@ -234,6 +263,14 @@ export const ChildMoneyRecords = () => {
                     onChange={(e) => setViewMode(e.target.value)}
                     className="w-40 mr-10"
                 />
+                {viewMode === 'monthly' && (
+                    <Select
+                        options={yearList}
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(e.target.value)}
+                        className="w-26 mr-10"
+                    />
+                )}
             </div>
 
             {/* コンテンツ */}
@@ -247,26 +284,36 @@ export const ChildMoneyRecords = () => {
                     </div>
                     
                     {/* 月別カード */}
-                    {filledMonthIndexes.length === 0 ? (
+                    {records.length === 0 ? (
                         <p className="text-center text-gray-400 py-10 text-3xl mt-30">
-                            今年完了したおてつだいはまだありません。
+                            {selectedYear}年の記録はまだありません。
                         </p>
                     ) : (
                         <div className="flex justify-center">
-                            <div className="w-[950px] overflow-x-auto">
+                            <div className="w-250 overflow-x-auto">
                                 <div className="flex space-x-6">
-                                    {filledMonthIndexes.map((i) => (
+                                    {records.map((record) => (
                                         <div
-                                            key={i}
+                                            key={`${record.user_id}-${record.inserted_month}`}
                                             className="min-w-[270px] bg-gray-250 border border-gray-400 rounded-lg px-4 py-3 flex flex-col justify-between shadow-sm"
                                         >
                                             <div className="text-gray-900 font-semibold text-3xl mb-2 text-center">
-                                                {monthLabelsAll[i]}
+                                                {record.inserted_month &&
+                                                new Date(record.inserted_month).toLocaleDateString("ja-JP", {
+                                                    year: "numeric",
+                                                    month: "long",
+                                                })}
                                             </div>
                                             <div className="flex flex-col space-y-3 items-center">
-                                                <span className="font-semibold text-xl">{monthCountData[i]}件</span>
-                                                <span className="text-2xl font-bold text-green-600">
-                                                    ¥{monthRewardData[i]}
+                                                <span className="text-gray-600 text-base">
+                                                    お小遣い：
+                                                    <span className="text-2xl font-bold text-green-600">
+                                                        ¥{record.reward}
+                                                    </span>
+                                                </span>
+                                                <span className="text-gray-600 text-base">
+                                                    お手伝い回数：
+                                                    <span className="font-semibold text-2xl">{record.number}回</span>
                                                 </span>
                                             </div>
                                         </div>
