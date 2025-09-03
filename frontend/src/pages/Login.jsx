@@ -35,7 +35,6 @@ export const Login = () => {
       return;
     }
 
-
     try {
       const response = await apiClient.post(PARENT_LOGIN,
         {
@@ -50,8 +49,6 @@ export const Login = () => {
       toast.error("メールアドレスまたはパスワードが正しくありません");
     }
   };
-
-
 
   return (
     <div className="bg-orange-100 h-screen">
@@ -85,7 +82,7 @@ export const Login = () => {
           label="ログイン"
           onClick={handleLogin}
           className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
-             transition-colors duration-300 mx-auto flex items-center justify-center mt-4"
+            transition-colors duration-300 mx-auto flex items-center justify-center mt-4"
         />
         <p className="flex items-center justify-center my-8 text-2xl">
           アカウントを持っていない場合

@@ -94,11 +94,10 @@ export const Top = () => {
     <div className="relative flex h-screen overflow-hidden">
       <Suspense fallback={null}>
         <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
+        <main className="flex-grow items-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] overflow-y-auto h-screen">
+            {renderMainContent()}
+        </main>
       </Suspense>
-
-      <main className="flex-grow items-center p-6 bg-[#FFE1AD] overflow-y-auto h-screen">
-        {renderMainContent()}
-      </main>
 
       {loading && activeTab === "tasks" && <Loading />}
     </div>

@@ -68,7 +68,7 @@ export const TaskCreate = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+        <div className="p-10 m-15 h-[780px] bg-[url('/images/kokuban.png')] bg-no-repeat bg-cover bg-center flex flex-col">
             <ToastContainer />
             <div className="m-10">
                 <h1 className="text-5xl font-bold p-8">おてつだいの作成</h1>

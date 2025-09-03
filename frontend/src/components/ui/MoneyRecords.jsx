@@ -31,9 +31,11 @@ export const MoneyRecords = () => {
     const [viewMode, setViewMode] = useState('records');
     const [doneTasks, setDoneTasks] = useState([]);
 
+    
+
     // 過去の記録、今月の記録の切り替え
     const viewModeOptions = [
-        { value: 'records', label: '過去のの記録' },
+        { value: 'records', label: '過去の記録' },
         { value: 'monthTasks', label: '今月の完了タスク' },
     ];
 
@@ -260,93 +262,94 @@ export const MoneyRecords = () => {
     }, [selectedChild, selectedYear, viewMode]);
 
     return (
-        <div className="m-10">
-            <div className="flex justify-between items-center">
+        <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+            <div className="flex justify-between items-center px-20 pt-15">
                 <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
             </div>
 
-            <div className="flex justify-end mb-8 mr-28">
+            <div className="flex flex-row justify-end mb-8 mr-28 space-x-4 mt-[-60px] ">
                 <Select
                     options={viewModeOptions}
                     value={viewMode}
                     onChange={(e) => setViewMode(e.target.value)}
                     className="w-40 mr-10"
                 />
-            </div>
-            <div className="flex justify-end mb-8 mr-28">
                 <Select
                     options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
                     value={selectedChild ? selectedChild.user_id : ""}
                     onChange={handleChildChange}
                     className="w-26 mr-10"
                 />
-            </div>
             {viewMode === 'records' && (
-                <div className="flex justify-end mb-8 mr-28">
                     <Select
                         options={yearList}
                         value={selectedYear}
                         onChange={handleYearChange}
                         className="w-26 mr-10"
                     />
-                </div>
             )}
-
-            {/* グラフ */}
+            </div>
             <div className="flex justify-center mb-10 ">
                 <div className="w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
                     <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
             {viewMode === "monthTasks" ? (
-                <div className="flex justify-center mt-10">
-                    <div className="w-3/4 space-y-3">
+                <div className="flex justify-center ">
+                    <div className="w-[950px] overflow-x-auto">
+                    <div className="flex space-x-2">
                         {filledDayIndexes.map((i) => (
-                            <div
-                                key={i}
-                                className="bg-gray-50 border border-gray-200 rounded-lg px-6 py-4 flex items-center justify-between shadow-sm"
-                            >
-                                <div className="text-gray-900 font-semibold text-lg">{dayLabelsAll[i]}</div>
-                                <div className="flex items-center space-x-6">
-                                    <span className="text-base text-gray-600">
-                                        完了件数：<span className="font-semibold">{dayCountData[i]}件</span>
-                                    </span>
-                                    <span className="text-lg font-bold text-green-600">
-                                        ¥{dayRewardData[i]}
-                                    </span>
-                                </div>
+                        <div
+                            key={i}
+                            className="min-w-[100px] bg-gray-50 border border-gray-300 rounded-lg px-6 py-5 flex flex-col justify-between shadow-sm"
+                        >
+                            <div className="text-gray-900 font-semibold text-2xl mb-3 text-center">
+                            {dayLabelsAll[i]}
                             </div>
+                            <div className="flex flex-col space-y-3 items-center">
+                                <span className="font-semibold text-xl">{dayCountData[i]}件</span>
+                            <span className="text-2xl font-bold text-green-600">
+                                ¥{dayRewardData[i]}
+                            </span>
+                            </div>
+                        </div>
                         ))}
+                    </div>
                     </div>
                 </div>
             ) : (
                 <div className="flex justify-center">
-                    <div className="w-3/4 h-6 space-y-8">
-                        {records.map((record) => (
-                            <div
-                                key={`${record.user_id}-${record.inserted_month}`}
-                                className="bg-gray-50 h-30 border border-gray-200 rounded-lg px-20 flex items-center justify-between shadow-sm"
-                            >
-                                <div className="text-gray-900 font-semibold text-2xl">
+                    <div className="w-250 overflow-x-auto">
+                        <div className="flex space-x-6">
+                            {records.map((record) => (
+                                <div
+                                    key={`${record.user_id}-${record.inserted_month}`}
+                                    className="min-w-[270px] bg-gray-250 border border-gray-400 rounded-lg px-4 py-3 flex flex-col justify-between shadow-sm"
+                                >
+                                <div className="text-gray-900 font-semibold text-3xl mb-2 text-center">
                                     {record.inserted_month &&
-                                        new Date(record.inserted_month).toLocaleDateString("ja-JP", {
-                                            year: "numeric",
-                                            month: "long",
-                                        })}
+                                    new Date(record.inserted_month).toLocaleDateString("ja-JP", {
+                                        year: "numeric",
+                                        month: "long",
+                                    })}
                                 </div>
-                                <div className="flex items-center space-x-10">
-                                    <span className="text-xl font-bold text-green-600">
-                                        ¥{record.reward}
+                                <div className="flex flex-col space-y-3 items-center">
+                                    <span className="text-gray-600 text-base">
+                                        お小遣い：
+                                        <span className="text-2xl font-bold text-green-600">
+                                            ¥{record.reward}
+                                        </span>
                                     </span>
                                     <span className="text-gray-600 text-base">
                                         お手伝い回数：
-                                        <span className="font-semibold">{record.number}回</span>
+                                        <span className="font-semibold text-2xl">{record.number}回</span>
                                     </span>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
+            </div>
             )}
         </div>
     );
