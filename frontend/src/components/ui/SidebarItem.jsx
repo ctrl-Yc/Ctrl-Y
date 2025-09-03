@@ -1,3 +1,4 @@
+//sidberitem
 export const SidebarItem = ({text, isActive, onClick }) => {
 const itemClasses = `
     md:py-3 md:px-4 md:flex md:items-center md:cursor-pointer md:hover:bg-orange-200 md:hover:text-white md:rounded-md md:transition-colors md:duration-200
@@ -9,7 +10,7 @@ const itemClasses = `
         if (text === "おてつだい一覧") return <img src='/images/icon-task.png' className="h-12 w-12"/>;
         if (text === "おこづかい記録") return <img src='/images/icon-money.png'  className="h-12 w-12"/>;
         if (text === "設定") return <img src='/images/icon-setting.png'  className="h-12 w-12"/>;
-        if (text === "ログアウト") return <img src="/images/icon-logout.png" className="h-12 w-12" />
+        if (text === "ログアウト")
         return "";
     };
     const getMobileConfig = () => {
@@ -22,7 +23,7 @@ const itemClasses = `
     return (
         <li className={`list-none ${itemClasses}`} onClick={onClick}>
             <span className="hidden md:inline md:mr-6 md:text-2xl">{renderIcon()}</span>
-            <span className={`md:hidden text-2xl font-semibold text-b px-2 py-4 rounded ${getMobileConfig().bg} writing-vertical-rl inline-block h-35 text-center mt-20`}  style={{ userSelect: 'none', WebkitTapHighlightColor: 'transparent' }}>
+            <span className={`md:hidden text-[17px] font-semibold text-b px-1 py-2  rounded ${getMobileConfig().bg} writing-vertical-rl inline-block h-23 text-center mt-12 ml-1`}  style={{ userSelect: 'none', WebkitTapHighlightColor: 'transparent' }}>
                 {getMobileConfig().label}  
             </span>
             <span className="hidden md:block text-3xl font-semibold text-black">
