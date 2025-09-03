@@ -7,7 +7,7 @@ export const ChildSidebar = ({ activeMenuItem, onMenuItemClick }) => {
     ];
 
     return (
-        <aside className="sidebar w-80 bg-orange-100 p-4 h-full flex flex-col">
+        <aside className="hidden md:sidebar md:w-80 md:bg-orange-100 md:text-white md:p-4 md:h-full md:flex md:flex-col">
             <nav>
                 <ul className="space-y-2">
                     {menuItems.map((item) => (

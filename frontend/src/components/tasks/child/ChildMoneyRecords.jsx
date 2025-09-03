@@ -31,9 +31,9 @@ export const ChildMoneyRecords = () => {
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
-        <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
             {/* タイトル */}
-            <div className="flex justify-between items-center px-20 pt-15">
+            <div className="flex justify-between items-center px-20 pt-15 mt-2">
                 <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
             </div>
 

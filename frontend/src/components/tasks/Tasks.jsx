@@ -76,8 +76,9 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
 
     return (
     <div className="
-            h-[1650px] w-[725px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
-            md:p-10 md:m-15 md:h-[780px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center flex flex-col
+            h-[1580px] w-[725px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
+            md:p-10 md:m-15 md:h-full md:w-full md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center flex flex-col
+
         ">
         <div className="
             md:flex md:justify-between md:items-center md:px-12 md:pt-12
@@ -105,8 +106,8 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
         </p>
         ) : (
         <div className="
-                        md:p-15 md:h-[500px]  md:px-10 md:pb-5 md:custom-scrollbar
-                        h-[1100px] overflow-y-auto 
+                        md:p-15 md:h-[550px]  md:px-10 md:pb-5 md:custom-scrollbar
+                        h-[calc(100vh-300px)] overflow-y-auto mt-5
                     ">
             <ul className="space-y-3 flex flex-col items-center">
                 {tasks.map((task) => (
