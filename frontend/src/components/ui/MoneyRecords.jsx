@@ -250,9 +250,7 @@ export const MoneyRecords = () => {
                             child_id: selectedChild.user_id
                         },
                     });
-                    setDoneTasks(response.data)
-                    // console.log(doneTasks)
-                    // console.log(response)
+                    setDoneTasks(response.data);
                 }
             } catch (error) {
                 console.error("データ取得エラー:", error);
