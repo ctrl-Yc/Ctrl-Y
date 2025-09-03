@@ -75,7 +75,7 @@ export const ChildTasks = ({ onLoadingChange }) => {
 		}
 	};
 
-  return (
+return (
     <div className="
 		h-[1580px] w-[725px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
 		md:m-10 md:m-15 md:h-[780px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:flex md:flex-col
