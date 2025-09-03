@@ -77,7 +77,7 @@ export const ChildTasks = ({ onLoadingChange }) => {
 
 return (
     <div className="
-		h-[1580px] w-[725px] md:w-full bg-[url('/images/mobile_note.png')] md:bg-[url('/images/kokuban.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
+		h-[1580px] w-[725px] md:w-full md:h-full bg-[url('/images/mobile_note.png')] md:bg-[url('/images/kokuban.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
 		md:m-15 md:bg-[length:100%_100%] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-center md:flex md:flex-col
 	">
     <h1 className="
@@ -91,8 +91,8 @@ return (
     )}
 
 
-      <div className="md:p-15 h-[calc(100vh-400px)] overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar">
-        <ul className="space-y-3 flex justify-center items-center flex-col">
+      <div className="md:p-15 h-[calc(100vh-330px)] overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar mt-5">
+        <ul className="space-y-3 flex flex-col items-center">
         {(!tasks || tasks.length === 0) ? (
             <p className="text-center p-50 text-gray-400 text-2xl">
 				いまできるおてつだいがないよ<br />
