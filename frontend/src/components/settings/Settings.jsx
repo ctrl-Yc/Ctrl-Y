@@ -2,10 +2,10 @@ import { Cards } from "../ui/Cards"
 
 export const Settings = ({ onSettingItemClick }) => {
  const settingItems = [
-    { id: 'salary', title: '給与', icon: './images/icon-money.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'notice', title: '通知', icon: './images/icon-notice.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'account', title: 'アカウント', icon: './images/icon-account.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'child', title: '子供', icon: './images/icon-children.png', cardClassName: 'w-36 h-30 m-2 mb-4 mx-auto'}
+    { id: 'salary', title: '給与', icon: '/images/icon-money.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'notice', title: '通知', icon: '/images/icon-notice.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'account', title: 'アカウント', icon: '/images/icon-account.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'child', title: '子供', icon: '/images/icon-children.png', cardClassName: 'w-36 h-30 m-2 mb-4 mx-auto'}
   ];
 
   // CardsからクリックされたときにTopに通知
