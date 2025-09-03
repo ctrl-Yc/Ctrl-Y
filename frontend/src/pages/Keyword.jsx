@@ -44,32 +44,32 @@ export const Keyword = () => {
     }
   };
 
-  return (
+   return (
     <div
       className="
         min-h-[100svh] md:min-h-[100dvh] w-screen
         bg-[#FFF877]
         bg-[url('/images/back2.png')] md:bg-[url('/images/back.png')]
         bg-center bg-no-repeat
-        [@media(min-aspect-ratio:725/1625)]:bg-cover
-        [@media(max-aspect-ratio:725/1625)]:bg-contain
+        [@media(min-aspect-ratio:390/844)]:bg-cover
+        [@media(max-aspect-ratio:390/844)]:bg-contain
         flex flex-col justify-center items-center
-        px-5
-        pt-[calc(env(safe-area-inset-top)+16px)]
-        pb-[calc(env(safe-area-inset-bottom)+16px)]
+        px-4
+        pt-[calc(env(safe-area-inset-top)+12px)]
+        pb-[calc(env(safe-area-inset-bottom)+12px)]
         overflow-x-hidden
       "
     >
       <ToastContainer />
 
-      <div className="w-full max-w-[640px] mx-auto">
-        <h1 className="text-5xl md:text-5xl font-extrabold text-center mb-10 md:mb-12 leading-snug">
+      <div className="w-full max-w-[600px] mx-auto">
+        <h1 className="text-2xl md:text-5xl font-extrabold text-center mb-6 md:mb-12 leading-snug">
           あいことばを入力してね
         </h1>
 
         <form
           onSubmit={handleClick}
-          className="flex flex-col items-center gap-8 md:gap-10"
+          className="flex flex-col items-center gap-6 md:gap-10"
         >
           <InputField
             type="text"
@@ -77,10 +77,10 @@ export const Keyword = () => {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="
-              w-120 md:w-120
-              h-16 md:h-14
-              px-5 border rounded-lg bg-gray-100
-              placeholder-gray-500 text-2xl md:text-lg
+              w-72 md:w-120
+              h-10 md:h-14
+              px-3 md:px-5 border rounded-lg bg-gray-100
+              placeholder-gray-500 text-base md:text-lg
             "
           />
 
@@ -88,9 +88,9 @@ export const Keyword = () => {
             type="submit"
             label="ログイン"
             className="
-              w-60 md:w-60
-              h-16 md:h-14
-              bg-blue-500 text-white text-3xl md:text-2xl font-extrabold
+              w-32 md:w-60
+              h-10 md:h-14
+              bg-blue-500 text-white text-base md:text-2xl font-extrabold
               rounded-lg hover:bg-blue-400 transition-colors duration-300
             "
           />
