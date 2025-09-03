@@ -83,7 +83,7 @@ export const ChildTasks = ({ onLoadingChange }) => {
     <h1 className="
 		text-5xl text-center
 		font-bold text-black px-12 pt-53
-		md:font-bold md:text-white md:px-12 md:pt-12 
+		md:font-bold md:text-white md:px-12 md:pt-18 
 	">おてつだい&nbsp;いちらん</h1>
 
     {error && (
