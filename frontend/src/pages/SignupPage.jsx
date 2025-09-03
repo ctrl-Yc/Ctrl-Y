@@ -13,9 +13,18 @@ export const SignupPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
     if (!email || !password) {
       toast.error("メールアドレスとパスワードを入力してください");
+      return;
+    }
+
+    const em = email.trim().toLowerCase();
+    const isValidEmail = (em) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+    if (!isValidEmail(em)) {
+      toast.error("メールアドレスの形式が正しくありません");
       return;
     }
 
@@ -49,16 +58,16 @@ export const SignupPage = () => {
 
   return (
     <div className="bg-[#FFF877] min-h-screen w-screen"
-        style={{
-          backgroundImage: "url('/images/back.png')",
-          backgroundSize: "cover",      
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }} 
+      style={{
+        backgroundImage: "url('/images/back.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <ToastContainer />
       <h1 className="text-6xl font-bold text-center w-full py-25">アカウント作成</h1>
-      <form className="space-y-4">
+      <form onSubmit={handleSignup} className="space-y-4">
         <div className="flex flex-col items-center justify-center space-y-4">
           <InputField
             type="email"
@@ -87,9 +96,8 @@ export const SignupPage = () => {
             />
 
             <CustomButton
-              type="button"
+              type="submit"
               label="作成"
-              onClick={handleSignup}
               className="w-50 h-15 bg-blue-500 text-black text-2xl font-extrabold rounded-lg hover:bg-blue-400
               transition-colors duration-300 mt-4"
             />
