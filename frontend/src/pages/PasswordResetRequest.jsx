@@ -54,7 +54,14 @@ export const PasswordResetRequest = () => {
     };
 
     return (
-        <div className="bg-orange-100 h-screen">
+        <div className="bg-[#FFF877] min-h-screen w-screen"
+            style={{
+                backgroundImage: "url('/images/back.png')",
+                backgroundSize: "cover",      
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+            }} 
+         >
             <ToastContainer />
             <h1 className="text-6xl font-bold text-center w-full py-25">パスワードのリセット</h1>
             <div className="flex flex-col items-center justify-center space-y-4">
