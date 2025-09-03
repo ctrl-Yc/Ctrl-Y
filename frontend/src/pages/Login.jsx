@@ -20,7 +20,9 @@ export const Login = () => {
     }
   }, [navigate]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     if (!email.trim()) {
       toast.error("メールアドレスを入力してください");
       return;
@@ -39,7 +41,7 @@ export const Login = () => {
       const response = await apiClient.post(PARENT_LOGIN, { email, password });
       const token = response.data.token;
       setToken(token);
-      navigate("/top"); 
+      navigate("/top");
     } catch {
       toast.error("メールアドレスまたはパスワードが正しくありません");
     }
@@ -71,7 +73,7 @@ export const Login = () => {
         />
       </div>
 
-      <form className="w-full md:w-auto flex flex-col items-center gap-8 md:gap-10">
+      <form onSubmit={handleLogin} className="w-full md:w-auto flex flex-col items-center gap-8 md:gap-10">
         <div className="flex flex-col items-center gap-6 md:gap-8 w-150 md:w-120">
           <InputField
             type="email"
@@ -108,9 +110,8 @@ export const Login = () => {
         </p>
 
         <CustomButton
-          type="button"
+          type="submit"
           label="ログイン"
-          onClick={handleLogin}
           className="
             w-60 md:w-60 h-16 md:h-14
             bg-blue-500 text-black text-2xl md:text-xl font-extrabold
