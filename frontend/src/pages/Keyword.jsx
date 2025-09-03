@@ -32,8 +32,15 @@ export const Keyword = () => {
   };
 
   return (
-    <div className="bg-orange-100 h-screen">
-      <h1 className="text-3xl font-bold text-center pt-12 pb-8">
+      <div className="bg-[#FFF877] min-h-screen w-screen"
+        style={{
+          backgroundImage: "url('/images/back.png')",
+          backgroundSize: "cover",      
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }} 
+      >
+      <h1 className="text-5xl font-bold text-center pt-70 pb-15">
         あいことばを入力してね
       </h1>
 
@@ -43,14 +50,14 @@ export const Keyword = () => {
           placeholder="あいことばを入力"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="mb-12 w-64 h-12 px-4 border rounded-lg bg-gray-100"
+          className="mb-12 w-105 h-12 px-4 border rounded-lg bg-gray-100"
         />
 
         <CustomButton
           type="button"
           label="ログイン"
           onClick={handleClick}
-          className="w-48 h-12 bg-blue-500 text-white text-xl font-bold rounded-lg hover:bg-blue-400 transition"
+          className="w-50 h-12 bg-blue-500 text-white text-xl font-bold rounded-lg hover:bg-blue-400 transition"
         />
       </div>
     </div>
