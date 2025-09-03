@@ -3,6 +3,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "swagger-autogen": "^2.23.7"
+    "swagger-autogen": "^2.23.7",
+    "tailwindcss": "^4.1.12"
   }
 }
