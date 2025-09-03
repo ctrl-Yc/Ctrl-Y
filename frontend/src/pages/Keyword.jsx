@@ -45,34 +45,57 @@ export const Keyword = () => {
   };
 
   return (
-    <div className="bg-[#FFF877] min-h-screen w-screen"
-      style={{
-        backgroundImage: "url('/images/back.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+    <div
+      className="
+        min-h-[100svh] md:min-h-[100dvh] w-screen
+        bg-[#FFF877]
+        bg-[url('/images/back2.png')] md:bg-[url('/images/back.png')]
+        bg-center bg-no-repeat
+        [@media(min-aspect-ratio:725/1625)]:bg-cover
+        [@media(max-aspect-ratio:725/1625)]:bg-contain
+        flex flex-col justify-center items-center
+        px-5
+        pt-[calc(env(safe-area-inset-top)+16px)]
+        pb-[calc(env(safe-area-inset-bottom)+16px)]
+        overflow-x-hidden
+      "
     >
       <ToastContainer />
-      <h1 className="text-5xl font-bold text-center pt-70 pb-15">
-        あいことばを入力してね
-      </h1>
 
-      <form onSubmit={handleClick} className="flex flex-col items-center justify-center space-y-4">
-        <InputField
-          type="text"
-          placeholder="あいことばを入力"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          className="mb-12 w-105 h-12 px-4 border rounded-lg bg-gray-100"
-        />
+      <div className="w-full max-w-[640px] mx-auto">
+        <h1 className="text-5xl md:text-5xl font-extrabold text-center mb-10 md:mb-12 leading-snug">
+          あいことばを入力してね
+        </h1>
 
-        <CustomButton
-          type="submit"
-          label="ログイン"
-          className="w-50 h-12 bg-blue-500 text-white text-xl font-bold rounded-lg hover:bg-blue-400 transition"
-        />
-      </form>
+        <form
+          onSubmit={handleClick}
+          className="flex flex-col items-center gap-8 md:gap-10"
+        >
+          <InputField
+            type="text"
+            placeholder="あいことばを入力"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="
+              w-120 md:w-120
+              h-16 md:h-14
+              px-5 border rounded-lg bg-gray-100
+              placeholder-gray-500 text-2xl md:text-lg
+            "
+          />
+
+          <CustomButton
+            type="submit"
+            label="ログイン"
+            className="
+              w-60 md:w-60
+              h-16 md:h-14
+              bg-blue-500 text-white text-3xl md:text-2xl font-extrabold
+              rounded-lg hover:bg-blue-400 transition-colors duration-300
+            "
+          />
+        </form>
+      </div>
     </div>
   );
 };
