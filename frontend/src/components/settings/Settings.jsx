@@ -16,7 +16,7 @@ export const Settings = ({ onSettingItemClick }) => {
   };
 
   return (
-      <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+      <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
         <h1 className="text-5xl font-bold p-30 -mt-6">設定</h1>
         
           <Cards

@@ -5,6 +5,8 @@ import { InputField } from "../components/common/InputField";
 import { CHILDREN_LOGIN } from "../config/api";
 import { setChildToken } from "../config/Token";
 import { apiClient } from "../lib/apiClient";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Keyword = () => {
   const [keyword, setKeyword] = useState("");
@@ -14,44 +16,85 @@ export const Keyword = () => {
   const handleClick = async (event) => {
     event.preventDefault();
 
+    const k = keyword.trim();
+    if (!k) {
+      toast.error("あいことばを入力してください");
+      return;
+    }
+
     try {
       const response = await apiClient.post(CHILDREN_LOGIN(childUUID), {
         keyword: keyword,
       });
-      console.log(childUUID);
+
       if (response.data.token) {
         const childToken = response.data.token;
         setChildToken(childToken);
         navigate(`/child/top/${response.data.child_id}`);
       } else {
-        console.log("あいことば違う");
+        toast.error("あいことば違います");
       }
-    } catch (error) {
-      console.error("通信エラー:", error);
+    } catch (err) {
+      const status = err?.response?.status;
+      if (status === 401) {
+        toast.error("あいことば違います");
+      } else {
+        toast.error("通信エラー");
+      }
     }
   };
 
   return (
-    <div className="bg-orange-100 h-screen">
-      <h1 className="text-3xl font-bold text-center pt-12 pb-8">
-        あいことばを入力してね
-      </h1>
+    <div
+      className="
+        min-h-[100svh] md:min-h-[100dvh] w-screen
+        bg-[#FFF877]
+        bg-[url('/images/back2.png')] md:bg-[url('/images/back.png')]
+        bg-center bg-no-repeat
+        [@media(min-aspect-ratio:725/1625)]:bg-cover
+        [@media(max-aspect-ratio:725/1625)]:bg-contain
+        flex flex-col justify-center items-center
+        px-5
+        pt-[calc(env(safe-area-inset-top)+16px)]
+        pb-[calc(env(safe-area-inset-bottom)+16px)]
+        overflow-x-hidden
+      "
+    >
+      <ToastContainer />
 
-      <div className="flex flex-col items-center justify-center space-y-4">
-        <InputField
-          type="text"
-          placeholder="あいことばを入力"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          className="mb-12 w-64 h-12 px-4 border rounded-lg bg-gray-100"
-        />
+      <div className="w-full max-w-[640px] mx-auto">
+        <h1 className="text-5xl md:text-5xl font-extrabold text-center mb-10 md:mb-12 leading-snug">
+          あいことばを入力してね
+        </h1>
 
-        <CustomButton
-          type="button"
-          label="ログイン"
-          onClick={handleClick}
-          className="w-48 h-12 bg-blue-500 text-white text-xl font-bold rounded-lg hover:bg-blue-400 transition"
-        />
+        <form
+          onSubmit={handleClick}
+          className="flex flex-col items-center gap-8 md:gap-10"
+        >
+          <InputField
+            type="text"
+            placeholder="あいことばを入力"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="
+              w-120 md:w-120
+              h-16 md:h-14
+              px-5 border rounded-lg bg-gray-100
+              placeholder-gray-500 text-2xl md:text-lg
+            "
+          />
+
+          <CustomButton
+            type="submit"
+            label="ログイン"
+            className="
+              w-60 md:w-60
+              h-16 md:h-14
+              bg-blue-500 text-white text-3xl md:text-2xl font-extrabold
+              rounded-lg hover:bg-blue-400 transition-colors duration-300
+            "
+          />
+        </form>
       </div>
     </div>
   );
