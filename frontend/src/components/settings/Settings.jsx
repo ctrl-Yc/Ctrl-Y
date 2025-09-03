@@ -2,10 +2,10 @@ import { Cards } from "../ui/Cards"
 
 export const Settings = ({ onSettingItemClick }) => {
  const settingItems = [
-    { id: 'salary', title: '給与', icon: '/images/icon-money.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'notice', title: '通知', icon: '/images/icon-notice.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'account', title: 'アカウント', icon: '/images/icon-account.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
-    { id: 'child', title: '子供', icon: '/images/icon-children.png', cardClassName: 'w-36 h-30 m-2 mb-4 mx-auto'}
+    { id: 'salary', title: '給与', icon: './images/icon-money.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'notice', title: '通知', icon: './images/icon-notice.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'account', title: 'アカウント', icon: './images/icon-account.png', cardClassName: 'w-28 h-28 m-4 mx-auto'},
+    { id: 'child', title: '子供', icon: './images/icon-children.png', cardClassName: 'w-36 h-30 m-2 mb-4 mx-auto'}
   ];
 
   // CardsからクリックされたときにTopに通知
@@ -16,7 +16,7 @@ export const Settings = ({ onSettingItemClick }) => {
   };
 
   return (
-      <div className="m-15 h-[780px] bg-[url('/images/note.png')] bg-no-repeat bg-[length:1425px_800px] bg-center flex flex-col">
+      <div className="m-15 h-full w-full bg-[url('./images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
         <h1 className="text-5xl font-bold p-30 -mt-6">設定</h1>
         
           <Cards
