@@ -77,8 +77,8 @@ export const ChildTasks = ({ onLoadingChange }) => {
 
 return (
     <div className="
-		h-[1580px] w-[725px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
-		md:m-10 md:m-15 md:h-[780px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:flex md:flex-col
+		h-[1580px] w-[725px] md:w-full bg-[url('/images/mobile_note.png')] md:bg-[url('/images/kokuban.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
+		md:m-15 md:bg-[length:100%_100%] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-center md:flex md:flex-col
 	">
     <h1 className="
 		text-5xl text-center
@@ -90,10 +90,8 @@ return (
         <p className="text-center p-50 text-2xl text-red-500">{error}</p>
     )}
 
-    <div className="
-			h-[1100px] overflow-y-auto
-			md:p-15 md:h-[500px] md:overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar
-			">
+
+      <div className="md:p-15 h-[calc(100vh-400px)] overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar">
         <ul className="space-y-3 flex justify-center items-center flex-col">
         {(!tasks || tasks.length === 0) ? (
             <p className="text-center p-50 text-gray-400 text-2xl">
