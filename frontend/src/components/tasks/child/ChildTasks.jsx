@@ -81,9 +81,9 @@ return (
 		md:m-15 md:bg-[length:100%_100%] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-center md:flex md:flex-col
 	">
     <h1 className="
-		text-5xl text-center
-		font-bold text-black px-12 pt-53
-		md:font-bold md:text-white md:px-12 md:pt-18 
+		text-2xl text-center
+		font-bold text-black px-10 pt-30
+		md:font-bold md:text-white md:px-12 md:pt-18 md:text-5xl
 	">おてつだい&nbsp;いちらん</h1>
 
     {error && (
