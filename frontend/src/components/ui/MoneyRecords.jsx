@@ -262,7 +262,7 @@ export const MoneyRecords = () => {
     }, [selectedChild, selectedYear, viewMode]);
 
     return (
-        <div className="m-15 h-full w-full bg-[url('./images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
+        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
             <div className="flex justify-between items-center px-20 pt-15">
                 <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
             </div>

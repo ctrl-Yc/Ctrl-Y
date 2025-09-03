@@ -126,7 +126,7 @@ export const NoticeSettings = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="m-15 h-full w-full bg-[url('./images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
+    <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
       <div className="ml-[80px] mt-10">
           <div className="flex justify-between items-center">
             <h2 className="text-5xl font-bold p-16">通知</h2>
