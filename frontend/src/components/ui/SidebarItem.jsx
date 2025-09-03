@@ -16,8 +16,8 @@ export const SidebarItem = ({text, isActive, onClick }) => {
     };
     return (
         <li className={itemClasses} onClick={onClick}>
-            <span className="mr-6 text-2xl">{renderIcon()}</span>
-            <span className="font-semibold text-3xl text-black">{text}</span>
+            <span className="mr-6 text-2xl flex-shrink-0">{renderIcon()}</span>
+            <span className="font-semibold text-3xl text-black whitespace-nowrap">{text}</span>
         </li>
     )
 }

@@ -17,6 +17,7 @@ export const Sidebar = ({ activeMenuItem, onMenuItemClick }) => {
                 <ul className="space-y-2">
                     {menuItems.map((item) => (
                         <SidebarItem
+                            className="nowrap"
                             key={item.id}
                             icon={item.icon}
                             text={item.text}

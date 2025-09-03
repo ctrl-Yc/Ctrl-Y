@@ -76,7 +76,7 @@ export const ChildTasks = ({ onLoadingChange }) => {
 	};
 
   return (
-    <div className="h-[calc(100vh-120px)] w-full bg-[url('/images/kokuban.png')] bg-no-repeat bg-center md:bg-[length:100%_100%] mt-5 md:m-15 md:flex md:flex-col">
+    <div className="h-[calc(100vh-40px)] w-full bg-[url('/images/kokuban.png')] bg-no-repeat bg-center md:bg-[length:100%_100%] mt-5 md:m-15 md:flex md:flex-col">
       <h1 className="text-5xl font-bold text-black px-12 pt-53 md:font-bold md:text-white md:px-12 md:pt-18 text-center">おてつだい&nbsp;いちらん</h1>
 
     {error && (
@@ -84,8 +84,11 @@ export const ChildTasks = ({ onLoadingChange }) => {
     )}
 
 
-      <div className="md:p-15 h-[calc(100vh-400px)] overflow-y-auto md:px-10 md:pb-5 md:custom-scrollbar">
-        <ul className="space-y-3 flex justify-center items-center flex-col">
+      <div className="
+                        md:p-15 md:h-[550px]  md:px-10 md:pb-5 md:custom-scrollbar
+                        h-[calc(100vh-300px)] overflow-y-auto mt-5
+                    ">
+        <ul className="space-y-3 flex flex-col items-center">
         {(!tasks || tasks.length === 0) ? (
             <p className="text-center p-50 text-gray-400 text-2xl">
 				いまできるおてつだいがないよ<br />

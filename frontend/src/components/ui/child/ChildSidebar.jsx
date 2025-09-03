@@ -7,11 +7,12 @@ export const ChildSidebar = ({ activeMenuItem, onMenuItemClick }) => {
     ];
 
     return (
-        <aside className="hidden md:sidebar md:w-80 md:bg-orange-100 md:text-white md:p-4 md:h-full md:flex md:flex-col">
+        <aside className="hidden md:sidebar md:w-80 md:bg-orange-100 md:text-white md:p-4 md:h-full md:flex md:flex-col md:flex-shrink-0">
             <nav>
                 <ul className="space-y-2">
                     {menuItems.map((item) => (
                         <SidebarItem
+                            className="nowrap"
                             key={item.id}
                             icon={item.icon}
                             text={item.text}
