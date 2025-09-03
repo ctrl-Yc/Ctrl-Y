@@ -99,7 +99,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
     };
 
     return (
-        <div className="bg-stone-100 w-full h-full rounded-xl overflow-y-auto">
+        <div className="p-10 m-15 h-[780px] bg-[url('/images/kokuban.png')] bg-no-repeat bg-cover bg-center flex flex-col">
             <ToastContainer />
             <div className="m-10">
 
@@ -119,7 +119,7 @@ export const TaskEdit = ({ taskId, setActiveTab }) => {
                                 label="削除"
                                 onClick={handleDeleteClick}
                                 className="w-30 h-12 px-4 text-3xl border rounded-lg bg-red-500 hover:bg-red-400
-                                      text-black font-bold"
+                                    text-black font-bold"
                             />
                         </div>
                     </div>
