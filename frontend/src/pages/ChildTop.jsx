@@ -62,7 +62,7 @@ export const ChildTop = () => {
           activeMenuItem={activeTab}
           onMenuItemClick={handleSidebarItemClick}
         />
-        <main className="flex-grow items-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] overflow-y-auto h-screen">
+        <main className="flex-grow flex items-center justify-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
             {renderMainContent()}
         </main>
       </Suspense>
