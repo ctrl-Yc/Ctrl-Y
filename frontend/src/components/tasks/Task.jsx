@@ -14,19 +14,32 @@ export const Task = ({ task, onEdit, onApprove }) => {
 
     return (
         <li
-    className={`px-6 py-2 bg-gray-50 shadow-lg h-[150px] w-[90%] flex items-center my-2 border-3 rounded-lg`}
+    className={`
+            bg-gray-50 shadow-lg items-center border-3
+            md:px-6 md:py-2  md:h-[150px] md:w-[90%] md:flex  md:my-2  md:rounded-lg md:mr-0
+            px-6 py-2  h-[130px] w-[80%] flex  -my-10  rounded-lg mt-20 mr-3
+            `}
 >
     {/* タスク名とメモ 横並び */}
-    <div className="flex flex-row items-center flex-1 ml-20 space-x-6">
-        <p className="text-4xl font-bold text-[#5C410E]">{task.t_name}</p>
-        <p className="text-2xl text-[#5C410E]">{task.memo}</p>
+    <div className="
+            md:flex md:flex-row md:items-center md:flex-1 md:ml-5 md:space-x-6
+            flex flex-col items-start flex-1
+        ">
+        <p className="md:text-4xl text-3xl font-bold text-[#5C410E]">{task.t_name}</p>
+        <p className="md:text-2xl text-[21px] text-[#5C410E]">{task.memo}</p>
     </div>
 
-    <div className="flex items-center space-x-12">
-        {/* 期限と金額 横並び */}
-        <div className="flex flex-row items-center space-x-6 text-right">
-            <Deadline className="text-2xl text-[#5C410E]" deadline={task.deadline} />
-            <p className="text-4xl font-bold text-green-600">¥{task.reward}</p>
+    <div className="
+                    md:flex md:items-center md:space-x-12
+                    flex items-center space-x-1
+                ">
+        {/* 期限と金額  */}
+        <div className="
+                        md:flex md:flex-row md:items-center md:space-x-6 md:text-right md:mr-15
+                        flex flex-col items-end  text-left mr-4
+                    ">
+            <Deadline className="text-2xl text-[#5C410E] " deadline={task.deadline} />
+            <p className="text-4xl font-bold  text-green-600 ">¥{task.reward}</p>
         </div>
 
         {task.status === "WAIT_REVIEW" ? (
@@ -34,14 +47,22 @@ export const Task = ({ task, onEdit, onApprove }) => {
                 type="button"
                 label="承認"
                 onClick={handleApproveClick}
-                className="w-25 h-12 bg-green-400 text-white text-3xl font-extrabold rounded-lg mx-auto hover:bg-green-500 transition-colors duration-300"
+                className="
+                    bg-green-400 text-white font-extrabold rounded-lg hover:bg-green-500
+                    md:w-25 md:h-12  md:text-3xl  md:mx-auto  md:transition-colors md:duration-300
+                    w-20 h-11  text-2xl mx-auto
+                "
             />
         ) : (
             <CustomButton
                 type="button"
                 label="編集"
                 onClick={handleEditClick}
-                className="w-25 h-12 bg-orange-300 text-[#5C410E] text-3xl font-extrabold rounded-lg mx-auto hover:bg-orange-400 transition-colors duration-300"
+                className="
+                    bg-orange-300 text-[#5C410E] font-extrabold rounded-lg hover:bg-orange-400 transition-colors duration-300 mx-auto
+                    md:w-25 md:h-12  md:text-3xl  
+                    w-20 h-11  text-2xl  
+                "
             />
         )}
     </div>

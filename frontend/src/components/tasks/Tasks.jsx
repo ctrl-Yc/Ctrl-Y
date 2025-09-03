@@ -75,14 +75,24 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
     };
 
     return (
-    <div className="p-10 m-15 h-[780px] bg-[url('/images/kokuban.png')] bg-no-repeat bg-cover bg-center flex flex-col">
-        <div className="flex justify-between items-center px-12 pt-12">
-        <h1 className="text-5xl font-bold text-white">おてつだい一覧</h1>
+    <div className="
+            h-[1650px] w-[725px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:730px_1400px] mt-5
+            md:p-10 md:m-15 md:h-[780px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center flex flex-col
+        ">
+        <div className="
+            md:flex md:justify-between md:items-center md:px-12 md:pt-12
+            flex justify-between items-center px-20 pt-68
+        ">
+        <h1 className="
+                md:text-5xl  md:text-white
+                text-4xl font-bold 
+            ">おてつだい一覧</h1>
             <CustomButton
             type="button"
             label="お手伝いを作成"
             onClick={handleCreateClick}
-            className="shadow-lg rounded-lg w-65 h-14 bg-orange-300 text-[#5C410E] text-3xl font-extrabold hover:bg-orange-400 transition-colors duration-300"
+            className="
+                shadow-lg rounded-lg w-65 h-14 bg-orange-300 text-[#5C410E] text-3xl font-extrabold hover:bg-orange-400 transition-colors duration-300"
             />
         </div>
 
@@ -94,7 +104,10 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
             子供にお手伝いを作成しましょう！
         </p>
         ) : (
-        <div className="p-15 h-[500px] overflow-y-auto px-10 pb-5 custom-scrollbar">
+        <div className="
+                        md:p-15 md:h-[500px]  md:px-10 md:pb-5 md:custom-scrollbar
+                        h-[1100px] overflow-y-auto 
+                    ">
             <ul className="space-y-3 flex flex-col items-center">
                 {tasks.map((task) => (
                     <Task
