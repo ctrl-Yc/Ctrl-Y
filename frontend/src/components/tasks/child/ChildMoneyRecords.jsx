@@ -220,19 +220,32 @@ export const ChildMoneyRecords = () => {
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
-        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
+        <div className="
+                    h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+		            md:m-10 md:m-15 md:h-[750px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:bg-[length:700px_1400px] md:flex md:flex-col
+                    ">
             {/* タイトル */}
-            <div className="flex justify-between items-center px-20 pt-15 mt-2">
-                <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
+            <div className="
+                md:flex md:justify-between md:items-center md:px-20 md:-pt-7 md:mt-9
+            ">
+                <h2 className="
+                            text-3xl font-bold p-12 mt-19
+                            md:text-5xl  md:p-8 md:mt-0
+                            ">
+                おこづかい記録</h2>
             </div>
 
             {/* フィルタ（ビューモード切り替えと日付セレクタ） */}
-            <div className="flex flex-row justify-end mb-8 mr-28 space-x-4 mt-[-60px]">
+
+            <div className="
+                        flex flex-row justify-end mb-8 mr-25 space-x-4 mt-[-60px]
+                        md:flex md:flex-row md:justify-end md:mb-8 md:mr-28 md:space-x-4 md:mt-[-60px]
+                        ">
                 <Select
                     options={viewModeOptions}
                     value={viewMode}
                     onChange={(e) => setViewMode(e.target.value)}
-                    className="w-40 mr-10"
+                    className="md:w-40 md:mr-10 md:-mt-0 w-22 -mr-13 -mt-6"
                 />
             </div>
 
@@ -240,32 +253,32 @@ export const ChildMoneyRecords = () => {
             {viewMode === 'monthly' ? (
                 <>
                     {/* グラフ */}
-                    <div className="flex justify-center mb-10">
-                        <div className="w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
+                    <div className="flex justify-center md:mb-10 md:mt-0 mt-14">
+                        <div className="md:w-3/4 w-[310px] bg-white md:p-6 p-1 rounded-lg shadow md:h-80 h-40 md:mr-0 mr-6" >
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
                     
                     {/* 月別カード */}
                     {filledMonthIndexes.length === 0 ? (
-                        <p className="text-center text-gray-400 py-10 text-3xl mt-30">
+                        <p className="text-center text-gray-400 md:py-10 md:text-3xl md:mt-30">
                             今年完了したおてつだいはまだありません。
                         </p>
                     ) : (
                         <div className="flex justify-center">
-                            <div className="w-[950px] overflow-x-auto">
-                                <div className="flex space-x-6">
+                            <div className="md:w-[950px] w-[280px] h-80  md:overflow-y-auto overflow-x-auto">
+                                <div className="md:flex md:flex-row  md:space-x-6  flex flex-col md:space-y-0 space-y-3 md:mt-0 mt-6">
                                     {filledMonthIndexes.map((i) => (
                                         <div
                                             key={i}
-                                            className="min-w-[270px] bg-gray-250 border border-gray-400 rounded-lg px-4 py-3 flex flex-col justify-between shadow-sm"
+                                            className="md:min-w-[270px] min-w-[200px] md:h-[140px] h-[70px] bg-gray-250 border border-gray-400 rounded-lg md:px-4 px-4 md:py-3 py-5 flex md:flex-col flex-row justify-between md:shadow-sm"
                                         >
-                                            <div className="text-gray-900 font-semibold text-3xl mb-2 text-center">
+                                            <div className="text-gray-900 font-semibold md:text-3xl text-xl md:mb-2  md:mr-0 md:ml-0 ml-12 mr-6 md:text-center  ">
                                                 {monthLabelsAll[i]}
                                             </div>
-                                            <div className="flex flex-col space-y-3 items-center">
-                                                <span className="font-semibold text-xl">{monthCountData[i]}件</span>
-                                                <span className="text-2xl font-bold text-green-600">
+                                            <div className="flex md:flex-col flex-row md:space-y-3 md:items-center items-end">
+                                                <span className="font-semibold text-xl md:mr-0 mr-9">{monthCountData[i]}件</span>
+                                                <span className="md:text-2xl text-xl font-bold text-green-600">
                                                     ¥{monthRewardData[i]}
                                                 </span>
                                             </div>
@@ -279,8 +292,8 @@ export const ChildMoneyRecords = () => {
             ) : viewMode === 'daily' ? (
                 <>
                     {/* グラフ */}
-                    <div className="flex justify-center mb-10">
-                        <div className="w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
+                    <div className="flex justify-center md:mb-10">
+                        <div className="md:w-3/4 w-80 bg-white md:p-6 p-6 rounded-lg shadow md:h-[320px] h-60 md:mr-0 mr-4" >
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
@@ -291,8 +304,8 @@ export const ChildMoneyRecords = () => {
                             今月完了したおてつだいはまだありません。
                         </p>
                     ) : (
-                        <div className="flex justify-center">
-                            <div className="w-[950px] overflow-x-auto">
+                        <div className="flex justify-center ">
+                            <div className="md:w-[950px] w-[300px] overflow-x-auto">
                                 <div className="flex space-x-2">
                                     {filledDayIndexes.map((i) => (
                                         <div
