@@ -32,8 +32,8 @@ export const ChildMoneyRecords = () => {
 
     // ビューモードのオプション
     const viewModeOptions = [
-        { value: 'monthly', label: '過去の記録' },
-        { value: 'daily', label: '今月の完了タスク' },
+        { value: 'monthly', label: 'きょねん' },
+        { value: 'daily', label: 'こんげつ' },
     ];
 
     // データ取得
@@ -78,7 +78,7 @@ export const ChildMoneyRecords = () => {
     );
 
     // 月別集計（過去の記録）
-    const { monthRewardData, monthCountData, filledMonthIndexes } = useMemo(() => {
+    const { monthRewardData } = useMemo(() => {
         const rewardArr = Array(12).fill(0);
         const countArr = Array(12).fill(0);
         const yearNum = Number(selectedYear);
@@ -252,7 +252,7 @@ export const ChildMoneyRecords = () => {
         <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
             {/* タイトル */}
             <div className="flex justify-between items-center px-20 pt-15 mt-2">
-                <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
+                <h2 className="text-5xl font-bold p-8">おこづかいきろく</h2>
             </div>
 
             {/* フィルタ（ビューモード切り替えと年選択） */}
