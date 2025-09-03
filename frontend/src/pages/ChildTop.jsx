@@ -35,6 +35,18 @@ export const ChildTop = () => {
 
 	const renderMainContent = () => {
 		const common = { onLoadingChange };
+		const tabComponents = {
+      ChildTasks: (
+        <ChildTasks key={activeTab} setActiveTab={setActiveTab} {...common} />
+      ),
+      ChildMoneyRecords: (
+        <ChildMoneyRecords
+          key={activeTab}
+          setActiveTab={setActiveTab}
+          child_id={child_id}
+        />
+      ),
+	};
 
     return (
       <Suspense fallback={null}>
