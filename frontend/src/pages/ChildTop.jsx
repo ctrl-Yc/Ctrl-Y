@@ -1,72 +1,67 @@
-import { useState, Suspense, lazy, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { Loading } from '../components/ui/Loading';
+import { useState, Suspense, lazy, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { Loading } from "../components/ui/Loading";
 
 const ChildSidebar = lazy(() =>
-	import('../components/ui/child/ChildSidebar').then((m) => ({ default: m.ChildSidebar }))
+    import("../components/ui/child/ChildSidebar").then((m) => ({ default: m.ChildSidebar }))
 );
 const ChildTasks = lazy(() =>
-	import('../components/tasks/child/ChildTasks').then((m) => ({ default: m.ChildTasks }))
+    import("../components/tasks/child/ChildTasks").then((m) => ({ default: m.ChildTasks }))
 );
 const ChildMoneyRecords = lazy(() =>
-	import('../components/tasks/child/ChildMoneyRecords').then((m) => ({
-		default: m.ChildMoneyRecords,
-	}))
+    import("../components/tasks/child/ChildMoneyRecords").then((m) => ({
+        default: m.ChildMoneyRecords,
+    }))
 );
 
 export const ChildTop = () => {
-	const [activeTab, setActiveTab] = useState('ChildTasks');
-	const [loading, setLoading] = useState(true);
-	const { child_id } = useParams();
+    const [activeTab, setActiveTab] = useState("ChildTasks");
+    const [loading, setLoading] = useState(true);
+    const { child_id } = useParams();
 
-	const handleSidebarItemClick = (itemId) => {
-		setActiveTab(itemId);
-	};
+    const handleSidebarItemClick = (itemId) => {
+        setActiveTab(itemId);
+    };
 
-	useEffect(() => {
-		if (activeTab === 'ChildTasks') {
-			setLoading(true);
-		} else {
-			setLoading(false);
-		}
-	}, [activeTab]);
+    useEffect(() => {
+        if (activeTab === "ChildTasks") {
+            setLoading(true);
+        } else {
+            setLoading(false);
+        }
+    }, [activeTab]);
 
-	const onLoadingChange = useMemo(() => (v) => setLoading(!!v), []);
+    const onLoadingChange = useMemo(() => (v) => setLoading(!!v), []);
 
-	const renderMainContent = () => {
-		const common = { onLoadingChange };
-		const tabComponents = {
-      ChildTasks: (
-        <ChildTasks key={activeTab} setActiveTab={setActiveTab} {...common} />
-      ),
-      ChildMoneyRecords: (
-        <ChildMoneyRecords
-          key={activeTab}
-          setActiveTab={setActiveTab}
-          child_id={child_id}
-        />
-      ),
-	};
+    const renderMainContent = () => {
+        const common = { onLoadingChange };
+        const tabComponents = {
+            ChildTasks: <ChildTasks key={activeTab} setActiveTab={setActiveTab} {...common} />,
+            ChildMoneyRecords: (
+                <ChildMoneyRecords
+                    key={activeTab}
+                    setActiveTab={setActiveTab}
+                    child_id={child_id}
+                />
+            ),
+        };
+
+        return (
+            <Suspense fallback={null}>
+                {tabComponents[activeTab] || <div>コンテンツがありません。</div>}
+            </Suspense>
+        );
+    };
 
     return (
-      <Suspense fallback={null}>
-        {tabComponents[activeTab] || <div>コンテンツがありません。</div>}
-      </Suspense>
+        <div className="relative flex min-h-dvh overflow-x-hidden">
+            <Suspense fallback={null}>
+                <ChildSidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
+                <main className="flex-1 ml-0 md:ml-80 flex items-center justify-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
+                    {renderMainContent()}
+                </main>
+            </Suspense>
+            {activeTab === "ChildTasks" && loading && <Loading className="text-orange-100" />}
+        </div>
     );
-  };
-
-  return (
-    <div className="relative flex h-screen overflow-hidden">
-      <Suspense fallback={null}>
-        <ChildSidebar
-          activeMenuItem={activeTab}
-          onMenuItemClick={handleSidebarItemClick}
-        />
-        <main className="flex-grow flex items-center justify-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
-            {renderMainContent()}
-        </main>
-      </Suspense>
-      {activeTab === "ChildTasks" && loading && <Loading className="text-orange-100" />}
-    </div>
-  );
 };

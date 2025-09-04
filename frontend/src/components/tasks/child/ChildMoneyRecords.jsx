@@ -17,7 +17,6 @@ import { Line } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
-// 今月の最終日
 const getLastDayOfThisMonth = () => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -30,13 +29,11 @@ export const ChildMoneyRecords = () => {
     const [viewMode, setViewMode] = useState("monthly");
     const [selectedYear] = useState(new Date().getFullYear().toString());
 
-    // ビューモードのオプション
     const viewModeOptions = [
         { value: "monthly", label: "きょねん" },
         { value: "daily", label: "こんげつ" },
     ];
 
-    // データ取得
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -70,10 +67,8 @@ export const ChildMoneyRecords = () => {
         fetchData();
     }, [viewMode, selectedYear]);
 
-    // 1〜12月の固定ラベル
     const monthLabelsAll = useMemo(() => Array.from({ length: 12 }, (_, i) => `${i + 1}月`), []);
 
-    // 月別集計（過去の記録）
     const { monthRewardData } = useMemo(() => {
         const rewardArr = Array(12).fill(0);
         const countArr = Array(12).fill(0);
@@ -85,12 +80,11 @@ export const ChildMoneyRecords = () => {
             // 表示している年だけ集計
             if (d.getFullYear() !== yearNum) return;
 
-            const m = d.getMonth(); // 0..11
+            const m = d.getMonth();
             rewardArr[m] += Number(r.reward ?? 0);
             countArr[m] += Number(r.number ?? 0);
         });
 
-        // "記録がある月"のインデックスだけ抽出
         const filled = [];
         for (let i = 0; i < 12; i++) {
             if (countArr[i] > 0 || rewardArr[i] > 0) filled.push(i);
@@ -103,11 +97,10 @@ export const ChildMoneyRecords = () => {
         };
     }, [records, selectedYear]);
 
-    // 今月の日別集計（合計金額とタスク）
     const { dayLabelsAll, dayRewardData, dayTasksData, filledDayIndexes } = useMemo(() => {
         const now = new Date();
         const year = now.getFullYear();
-        const monthIdx = now.getMonth(); // 0-based
+        const monthIdx = now.getMonth();
         const last = getLastDayOfThisMonth();
 
         const labels = Array.from({ length: last }, (_, i) => `${i + 1}日`);
@@ -123,12 +116,11 @@ export const ChildMoneyRecords = () => {
 
             if (d.getFullYear() !== year || d.getMonth() !== monthIdx) return;
 
-            const idx = d.getDate() - 1; // 0-based
+            const idx = d.getDate() - 1;
             rewardSumByDay[idx] += Number(t.reward ?? 0);
             tasksByDay[idx].push(t);
         });
 
-        // "記録がある日"のインデックスだけ抽出
         const filled = [];
         for (let i = 0; i < last; i++) {
             if (tasksByDay[i].length > 0 || rewardSumByDay[i] > 0) filled.push(i);
@@ -142,7 +134,6 @@ export const ChildMoneyRecords = () => {
         };
     }, [doneTasks]);
 
-    // 累計金額の配列
     const monthCumulativeData = useMemo(() => {
         let acc = 0;
         return monthRewardData.map((v) => (acc += v));
@@ -150,10 +141,9 @@ export const ChildMoneyRecords = () => {
 
     // 日別の累計（全日分）: グラフでは今日までの累計を使用
 
-    // 今月：未来日を除外し、過去日(今日含む)のみを表示する配列（グラフ表示用）
     const { dayLabelsUntilToday, dayRewardDataUntilToday, dayCumulativeDataUntilToday } =
         useMemo(() => {
-            const today = new Date().getDate(); // 1-based
+            const today = new Date().getDate();
             const end = Math.min(today, dayLabelsAll.length);
             const labels = dayLabelsAll.slice(0, end);
             const rewards = dayRewardData.slice(0, end);
@@ -255,14 +245,12 @@ export const ChildMoneyRecords = () => {
 		            md:m-15 md:h-[750px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:flex md:flex-col
                     "
         >
-            {/* タイトル */}
             <div className="flex md:justify-between md:items-center md:px-20 md:-pt-7 md:mt-9">
                 <h2 className="text-3xl font-bold p-12 mt-19 md:text-5xl md:p-8 md:mt-0">
                     おこづかいきろく
                 </h2>
             </div>
 
-            {/* フィルタ（ビューモード切り替えと年選択） */}
             <div className="flex flex-row justify-end mb-8 space-x-4 mt-[-60px] md:flex md:flex-row md:justify-end md:mb-8 md:mr-28 md:space-x-4 md:mt-[-60px]">
                 <Select
                     options={viewModeOptions}
@@ -272,17 +260,14 @@ export const ChildMoneyRecords = () => {
                 />
             </div>
 
-            {/* コンテンツ */}
             {viewMode === "monthly" && (
                 <>
-                    {/* グラフ */}
                     <div className="flex justify-center md:mb-10 md:mt-0 mt-14">
                         <div className="md:w-3/4 w-[310px] bg-white md:p-6 p-1 rounded-lg shadow md:h-80 h-40 md:mr-0 mr-6">
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
 
-                    {/* 月別カード */}
                     {records.length === 0 ? (
                         <p className="text-center text-gray-400 md:py-10 md:text-3xl md:mt-30">
                             {selectedYear}年の記録はまだありません。
@@ -323,14 +308,12 @@ export const ChildMoneyRecords = () => {
 
             {viewMode === "daily" && (
                 <>
-                    {/* グラフ */}
                     <div className="flex justify-center md:mb-10">
                         <div className="md:w-3/4 w-80 bg-white md:p-6 p-4 pt-0 rounded-lg shadow md:h-[320px] h-60 md:mr-0 mr-4">
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
 
-                    {/* 日別バーとタスク一覧 */}
                     {filledDayIndexes.length === 0 ? (
                         <p className="text-center text-gray-400 py-10 text-3xl mt-30">
                             今月完了したおてつだいはまだありません。
