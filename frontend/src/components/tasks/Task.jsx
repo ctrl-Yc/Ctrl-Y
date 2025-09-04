@@ -48,7 +48,7 @@ export const Task = ({ task, onEdit, onApprove }) => {
           md:flex md:flex-row md:items-center md:space-x-6 md:text-right md:mr-15
           flex flex-col items-end text-right mr-2
         ">
-          <Deadline className="text-sm md:text-1xl text-[#5C410E]" deadline={task.deadline} />
+          <Deadline className="text-sm md:text-2xl text-[#5C410E]" deadline={task.deadline} />
           <p className="text-lg md:text-4xl font-bold text-green-600">¥{task.reward}</p>
         </div>
 
