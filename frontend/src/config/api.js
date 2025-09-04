@@ -1,7 +1,9 @@
-const isLocal = window.location.hostname === 'localhost';
+const isLocal = window.location.hostname === "localhost";
 
-export const API_BASE_URL = 'http://localhost:3000';
-export const FRONT_BASE_URL = isLocal ? 'http://localhost:5173' : 'https://frontend-beige-eight-97.vercel.app';
+export const API_BASE_URL = "https://ctrl-y-production.up.railway.app";
+export const FRONT_BASE_URL = isLocal
+    ? "http://localhost:5173"
+    : "https://frontend-beige-eight-97.vercel.app";
 
 //親ユーザー
 export const PARENT_BASE = `${API_BASE_URL}/api/parents`;
@@ -24,13 +26,13 @@ export const TASK_STATUS = (taskId, nextStatus) => `${TASKS_BASE}/${taskId}/${ne
 
 //一覧取得
 export const TASKS_COLLECTION = (labels) => {
-	if (labels === undefined) {
-		return TASKS_BASE;
-	} else if (Array.isArray(labels)) {
-		return `${TASKS_BASE}?labels=${labels.join(',')}`;
-	} else {
-		return `${TASKS_BASE}?labels=${labels}`;
-	}
+    if (labels === undefined) {
+        return TASKS_BASE;
+    } else if (Array.isArray(labels)) {
+        return `${TASKS_BASE}?labels=${labels.join(",")}`;
+    } else {
+        return `${TASKS_BASE}?labels=${labels}`;
+    }
 };
 
 //個別タスクURLを返す
@@ -40,7 +42,7 @@ export const INIT_SETUP = `${API_BASE_URL}/api/setup`;
 
 export const PARENT_EMAIL_CHANGE = `${API_BASE_URL}/email`; // メールアドレス変更
 export const PARENT_EMAIL_GET = `${API_BASE_URL}/api/setting/`; // メールアドレス取得
-export const PAYDAY_CUTOFF_SETTING = `${API_BASE_URL}/api/setting/paycut`;	  // 締め日給料日設定
+export const PAYDAY_CUTOFF_SETTING = `${API_BASE_URL}/api/setting/paycut`; // 締め日給料日設定
 export const KEYWORD_CHANGE = `${API_BASE_URL}/api/setting/change`; // あいことば変更
 
 export const PARENT_SUBSCRIBE = `${API_BASE_URL}/notification/subscribe`;
