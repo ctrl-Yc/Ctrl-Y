@@ -78,13 +78,19 @@ exports.getChildPayments = async (req, res) => {
         const { child_id } = req.params;
         const { year } = req.query;
 
-        const parent_id = await prisma.child.findUnique({
-            where: { user_id: child_id },
-            select: { parent_id: true },
-        });
+        // 子供が自分のデータにアクセスする場合
+        if (decoded.role === 'child' && decoded.user_id === child_id) {
+            // 子供が自分のデータにアクセスする場合は許可
+        } else {
+            // 親が子供のデータにアクセスする場合の権限チェック
+            const parent_id = await prisma.child.findUnique({
+                where: { user_id: child_id },
+                select: { parent_id: true },
+            });
 
-        if (!parent_id || parent_id.parent_id !== decoded.user_id) {
-            throw new AppError("この子供の給与を取得する権限がありません", 403);
+            if (!parent_id || parent_id.parent_id !== decoded.user_id) {
+                throw new AppError("この子供の給与を取得する権限がありません", 403);
+            }
         }
 
         const result = await prisma.pay.findMany({

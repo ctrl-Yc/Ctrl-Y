@@ -1,6 +1,6 @@
 const isLocal = window.location.hostname === 'localhost';
 
-export const API_BASE_URL = 'https://ctrl-y-production.up.railway.app';
+export const API_BASE_URL = 'http://localhost:3000';
 export const FRONT_BASE_URL = isLocal ? 'http://localhost:5173' : 'https://frontend-beige-eight-97.vercel.app';
 
 //親ユーザー

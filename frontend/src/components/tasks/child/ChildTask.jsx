@@ -20,7 +20,7 @@ export const ChildTask = ({ task, onNext }) => {
     const isDone = task.status === "DONE"; 
 
     return ( 
-        <li className="
+        <div className="
             bg-gray-50 shadow-lg items-center border-3
             md:px-7 md:py-2  md:h-[120px] md:w-[90%] md:flex  md:my-2  md:rounded-lg md:mr-0
             px-2 py-2  h-[70px] w-[75%] flex  -my-3  rounded-lg mt-5 
@@ -56,6 +56,6 @@ export const ChildTask = ({ task, onNext }) => {
                     /> 
                 )} 
                 </div> 
-        </li> 
+        </div> 
     ); 
 };
