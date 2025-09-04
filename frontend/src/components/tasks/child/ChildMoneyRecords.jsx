@@ -28,7 +28,7 @@ export const ChildMoneyRecords = () => {
     const [records, setRecords] = useState([]);
     const [error, setError] = useState(null);
     const [viewMode, setViewMode] = useState("monthly");
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+    const [selectedYear] = useState(new Date().getFullYear().toString());
 
     // ビューモードのオプション
     const viewModeOptions = [
@@ -148,10 +148,23 @@ export const ChildMoneyRecords = () => {
         return monthRewardData.map((v) => (acc += v));
     }, [monthRewardData]);
 
-    const dayCumulativeData = useMemo(() => {
-        let acc = 0;
-        return dayRewardData.map((v) => (acc += v));
-    }, [dayRewardData]);
+    // 日別の累計（全日分）: グラフでは今日までの累計を使用
+
+    // 今月：未来日を除外し、過去日(今日含む)のみを表示する配列（グラフ表示用）
+    const { dayLabelsUntilToday, dayRewardDataUntilToday, dayCumulativeDataUntilToday } =
+        useMemo(() => {
+            const today = new Date().getDate(); // 1-based
+            const end = Math.min(today, dayLabelsAll.length);
+            const labels = dayLabelsAll.slice(0, end);
+            const rewards = dayRewardData.slice(0, end);
+            let acc = 0;
+            const cumulative = rewards.map((v) => (acc += v));
+            return {
+                dayLabelsUntilToday: labels,
+                dayRewardDataUntilToday: rewards,
+                dayCumulativeDataUntilToday: cumulative,
+            };
+        }, [dayLabelsAll, dayRewardData]);
 
     // グラフ設定
     const chartData =
@@ -179,11 +192,11 @@ export const ChildMoneyRecords = () => {
                   ],
               }
             : {
-                  labels: dayLabelsAll,
+                  labels: dayLabelsUntilToday,
                   datasets: [
                       {
                           label: "日別報酬額（円）",
-                          data: dayRewardData,
+                          data: dayRewardDataUntilToday,
                           borderColor: "rgba(75,192,192,1)",
                           backgroundColor: "rgba(75,192,192,0.2)",
                           tension: 0.3,
@@ -191,7 +204,7 @@ export const ChildMoneyRecords = () => {
                       },
                       {
                           label: "累計（円）",
-                          data: dayCumulativeData,
+                          data: dayCumulativeDataUntilToday,
                           borderColor: "rgba(0,0,0,0.7)",
                           backgroundColor: "rgba(0,0,0,0.05)",
                           tension: 0.2,
@@ -217,14 +230,9 @@ export const ChildMoneyRecords = () => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: "金額（円）",
                 },
             },
             x: {
-                title: {
-                    display: true,
-                    text: viewMode === "monthly" ? "月" : "日",
-                },
                 type: "category",
                 ticks: {
                     autoSkip: false, // 全日付を表示
@@ -236,12 +244,7 @@ export const ChildMoneyRecords = () => {
         },
     };
 
-    // 年を格納する配列
-    const currentYear = new Date().getFullYear();
-    const yearList = [];
-    for (let y = 2023; y <= currentYear; y++) {
-        yearList.unshift({ value: y.toString(), label: `${y}年` });
-    }
+    // 年リストは未使用のため削除
 
     if (error) return <p className="text-center text-red-500">{error}</p>;
 
@@ -249,7 +252,7 @@ export const ChildMoneyRecords = () => {
         <div
             className="
                     h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
-		            md:m-15 md:h-[750px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:bg-[length:700px_1400px] md:flex md:flex-col
+		            md:m-15 md:h-[750px] md:w-[1400px] md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-cover md:bg-center md:flex md:flex-col
                     "
         >
             {/* タイトル */}
@@ -260,25 +263,17 @@ export const ChildMoneyRecords = () => {
             </div>
 
             {/* フィルタ（ビューモード切り替えと年選択） */}
-            <div className="flex flex-row justify-end mb-8 mr-25 space-x-4 mt-[-60px] md:flex md:flex-row md:justify-end md:mb-8 md:mr-28 md:space-x-4 md:mt-[-60px]">
+            <div className="flex flex-row justify-end mb-8 space-x-4 mt-[-60px] md:flex md:flex-row md:justify-end md:mb-8 md:mr-28 md:space-x-4 md:mt-[-60px]">
                 <Select
                     options={viewModeOptions}
                     value={viewMode}
                     onChange={(e) => setViewMode(e.target.value)}
-                    className="md:w-40 md:mr-10 md:-mt-0 w-22 -mr-13 -mt-6"
+                    className="md:w-40 md:mr-10 md:-mt-0 w-22 mr-10 -mt-6"
                 />
-                {viewMode === "monthly" && (
-                    <Select
-                        options={yearList}
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(e.target.value)}
-                        className="w-26 mr-10"
-                    />
-                )}
             </div>
 
             {/* コンテンツ */}
-            {viewMode === "monthly" ? (
+            {viewMode === "monthly" && (
                 <>
                     {/* グラフ */}
                     <div className="flex justify-center md:mb-10 md:mt-0 mt-14">
@@ -301,28 +296,21 @@ export const ChildMoneyRecords = () => {
                                             key={`${record.user_id}-${record.inserted_month}`}
                                             className="md:min-w-[270px] min-w-[200px] md:h-[140px] h-[70px] bg-gray-250 border border-gray-400 rounded-lg md:px-4 px-4 md:py-3 py-5 flex md:flex-col flex-row justify-between md:shadow-sm"
                                         >
-                                            <div className="text-gray-900 font-semibold md:text-3xl text-xl md:mb-2  md:mr-0 md:ml-0 ml-12 mr-6 md:text-center  ">
-                                                {record.inserted_month &&
-                                                    new Date(
-                                                        record.inserted_month
-                                                    ).toLocaleDateString("ja-JP", {
-                                                        year: "numeric",
-                                                        month: "long",
-                                                    })}
-                                            </div>
-                                            <div className="flex md:flex-col flex-row md:space-y-3 md:items-center items-end">
-                                                <span className="text-gray-600 md:text-base text-sm">
-                                                    お小遣い：
-                                                    <span className="md:text-2xl text-xl font-bold text-green-600">
-                                                        ¥{record.reward}
-                                                    </span>
-                                                </span>
-                                                <span className="text-gray-600 md:text-base text-sm">
-                                                    お手伝い回数：
-                                                    <span className="font-semibold text-2xl">
-                                                        {record.number}回
-                                                    </span>
-                                                </span>
+                                            <div className="flex w-full md:flex-col flex-row md:space-y-3 md:items-center items-center">
+                                                <div className="basis-1/3 text-gray-900 font-semibold md:text-3xl text-xl md:mb-2 md:text-center">
+                                                    {record.inserted_month &&
+                                                        new Date(
+                                                            record.inserted_month
+                                                        ).toLocaleDateString("ja-JP", {
+                                                            month: "short",
+                                                        })}
+                                                </div>
+                                                <div className="basis-1/3 md:text-2xl text-xl font-bold text-green-600 text-center">
+                                                    ¥{record.reward}
+                                                </div>
+                                                <div className="basis-1/3 font-semibold text-2xl text-center">
+                                                    {record.number}回
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -331,11 +319,13 @@ export const ChildMoneyRecords = () => {
                         </div>
                     )}
                 </>
-            ) : viewMode === "daily" ? (
+            )}
+
+            {viewMode === "daily" && (
                 <>
                     {/* グラフ */}
                     <div className="flex justify-center md:mb-10">
-                        <div className="md:w-3/4 w-80 bg-white md:p-6 p-6 rounded-lg shadow md:h-[320px] h-60 md:mr-0 mr-4">
+                        <div className="md:w-3/4 w-80 bg-white md:p-6 p-4 pt-0 rounded-lg shadow md:h-[320px] h-60 md:mr-0 mr-4">
                             <Line data={chartData} options={chartOptions} />
                         </div>
                     </div>
@@ -348,22 +338,22 @@ export const ChildMoneyRecords = () => {
                     ) : (
                         <div className="flex justify-center ">
                             <div className="md:w-[950px] w-[300px] overflow-x-auto">
-                                <div className="flex space-x-2">
+                                <div className="md:flex md:flex-row md:space-x-6 flex flex-col md:space-y-0 space-y-3 md:mt-0 mt-6">
                                     {filledDayIndexes.map((i) => (
                                         <div
                                             key={i}
-                                            className="min-w-[130px] bg-gray-50 border border-gray-300 rounded-lg px-6 py-5 flex flex-col justify-between shadow-sm"
+                                            className="md:min-w-[270px] min-w-[200px] md:h-[140px] h-[70px] bg-gray-250 border border-gray-400 rounded-lg md:px-4 px-4 md:py-3 py-5 flex md:flex-col flex-row justify-between md:shadow-sm"
                                         >
-                                            <div className="text-gray-900 font-semibold text-2xl mb-3 text-center">
-                                                {dayLabelsAll[i]}
-                                            </div>
-                                            <div className="flex flex-col space-y-3 items-center">
-                                                <span className="font-semibold text-xl">
-                                                    {dayTasksData[i].length}件
-                                                </span>
-                                                <span className="text-2xl font-bold text-green-600">
+                                            <div className="flex w-full md:flex-col flex-row md:space-y-3 md:items-center items-center">
+                                                <div className="basis-1/3 text-gray-900 font-semibold md:text-3xl text-xl md:mb-2 md:text-center">
+                                                    {dayLabelsAll[i]}
+                                                </div>
+                                                <div className="basis-1/3 md:text-2xl text-xl font-bold text-green-600 text-center">
                                                     ¥{dayRewardData[i]}
-                                                </span>
+                                                </div>
+                                                <div className="basis-1/3 font-semibold text-2xl text-center">
+                                                    {dayTasksData[i].length}件
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -372,7 +362,7 @@ export const ChildMoneyRecords = () => {
                         </div>
                     )}
                 </>
-            ) : null}
+            )}
         </div>
     );
 };
