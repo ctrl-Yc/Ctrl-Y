@@ -9,7 +9,7 @@ export const ChildSidebar = ({ activeMenuItem, onMenuItemClick }) => {
 
     return (
         <aside className="
-            fixed top-0 left-0 w-full flex flex-row justify-start px-10 z-50
+            fixed top-12 left-0 w-full flex flex-row justify-start px-10 z-50
             md:relative md:w-80 md:bg-orange-100 md:text-white md:p-4 md:h-full md:flex md:flex-col
         ">
             <nav>
