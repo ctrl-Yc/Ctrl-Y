@@ -84,40 +84,67 @@ export const SalarySettings = ({ setActiveTab }) => {
   };
 
   return (
-    <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
-      <div className="ml-[80px] mt-10">
+    <div className="
+      h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+      md:m-15 md:h-full md:w-full md:bg-[url('/images/note.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center md:flex md:flex-col
+    ">
+      <div className="
+        ml-4 mt-6
+        md:ml-[80px] md:mt-10
+      ">
           <ToastContainer />
           <div className="flex justify-between items-center">
-            <h2 className="text-5xl font-bold p-16">給与</h2>
+            <h2 className="
+              text-3xl font-bold p-4
+              md:text-5xl md:p-16
+            ">給与</h2>
           </div>
-          <div className="mx-20 space-y-4">
-            <p className="text-xl">給料日の変更</p>
+          <div className="
+            mx-4 space-y-3
+            md:mx-20 md:space-y-4
+          ">
+            <p className="
+              text-lg
+              md:text-xl
+            ">給料日の変更</p>
             <Select
               options={paydayOptions}
               value={selectedPayday}
               onChange={handlePaydayChange}
-              className="w-26"
+              className="w-20 md:w-26"
             />
 
-            <p className="text-xl">締め日の変更</p>
+            <p className="
+              text-lg
+              md:text-xl
+            ">締め日の変更</p>
             <Select
               options={cutoffOptions}
               value={selectedCutoff}
               onChange={handleCutoffChange}
-              className="w-26"
+              className="w-20 md:w-26"
             />
-            <div className="mt-8 space-x-12">
+            <div className="
+              mt-6 space-x-6
+              md:mt-8 md:space-x-12
+            ">
               <CustomButton
                 type="button"
                 label="戻る"
                 onClick={handleBackClick}
-                className='w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200 transition-colors duration-300'
+                className='
+                  w-20 h-8 bg-gray-300 text-black text-sm font-extrabold rounded-lg hover:bg-gray-200 transition-colors duration-300
+                  md:w-30 md:h-12 md:text-2xl
+                '
               />
               <CustomButton
                 type="button"
                 label="決定"
                 onClick={handleSubmitClick}
-                className='w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300'
+                className='
+                  w-20 h-8 bg-orange-300 text-black text-sm font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300
+                  md:w-30 md:h-12 md:text-2xl
+                '
               />
             </div>
           </div>

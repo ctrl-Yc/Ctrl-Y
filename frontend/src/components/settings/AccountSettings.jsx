@@ -80,22 +80,40 @@ export const AccountSettings = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
-            <div className="ml-[80px] mt-10">
+        <div className="
+          h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+          md:m-15 md:h-full md:w-full md:bg-[url('/images/note.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center md:flex md:flex-col
+        ">
+            <div className="
+              ml-4 mt-6
+              md:ml-[80px] md:mt-10
+            ">
                 <ToastContainer />
                 <div className="flex justify-between items-center ">
-                    <h2 className="text-5xl font-bold p-16">アカウント</h2>
+                    <h2 className="
+                      text-3xl font-bold p-4
+                      md:text-5xl md:p-16
+                    ">アカウント</h2>
                 </div>
-                <div className="mx-20 space-y-4">
-                    <div className="space-y-4">
-                        <p className="text-2xl">メールアドレス</p>
+                <div className="
+                  mx-4 space-y-3
+                  md:mx-20 md:space-y-4
+                ">
+                    <div className="space-y-3 md:space-y-4">
+                        <p className="
+                          text-lg
+                          md:text-2xl
+                        ">メールアドレス</p>
                         <div className=" items-center space-x-2">
                             <InputField
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 disabled={editField !== "email"}
-                                className="mb-12 w-100 h-12 px-4 border rounded-lg bg-white"
+                                className="
+                                  mb-6 w-60 h-8 px-3 border rounded-lg bg-white
+                                  md:mb-12 md:w-100 md:h-12 md:px-4
+                                "
                             />
                             {editField === "email" ? (
                                 <div className="space-x-2">

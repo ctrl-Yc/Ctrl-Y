@@ -88,10 +88,10 @@ export const Top = () => {
     };
 
     return (
-        <div className="relative flex h-screen overflow-hidden">
+        <div className="relative flex min-h-dvh overflow-x-hidden">
             <Suspense fallback={null}>
                 <Sidebar activeMenuItem={activeTab} onMenuItemClick={handleSidebarItemClick} />
-                <main className="flex-grow flex items-center justify-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
+                <main className="flex-1 ml-0 md:ml-80 flex items-center justify-center p-2 bg-[#FFF877] bg-[url('/images/back.png')] bg-center bg-no-repeat bg-cover overflow-hidden">
                     {renderMainContent()}
                 </main>
             </Suspense>

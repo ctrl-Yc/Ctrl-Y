@@ -77,9 +77,8 @@ export const Tasks = ({ setActiveTab, setSelectedTaskId, onLoadingChange }) => {
    return (
   <div
     className="
-      min-h-[100svh] w-full
-      bg-[url('/images/mobile_note.png')] bg-no-repeat bg-top bg-contain mt-3
-      md:p-10 md:m-15 md:h-full md:w-full md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center flex flex-col
+      h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+      md:p-10 md:m-15 md:h-full md:w-full md:bg-[url('/images/kokuban.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center md:flex md:flex-col
     "
   >
     <div

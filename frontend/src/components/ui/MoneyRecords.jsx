@@ -260,87 +260,141 @@ export const MoneyRecords = () => {
     }, [selectedChild, selectedYear, viewMode]);
 
     return (
-        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
-            <div className="flex justify-between items-center px-20 pt-15">
-                <h2 className="text-5xl font-bold p-8">おこづかい記録</h2>
+        <div className="
+            h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+            md:m-15 md:h-full md:w-full md:bg-[url('/images/note.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center md:flex md:flex-col
+        ">
+            <div className="
+                flex justify-between items-center px-6 pt-8
+                md:px-20 md:pt-15
+            ">
+                <h2 className="
+                    text-3xl font-bold p-4
+                    md:text-5xl md:p-8
+                ">おこづかい記録</h2>
             </div>
 
-            <div className="flex flex-row justify-end mb-8 mr-28 space-x-4 mt-[-60px] ">
+            <div className="
+                flex flex-row justify-end mb-8 space-x-4 mt-[-60px]
+                md:mr-28
+            ">
                 <Select
                     options={viewModeOptions}
                     value={viewMode}
                     onChange={(e) => setViewMode(e.target.value)}
-                    className="w-40 mr-10"
+                    className="w-32 mr-4 md:w-40 md:mr-10"
                 />
                 <Select
                     options={children.map((c) => ({ value: c.user_id, label: c.c_name }))}
                     value={selectedChild ? selectedChild.user_id : ""}
                     onChange={handleChildChange}
-                    className="w-26 mr-10"
+                    className="w-20 mr-4 md:w-26 md:mr-10"
                 />
             {viewMode === 'records' && (
                     <Select
                         options={yearList}
                         value={selectedYear}
                         onChange={handleYearChange}
-                        className="w-26 mr-10"
+                        className="w-20 mr-4 md:w-26 md:mr-10"
                     />
             )}
             </div>
-            <div className="flex justify-center mb-10 ">
-                <div className="w-3/4 bg-white p-6 rounded-lg shadow" style={{ height: 320 }}>
+            <div className="
+                flex justify-center mb-10
+                md:mb-10
+            ">
+                <div className="
+                    w-[310px] bg-white p-1 rounded-lg shadow
+                    md:w-3/4 md:p-6
+                " style={{ height: 320 }}>
                     <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
             {viewMode === "monthTasks" ? (
-                <div className="flex justify-center ">
-                    <div className="w-[950px] overflow-x-auto">
-                    <div className="flex space-x-2">
-                        {filledDayIndexes.map((i) => (
-                        <div
-                            key={i}
-                            className="min-w-[100px] bg-gray-50 border border-gray-300 rounded-lg px-6 py-5 flex flex-col justify-between shadow-sm"
-                        >
-                            <div className="text-gray-900 font-semibold text-2xl mb-3 text-center">
-                            {dayLabelsAll[i]}
+                <div className="flex justify-center">
+                    <div className="
+                        w-[350px] overflow-x-auto
+                        md:w-[950px]
+                    ">
+                        <div className="flex space-x-2">
+                            {filledDayIndexes.map((i) => (
+                            <div
+                                key={i}
+                                className="
+                                    min-w-[80px] bg-gray-50 border border-gray-300 rounded-lg px-3 py-3 flex flex-col justify-between shadow-sm
+                                    md:min-w-[100px] md:px-6 md:py-5
+                                "
+                            >
+                                <div className="
+                                    text-gray-900 font-semibold text-lg mb-2 text-center
+                                    md:text-2xl md:mb-3
+                                ">
+                                {dayLabelsAll[i]}
+                                </div>
+                                <div className="flex flex-col space-y-2 items-center md:space-y-3">
+                                    <span className="
+                                        font-semibold text-sm
+                                        md:text-xl
+                                    ">{dayCountData[i]}件</span>
+                                <span className="
+                                    text-lg font-bold text-green-600
+                                    md:text-2xl
+                                ">
+                                    ¥{dayRewardData[i]}
+                                </span>
+                                </div>
                             </div>
-                            <div className="flex flex-col space-y-3 items-center">
-                                <span className="font-semibold text-xl">{dayCountData[i]}件</span>
-                            <span className="text-2xl font-bold text-green-600">
-                                ¥{dayRewardData[i]}
-                            </span>
-                            </div>
+                            ))}
                         </div>
-                        ))}
-                    </div>
                     </div>
                 </div>
             ) : (
                 <div className="flex justify-center">
-                    <div className="w-250 overflow-x-auto">
-                        <div className="flex space-x-6">
+                    <div className="
+                        w-[350px] overflow-x-auto
+                        md:w-250
+                    ">
+                        <div className="flex space-x-4 md:space-x-6">
                             {records.map((record) => (
                                 <div
                                     key={`${record.user_id}-${record.inserted_month}`}
-                                    className="min-w-[270px] bg-gray-250 border border-gray-400 rounded-lg px-4 py-3 flex flex-col justify-between shadow-sm"
+                                    className="
+                                        min-w-[200px] bg-gray-250 border border-gray-400 rounded-lg px-3 py-2 flex flex-col justify-between shadow-sm
+                                        md:min-w-[270px] md:px-4 md:py-3
+                                    "
                                 >
-                                <div className="text-gray-900 font-semibold text-3xl mb-2 text-center">
+                                <div className="
+                                    text-gray-900 font-semibold text-xl mb-1 text-center
+                                    md:text-3xl md:mb-2
+                                ">
                                     {record.inserted_month &&
                                     new Date(record.inserted_month).toLocaleDateString("ja-JP", {
                                         year: "numeric",
                                         month: "long",
                                     })}
                                 </div>
-                                <div className="flex flex-col space-y-3 items-center">
-                                    <span className="text-gray-600 text-base">
+                                <div className="flex flex-col space-y-2 items-center md:space-y-3">
+                                    <span className="
+                                        text-gray-600 text-sm
+                                        md:text-base
+                                    ">
                                         お小遣い：
-                                        <span className="text-2xl font-bold text-green-600">
+                                        <span className="
+                                            text-lg font-bold text-green-600
+                                            md:text-2xl
+                                        ">
                                             ¥{record.reward}
                                         </span>
                                     </span>
-                                    <span className="text-gray-600 text-base">
+                                    <span className="
+                                        text-gray-600 text-sm
+                                        md:text-base
+                                    ">
                                         お手伝い回数：
-                                        <span className="font-semibold text-2xl">{record.number}回</span>
+                                        <span className="
+                                            font-semibold text-lg
+                                            md:text-2xl
+                                        ">{record.number}回</span>
                                     </span>
                                 </div>
                             </div>

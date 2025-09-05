@@ -95,22 +95,40 @@ export const ChildSettings = ({ setActiveTab }) => {
     };
 
     return (
-        <div className="m-15 h-full w-full bg-[url('/images/note.png')] bg-no-repeat bg-[length:100%_100%] bg-center flex flex-col">
-            <div className="ml-[80px] mt-10">
+        <div className="
+          h-[800px] w-[400px] bg-[url('/images/mobile_note.png')] bg-no-repeat bg-center bg-[length:380px_700px] mt-5
+          md:m-15 md:h-full md:w-full md:bg-[url('/images/note.png')] md:bg-no-repeat md:bg-[length:100%_100%] md:bg-center md:flex md:flex-col
+        ">
+            <div className="
+              ml-4 mt-6
+              md:ml-[80px] md:mt-10
+            ">
                 <ToastContainer />
                 <div className="flex justify-between items-center">
-                    <h2 className="text-5xl font-bold p-16">子供</h2>
+                    <h2 className="
+                      text-3xl font-bold p-4
+                      md:text-5xl md:p-16
+                    ">子供</h2>
                 </div>
 
-                <div className="mx-20 space-y-4">
+                <div className="
+                  mx-4 space-y-3
+                  md:mx-20 md:space-y-4
+                ">
                     <div>
-                        <p className="text-2xl">あいことばの変更</p>
+                        <p className="
+                          text-lg
+                          md:text-2xl
+                        ">あいことばの変更</p>
                         <InputField
                             type="text"
                             placeholder=""
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
-                            className="my-6 w-70 h-10 px-4 border bg-white rounded-lg"
+                            className="
+                              my-4 w-48 h-8 px-3 border bg-white rounded-lg
+                              md:my-6 md:w-70 md:h-10 md:px-4
+                            "
                         />
                     </div>
 
@@ -119,12 +137,17 @@ export const ChildSettings = ({ setActiveTab }) => {
                             type="button"
                             label="+子供の追加"
                             onClick={() => setIsDialogOpen(true)}
-                            className="w-32 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
-                        mb-6 hover:bg-orange-200 transition-colors duration-300"
+                            className="
+                              w-24 h-8 bg-orange-300 text-black text-sm font-bold rounded-lg mb-4 hover:bg-orange-200 transition-colors duration-300
+                              md:w-32 md:h-10 md:text-lg md:mb-6
+                            "
                         />
                     </div>
 
-                    <p className="text-2xl">ログイン用URL</p>
+                    <p className="
+                      text-lg
+                      md:text-2xl
+                    ">ログイン用URL</p>
                     <Select
                         options={children.map((child) => ({
                             value: child.user_id,
@@ -136,39 +159,54 @@ export const ChildSettings = ({ setActiveTab }) => {
                             setSelectedChild(selected);
                         }}
                         placeholder="子供を選択"
-                        className="w-70"
+                        className="w-48 md:w-70"
                     />
-                    <div className="flex items-center space-x-4 my-6">
+                    <div className="
+                      flex items-center space-x-2 my-4
+                      md:space-x-4 md:my-6
+                    ">
                         <InputField
                             type="text"
                             placeholder=""
                             value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ""}
                             readOnly
-                            className="my-6 w-100 h-10 px-4 border bg-white rounded-lg"
+                            className="
+                              my-4 w-60 h-8 px-3 border bg-white rounded-lg
+                              md:my-6 md:w-100 md:h-10 md:px-4
+                            "
                         />
                         <CustomButton
                             type="button"
                             label="コピー"
                             onClick={handleCopyUrl}
-                            className="w-25 h-10 bg-orange-300 text-black text-lg font-bold rounded-lg
-                        hover:bg-orange-200 transition-colors duration-300"
+                            className="
+                              w-16 h-8 bg-orange-300 text-black text-sm font-bold rounded-lg hover:bg-orange-200 transition-colors duration-300
+                              md:w-25 md:h-10 md:text-lg
+                            "
                         />
                     </div>
-                    <div className="mt-4 space-x-12">
+                    <div className="
+                      mt-4 space-x-6
+                      md:space-x-12
+                    ">
                         <CustomButton
                             type="button"
                             label="戻る"
                             onClick={handleBackClick}
-                            className="w-30 h-12 bg-gray-300 text-black text-2xl font-extrabold rounded-lg hover:bg-gray-200
-                        transition-colors duration-300"
+                            className="
+                              w-20 h-8 bg-gray-300 text-black text-sm font-extrabold rounded-lg hover:bg-gray-200 transition-colors duration-300
+                              md:w-30 md:h-12 md:text-2xl
+                            "
                         />
                         <CustomButton
                             type="button"
                             label="決定"
                             onClick={handleSubmitClick}
                             disabled={isSaving}
-                            className="w-30 h-12 bg-orange-300 text-black text-2xl font-extrabold rounded-lg hover:bg-orange-200
-                        transition-colors duration-300"
+                            className="
+                              w-20 h-8 bg-orange-300 text-black text-sm font-extrabold rounded-lg hover:bg-orange-200 transition-colors duration-300
+                              md:w-30 md:h-12 md:text-2xl
+                            "
                         />
                     </div>
                 </div>
