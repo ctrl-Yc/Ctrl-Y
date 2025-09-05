@@ -165,16 +165,26 @@ export const ChildSettings = ({ setActiveTab }) => {
                       flex items-center space-x-2 my-4
                       md:space-x-4 md:my-6
                     ">
-                        <InputField
-                            type="text"
-                            placeholder=""
-                            value={selectedChild ? `${CHILD_LOGIN_URL}${selectedChild.user_id}` : ""}
-                            readOnly
-                            className="
-                              my-4 w-60 h-8 px-3 border bg-white rounded-lg
-                              md:my-6 md:w-100 md:h-10 md:px-4
-                            "
-                        />
+                        {selectedChild ? (
+                            <a
+                                href={`${CHILD_LOGIN_URL}${selectedChild.user_id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="
+                                  my-4 w-60 h-8 px-3 border bg-white rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200 flex items-center text-sm text-blue-600 hover:text-blue-800
+                                  md:my-6 md:w-100 md:h-10 md:px-4 md:text-base
+                                "
+                            >
+                                {`${CHILD_LOGIN_URL}${selectedChild.user_id}`}
+                            </a>
+                        ) : (
+                            <div className="
+                              my-4 w-60 h-8 px-3 border bg-gray-100 rounded-lg flex items-center text-sm text-gray-500
+                              md:my-6 md:w-100 md:h-10 md:px-4 md:text-base
+                            ">
+                                子供を選択してください
+                            </div>
+                        )}
                         <CustomButton
                             type="button"
                             label="コピー"
