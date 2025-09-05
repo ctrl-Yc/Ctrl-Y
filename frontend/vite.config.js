@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   base: '/',
+  server: {
+    historyApiFallback: true
+  },
   plugins: [
     react(),
     tailwindcss(),

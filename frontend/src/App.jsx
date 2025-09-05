@@ -8,6 +8,7 @@ import { ChildUrl } from "./pages/ChildUrl.jsx";
 import { ChildTop } from "./pages/ChildTop.jsx";
 import { PasswordResetRequest } from "./pages/PasswordResetRequest.jsx";
 import { PasswordReset } from "./pages/PasswordReset.jsx";
+import { NotFound } from "./pages/NotFound.jsx";
 
 export function App() {
     return (
@@ -21,6 +22,7 @@ export function App() {
             <Route path="/top" element={<Top />} />
             <Route path="/childName" element={<ChildSignup />} />
             <Route path="/childUrl" element={<ChildUrl />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
