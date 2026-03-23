@@ -1,5 +1,3 @@
-const prisma = require("@db");
-
 const getParentId = async (user) => {
     return user.role === 'parent' ? user.user_id : user.parent_id ;
 };
@@ -17,7 +15,7 @@ const parseLabels = (labelParam, queryLabels) => {
 };
 
 const parseTaskId = (taskIdParam) => {
-    return parseInt(taskIdParam, 10);
+    return Number.parseInt(taskIdParam, 10);
 };
 
 module.exports = {
