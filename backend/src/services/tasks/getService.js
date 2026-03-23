@@ -1,5 +1,6 @@
 const { TaskStatusCode } = require("@prisma/client");
 const prisma = require("@db");
+const AppError = require("../../utils/AppError");
 
 exports.findAllTasks = async (parent_id, labels, child_id) => {
     const list = labels === undefined ? [] : Array.isArray(labels) ? labels : [labels];
@@ -22,9 +23,7 @@ exports.getOneTask = async (taskId) => {
         },
     });
     if (!OneTask) {
-        const error = new Error("タスクが見つかりません");
-        error.statusCode = 404;
-        throw error;
+        throw new AppError("タスクが見つかりません", 404);
     }
 
     return OneTask;

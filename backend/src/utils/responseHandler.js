@@ -1,7 +1,7 @@
 const handleError = (res, error, operation) => {
     const status = Number(error.statusCode) || 500;
     const message = error.message || "エラーが発生しました";
-    console.log(`${operation}エラー:`, message, error?.stack);
+    console.error(`${operation}エラー:`, message);
 
     res.status(status).json({ message });
 };

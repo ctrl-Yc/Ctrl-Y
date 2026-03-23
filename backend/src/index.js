@@ -39,4 +39,12 @@ app.use('/api/setup', setupRouter);
 const notificationRouter = require('./routes/notificationRouter.js');
 app.use('/notification',notificationRouter);
 
+// グローバルエラーミドルウェア
+app.use((err, req, res, next) => {
+    const status = Number(err.statusCode) || 500;
+    const message = err.message || "エラーが発生しました";
+    console.error('未処理エラー:', message);
+    res.status(status).json({ message });
+});
+
 module.exports = app;
