@@ -22,3 +22,11 @@ yarn-error.log*
 .coderabbit.yaml
 *.cursorrules
 
+# ===== AI =====
+.ai-guide/
+.claude/
+.cursor/
+.agents/
+.ai-rules/
+CLAUDE.md
+AGENT.md
