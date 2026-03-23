@@ -2,6 +2,9 @@
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.JWT_SECRET;
 
+function validateTokenFormat(token) {
+	if (!token || token.length > 500) throw new Error('トークンが無効です');
+}
 
 function signToken(user_id, opts = {}) {
 	const payload = {
@@ -16,7 +19,7 @@ function signToken(user_id, opts = {}) {
 }
 
 function verifyToken(token) {
-	if (!token || token.length > 500) throw new Error('トークンが無効です');
+	validateTokenFormat(token);
 
 	try {
 		return jwt.verify(token, SECRET);
@@ -31,18 +34,16 @@ function createEmailChangeToken(user_id, newEmail) {
 	return jwt.sign(payload, SECRET, { expiresIn: '1h' });
 }
 
-
 // メールアドレス変更用トークン検証
 function verifyEmailChangeToken(token) {
-	if (!token || token.length > 500) throw new Error('トークンが無効です');
+	validateTokenFormat(token);
 
 	try {
-    return jwt.verify(token, SECRET);
+		return jwt.verify(token, SECRET);
 	} catch (error) {
-    throw new Error('トークンが無効または期限切れです');
+		throw new Error('トークンが無効または期限切れです');
 	}
 }
-
 
 // パスワードリセット用トークン発行（有効期限15分）
 function createPasswordResetToken(user_id) {
@@ -52,7 +53,7 @@ function createPasswordResetToken(user_id) {
 
 // パスワードリセット用トークン検証
 function verifyPasswordResetToken(token) {
-	if (!token || token.length > 500) throw new Error('トークンが無効です');
+	validateTokenFormat(token);
 
 	try {
 		return jwt.verify(token, SECRET);

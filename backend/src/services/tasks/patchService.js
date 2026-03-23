@@ -1,15 +1,11 @@
 const prisma = require("@db");
 const { getOneTask } = require("./getService");
+const { assertTaskOwner } = require("../../utils/taskAuthUtils");
 
 //taskの編集
 exports.editTask = async (taskId, taskData, parent_id) => {
     const task = await getOneTask(taskId);
-
-    if (task.parent_id !== parent_id) {
-        const error = new Error("このタスクを編集する権限がありません");
-        error.statusCode = 403;
-        throw error;
-    }
+    assertTaskOwner(task, parent_id);
 
     const { t_name, memo, reward, deadline } = taskData;
     return await prisma.task.update({
@@ -27,11 +23,7 @@ exports.editTask = async (taskId, taskData, parent_id) => {
 
 exports.sidEdit = async (parent_id, taskId, labels,child_id) => {
     const task = await getOneTask(taskId);
-    if (task.parent_id !== parent_id) {
-        const error = new Error("このタスクを変更する権限がありません");
-        error.statusCode = 403;
-    throw error;
-    }
+    assertTaskOwner(task, parent_id);
     const label = labels[0];
 
     const updateData = {
